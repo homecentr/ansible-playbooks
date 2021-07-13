@@ -1,0 +1,3 @@
+---
+- import_tasks: iam.yml
+- import_tasks: docker-stack.yml

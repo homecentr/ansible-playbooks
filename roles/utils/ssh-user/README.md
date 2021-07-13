@@ -1,0 +1,1 @@
+Creates a local user with their own group and automatically adds their github public keys to SSH authorized keys.

@@ -1,0 +1,18 @@
+- name: "Update packages required to add Lynis repo"
+  yum:
+    name:
+      - ca-certificates
+      - curl
+      - nss
+      - openssl
+    state: latest
+
+- name: "Create repo definition file"
+  copy:
+    src: rhel.repo
+    dest: /etc/yum.repos.d/cisofy-lynis.repo
+
+- name: "Install Lynis"
+  yum:
+    name: lynis
+    update_cache: true

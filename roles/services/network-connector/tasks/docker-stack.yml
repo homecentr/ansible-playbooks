@@ -1,0 +1,7 @@
+- name: Network Connector stack
+  run_once: true
+  docker_stack:
+    prune: yes
+    name: homecentr-network-connector
+    compose:
+      - "{{ lookup('template', 'docker-compose.yml.j2') | from_yaml }}"

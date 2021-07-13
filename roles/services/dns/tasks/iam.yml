@@ -1,0 +1,23 @@
+---
+- name: "Create group '{{ group_name }}'"
+  group:
+    name: "{{ group_name | mandatory }}"
+    gid: "{{ container_gid | mandatory }}"
+    state: present
+
+- name: "Create user '{{ user_name }}'"
+  user:
+    name: "{{ user_name | mandatory }}"
+    uid: "{{ container_uid | mandatory }}"
+    group: "{{ group_name | mandatory }}"
+    groups:
+      - "{{ group_name | mandatory }}"
+    state: present
+
+- name: "Add '{{ admin_user }}' to the group '{{ group_name }}'"
+  user:
+    name: "{{ admin_user }}"
+    append: true
+    groups:
+      - "{{ group_name }}"
+  when: admin_user is defined

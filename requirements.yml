@@ -1,0 +1,9 @@
+---
+collections:
+- name: oasis_roles.system
+
+roles:
+- name: geerlingguy.docker
+  version: 3.0.0
+- name: geerlingguy.pip
+- name: geerlingguy.security

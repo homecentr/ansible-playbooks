@@ -1,0 +1,8 @@
+---
+- name: Docker swarm stack
+  run_once: true
+  docker_stack:
+    prune: yes
+    name: homecentr-dns
+    compose:
+      - "{{ lookup('template', 'docker-compose.yml.j2') | from_yaml }}"

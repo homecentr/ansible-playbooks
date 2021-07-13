@@ -1,0 +1,6 @@
+---
+- import_tasks: iam.yml
+- import_tasks: directories.yml
+- import_tasks: config-master.yml
+- import_tasks: config-slave.yml
+- import_tasks: docker-stack.yml

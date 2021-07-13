@@ -1,0 +1,3 @@
+Proxmox comes with an enterprise repository added to the sources by default. This repository requires subscription. Unfortunately until the change is done, any apt/apt-get operations fail because the apt-get update cannot be finished because the PVE repository returns 401. This is also case of ansible apt modules which try to install python modules in the background.
+
+This role removes the enterprise repository and adds a repository which does not require subscription. It does so by changing sources.list.d files directly, without the usage of apt commands.

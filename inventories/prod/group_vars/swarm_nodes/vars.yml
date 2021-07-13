@@ -1,0 +1,3 @@
+---
+docker_gid: 8000
+docker_macvlan_network: homecentr-services

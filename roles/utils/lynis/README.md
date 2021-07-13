@@ -1,0 +1,1 @@
+Installs the latest version of Lynis from the official repository.
