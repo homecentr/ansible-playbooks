@@ -21,6 +21,12 @@
     import_role:
       name: "./roles/services/network-connector"
 
+  - name: "HTTP/HTTPS Ingress"
+    tags:
+      - ingress
+    import_role:
+      name: "./roles/services/ingress"
+
   # - name: "DNS"
   #   tags:
   #     - dns

@@ -1,0 +1,44 @@
+#!/bin/sh
+
+printHelp() {
+  echo "Usage: apply (lab|prod) <playbook>"
+}
+
+case "$1" in
+ lab)
+  INVENTORY="./inventories/lab"
+  ;;
+ prod)
+  INVENTORY="./inventories/prod"
+  ;;
+ *)
+  # else
+  printHelp
+  exit 1
+  ;;
+esac
+
+if [ -z "$2" ]; then
+  printHelp
+  exit 1
+fi
+
+PLAYBOOK="./playbooks/$2.yml"
+
+if [ ! -f "$PLAYBOOK" ]; then
+  printHelp
+  echo "Playbook $PLAYBOOK could not be found"
+fi
+
+shift
+shift
+
+export ANSIBLE_CONFIG="./ansible.cfg"
+
+# Install dependencies
+ansible-galaxy install -r ./requirements.yml
+
+COMMAND="ansible-playbook -i $INVENTORY $PLAYBOOK $@"
+
+# Execute playbook
+eval $COMMAND

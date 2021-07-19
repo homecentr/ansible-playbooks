@@ -1,0 +1,47 @@
+version: '3.7'
+services:
+  proxy:
+    image: homecentr/traefik:{{ docker_image_version | mandatory }}
+    deploy:
+      mode: global
+      labels:
+      - 'traefik.enable=true'
+      - 'traefik.docker.network=homecentr-ingress'
+      - 'traefik.http.services.traefik.loadbalancer.server.port=888' # required by swarm but not used.
+      - 'traefik.http.routers.api.rule=Host(`traefik.{{ root_domain }}`)'
+      - 'traefik.http.routers.api.entrypoints=web'
+      - 'traefik.http.routers.api.service=api@internal'
+      - 'traefik.http.routers.metrics.rule=Host(`metrics.traefik.{{ root_domain }}`)'
+      - 'traefik.http.routers.metrics.entrypoints=web'
+      - 'traefik.http.routers.metrics.service=prometheus@internal'
+      # - 'traefik.http.routers.api.tls=true'
+      # - 'traefik.boltdb.endpoint=/etc/traefik/traefik.db'
+      # - 'traefik.boltdb.watch=true'
+    ports:
+      - "80:80/tcp"
+      - "443:443/tcp"
+    networks:
+      - proxy
+    environment:
+      PUID: 0 #"{{ container_uid | mandatory }}"
+      PGID: 0 #"{{ container_gid | mandatory }}"
+      LOG_LEVEL: "{{ traefik_log_level | mandatory }}"
+      TRAEFIK_PILOT_DASHBOARD: "false" # disable notifications about Traefik Pilot
+      TRAEFIK_ARGS: >-
+        --accesslog=true
+        --api=true
+        --api.dashboard=true
+        --metrics.prometheus=true
+        --metrics.prometheus.manualrouting=true
+        --entrypoints.web.address=:80
+        --providers.docker.endpoint=unix:///var/run/docker.sock 
+        --providers.docker.swarmMode=true 
+        --providers.docker.exposedbydefault=false 
+        --providers.docker.network=homecentr-ingress 
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+networks:
+  proxy:
+    name: "homecentr-ingress"
+    driver: overlay
+    attachable: true

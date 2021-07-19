@@ -1,3 +1,10 @@
 ---
-- import_tasks: iam.yml
-- import_tasks: docker-stack.yml
+- import_tasks: ../../shared/docker-stack-iam.yml
+
+- name: Network Connector stack
+  run_once: true
+  docker_stack:
+    prune: yes
+    name: homecentr-network-connector
+    compose:
+      - "{{ lookup('template', 'docker-compose.yml.j2') | from_yaml }}"
