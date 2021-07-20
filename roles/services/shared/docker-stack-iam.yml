@@ -14,13 +14,6 @@
       - "{{ group_name }}"
     state: present
 
-- name: "Add user '{{ user_name }}' to Docker group"
-  user:
-    name: "{{ user_name }}"
-    append: true
-    groups:
-      - docker
-
 - name: "Add '{{ admin_user }}' to the group '{{ group_name }}'"
   user:
     name: "{{ admin_user }}"

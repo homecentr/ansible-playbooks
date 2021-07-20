@@ -60,7 +60,7 @@
 
     - name: "Unify Docker group GID across the cluster"
       group:
-        gid: "{{ docker_gid }}"
+        gid: "{{ docker_gid | mandatory }}"
         name: "docker"
 
     - name: "Install Docker pip module"

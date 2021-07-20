@@ -8,10 +8,10 @@ services:
       - 'traefik.enable=true'
       - 'traefik.docker.network=homecentr-ingress'
       - 'traefik.http.services.traefik.loadbalancer.server.port=888' # required by swarm but not used.
-      - 'traefik.http.routers.api.rule=Host(`traefik.{{ root_domain }}`)'
+      - 'traefik.http.routers.api.rule=Host(`ingress.{{ root_domain }}`)'
       - 'traefik.http.routers.api.entrypoints=web'
       - 'traefik.http.routers.api.service=api@internal'
-      - 'traefik.http.routers.metrics.rule=Host(`metrics.traefik.{{ root_domain }}`)'
+      - 'traefik.http.routers.metrics.rule=Host(`metrics.ingress.{{ root_domain }}`)'
       - 'traefik.http.routers.metrics.entrypoints=web'
       - 'traefik.http.routers.metrics.service=prometheus@internal'
       # - 'traefik.http.routers.api.tls=true'
@@ -23,10 +23,11 @@ services:
     networks:
       - proxy
     environment:
-      PUID: 0 #"{{ container_uid | mandatory }}"
-      PGID: 0 #"{{ container_gid | mandatory }}"
+      PUID: "{{ container_uid | mandatory }}"
+      PGID: "{{ container_gid | mandatory }}"
+      PUID_ADDITIONAL_GROUPS: "{{ docker_gid | mandatory }}:docker"
       LOG_LEVEL: "{{ traefik_log_level | mandatory }}"
-      TRAEFIK_PILOT_DASHBOARD: "false" # disable notifications about Traefik Pilot
+      TRAEFIK_PILOT_DASHBOARD: "false"
       TRAEFIK_ARGS: >-
         --accesslog=true
         --api=true

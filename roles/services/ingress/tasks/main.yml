@@ -1,5 +1,6 @@
 ---
 - import_tasks: ../../shared/docker-stack-iam.yml
+- import_tasks: ../../shared/docker-socket-iam.yml
 
 - name: Traefik stack
   run_once: true
