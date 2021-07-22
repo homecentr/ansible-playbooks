@@ -11,10 +11,9 @@ This role sets up stack with the [homecentr/certbot](https://github.com/homecent
 | container_uid | 9003 | UID the connector process in the container will use. The user will be created on the host machine if it does not exist. |
 | group_name | certbot | Name of the group the connector process in the container will use. |
 | user_name | certbot | Name of the user the connector process in the container will use. |
-| use_staging | false | Sets whether Certbot should use Let's encrypt's staging servers which have higher throttling limits which is useful for testing the configuration. |
+| certbot_use_staging | false | Sets whether Certbot should use Let's encrypt's staging servers which have higher throttling limits which is useful for testing the configuration. |
 | certbot_acme_email |  | E-mail you registered with Let's encrypt. |
-| certbot_cloudflare_email | | .... |
-| certbot_cloudflare_api_key | | .... |
+| certbot_cloudflare_api_token | | .... |
 
 ## High availability & service criticality
 
