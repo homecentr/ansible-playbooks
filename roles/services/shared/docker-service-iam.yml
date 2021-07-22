@@ -1,4 +1,10 @@
 ---
+- name: "Create group 'swarm-services'"
+  group:
+    name: "swarm-services"
+    gid: "{{ docker_swarm_services_gid }}"
+    state: present
+
 - name: "Create group '{{ group_name }}'"
   group:
     name: "{{ group_name }}"
@@ -12,6 +18,7 @@
     group: "{{ group_name }}"
     groups:
       - "{{ group_name }}"
+      - "swarm-services"
     state: present
 
 - name: "Add '{{ admin_user }}' to the group '{{ group_name }}'"

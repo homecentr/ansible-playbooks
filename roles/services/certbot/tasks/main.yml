@@ -1,0 +1,37 @@
+---
+- name: "Print dummy secret"
+  debug:
+    var: scrt
+
+# - import_tasks: ../../shared/docker-service-iam.yml
+# - import_tasks: ../../shared/docker-service-dir.yml
+#   vars:
+#     service_name: "certbot"
+
+# - name: Create 'ssl' directory
+#   run_once: true
+#   file:
+#     path: "{{ homecentr_root | mandatory }}/ssl"
+#     state: directory
+#     owner: "{{ container_uid | string }}"
+#     group: "swarm-services"
+#     mode: '0740'
+
+# - name: "Create cloudflare credential file"
+#   run_once: true
+#   template:
+#     src: cloudflare.ini.j2
+#     dest: "{{ homecentr_root | mandatory }}/certbot/cloudflare.ini"
+#     owner: "{{ container_uid }}"
+#     group: "{{ container_gid }}"
+#     mode: '0600'
+
+# - name: "Certbot docker stack"
+#   run_once: true
+#   docker_stack:
+#     prune: yes
+#     name: homecentr-certbot
+#     compose:
+#       - "{{ lookup('template', 'docker-compose.yml.j2') | from_yaml }}"
+
+# Wait for certificate or fail

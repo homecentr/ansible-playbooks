@@ -1,0 +1,38 @@
+#!/bin/sh
+
+set -e
+
+printHelp() {
+  echo "Usage:"
+  echo "\t./vault get-password"
+  echo "\t./vault edit (lab|prod)"
+}
+
+case "$1" in
+ '')
+  gpg --batch --use-agent --decrypt ./.vault-pass.gpg
+  exit 0
+  ;;
+ edit)
+  ;;
+ create)
+  ;;
+ *)
+  # else
+  printHelp
+  exit 1
+  ;;
+esac
+
+if [ -z "$2" ]; then
+  printHelp
+  exit 1
+fi
+
+if [ "$2" != "lab" ] && [ "$2" != "prod" ]; then
+  printHelp
+  exit 1
+fi
+
+export EDITOR=nano
+ansible-vault $1 --vault-password-file "./vault" "./inventories/$2/secrets.yml"

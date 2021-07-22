@@ -1,0 +1,6 @@
+docker_image_version: "latest"
+container_gid: 9003
+container_uid: 9003
+group_name: "certbot"
+user_name: "certbot"
+use_staging: false

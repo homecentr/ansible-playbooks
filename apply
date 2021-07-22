@@ -38,7 +38,7 @@ export ANSIBLE_CONFIG="./ansible.cfg"
 # Install dependencies
 ansible-galaxy install -r ./requirements.yml
 
-COMMAND="ansible-playbook -i $INVENTORY $PLAYBOOK $@"
+COMMAND="ansible-playbook -i $INVENTORY $PLAYBOOK --vault-password-file ./vault $@"
 
 # Execute playbook
 eval $COMMAND

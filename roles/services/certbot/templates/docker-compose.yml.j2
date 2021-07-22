@@ -1,0 +1,30 @@
+version: '3.7'
+services:
+  proxy:
+    image: homecentr/certbot:{{ docker_image_version | mandatory }}
+    deploy:
+      mode: replicated
+    environment:
+      PUID: "{{ container_uid | mandatory }}"
+      PGID: "{{ container_gid | mandatory }}"
+      CERTBOT_ARGS: "--email '{{ certbot_acme_email | mandatory }}' --dns-cloudflare-credentials '/secrets/cloudflare.ini'"
+    volumes:
+      - "secrets:/secrets:ro"
+      - "ssl:/etc/letsencrypt"
+  
+volumes:
+  secrets:
+    name: "homecentr-certbot-secrets"
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "{{ homecentr_root | mandatory }}/certbot"
+
+  ssl:
+    name: "homecentr-certbot-ssl"
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "{{ homecentr_root | mandatory }}/ssl"

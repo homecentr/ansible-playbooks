@@ -4,6 +4,7 @@
   become: true
   become_method: sudo
   tasks:
+
   - name: "Create local Docker macvlan network on all nodes"
     docker_network:
       name: "{{ docker_macvlan_network }}"
@@ -20,6 +21,12 @@
       - network-connector
     import_role:
       name: "./roles/services/network-connector"
+
+  - name: "Certbot (SSL certificates provider)"
+    tags:
+      - certbot
+    import_role:
+      name: "./roles/services/certbot"
 
   - name: "HTTP/HTTPS Ingress"
     tags:

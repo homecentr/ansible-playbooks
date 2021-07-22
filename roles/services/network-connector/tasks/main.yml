@@ -1,5 +1,5 @@
 ---
-- import_tasks: ../../shared/docker-stack-iam.yml
+- import_tasks: ../../shared/docker-service-iam.yml
 
 - name: Network Connector stack
   run_once: true

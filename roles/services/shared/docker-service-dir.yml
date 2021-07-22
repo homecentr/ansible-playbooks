@@ -1,0 +1,18 @@
+---
+- name: Create root directory
+  run_once: true
+  file:
+    path: "{{ homecentr_root | mandatory }}"
+    state: directory
+    owner: "root"
+    group: "root"
+    mode: '0750'
+
+- name: Create {{ service_name | mandatory }} directory
+  run_once: true
+  file:
+    path: "{{ homecentr_root | mandatory }}/{{ service_name | mandatory }}"
+    state: directory
+    owner: "{{ container_uid | string }}"
+    group: "{{ container_gid | string }}"
+    mode: '0750'
