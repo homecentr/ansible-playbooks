@@ -1,6 +1,8 @@
+ingress_service_name: "ingress"
 docker_image_version: "latest"
 container_gid: 9002
 container_uid: 9002
 group_name: "traefik"
 user_name: "traefik"
-traefik_log_level: error
+traefik_log_level: debug # error
+sslcert_readers_group_name: sslcert-readers

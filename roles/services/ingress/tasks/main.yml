@@ -1,11 +1,36 @@
 ---
 - import_tasks: ../../shared/docker-service-iam.yml
-- import_tasks: ../../shared/docker-service-docker-socket-iam.yml
+  vars:
+    additional_groups:
+      - docker # to have access to the docker socket
+      - "{{ sslcert_readers_group_name }}" # to allow reading SSL certificates
 
-- name: Traefik stack
+- import_tasks: ../../shared/docker-service-dir.yml
+  vars:
+    service_name: "{{ ingress_service_name | mandatory }}"
+
+- name: Traefik static config
+  template:
+    src: 'static.yml.j2'
+    dest: "{{ homecentr_root | mandatory }}/{{ ingress_service_name | mandatory }}/traefik.yml"
+    force: yes
+    mode: 0440
+    owner: "{{ user_name }}"
+    group: "{{ group_name }}"
+
+- name: Traefik dynamic config
+  template:
+    src: 'dynamic.yml.j2'
+    dest: "{{ homecentr_root | mandatory }}/{{ ingress_service_name | mandatory }}/dynamic.yml"
+    force: yes
+    mode: 0440
+    owner: "{{ user_name }}"
+    group: "{{ group_name }}"
+
+- name: Docker stack
   run_once: true
   docker_stack:
     prune: yes
-    name: homecentr-traefik
+    name: homecentr-ingress
     compose:
       - "{{ lookup('template', 'docker-compose.yml.j2') | from_yaml }}"

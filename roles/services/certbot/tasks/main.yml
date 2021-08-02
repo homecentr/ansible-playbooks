@@ -1,27 +1,42 @@
 ---
+# Create groups and users
+- name: Create 'sslcert-readers' group
+  group:
+    gid: "{{ sslcert_readers_group_id }}"
+    name: "{{ sslcert_readers_group_name }}"
+    state: present
+
 - import_tasks: ../../shared/docker-service-iam.yml
+
+# Create directories required for Docker volumes
 - import_tasks: ../../shared/docker-service-dir.yml
   vars:
     service_name: "certbot"
+    subdirs:
+      - state
+      - logs
+      - secrets
 
 - name: Create 'ssl' directory
   run_once: true
   file:
-    path: "{{ homecentr_root | mandatory }}/ssl"
+    path: "{{ homecentr_root | mandatory }}/certbot/certs"
     state: directory
     owner: "{{ container_uid | string }}"
-    group: "swarm-services"
+    group: "{{ sslcert_readers_group_name }}"
     mode: '0740'
 
+# Create credential file
 - name: "Create cloudflare credential file"
   run_once: true
   template:
     src: cloudflare.ini.j2
-    dest: "{{ homecentr_root | mandatory }}/certbot/cloudflare.ini"
+    dest: "{{ homecentr_root | mandatory }}/certbot/secrets/cloudflare.ini"
     owner: "{{ container_uid | mandatory | string }}"
     group: "{{ container_gid | mandatory | string }}"
     mode: '0600'
 
+# Create Docker stack
 - name: "Certbot docker stack"
   run_once: true
   docker_stack:
@@ -30,20 +45,22 @@
     compose:
       - "{{ lookup('template', 'docker-compose.yml.j2') | from_yaml }}"
 
+
+# Wait for the certificate to be issued so that other services can immediately use it
 - name: "Wait for certificate to be issued (fullchain.pem)"
   wait_for:
-    path: "{{ homecentr_root }}/ssl/live/{{ root_domain }}/fullchain.pem"
+    path: "{{ homecentr_root }}/certbot/certs/fullchain.pem"
     state: present
     timeout: 120
 
 - name: "Wait for certificate to be issued (cert.pem)"
   wait_for:
-    path: "{{ homecentr_root }}/ssl/live/{{ root_domain }}/cert.pem"
+    path: "{{ homecentr_root }}/certbot/certs/cert.pem"
     state: present
     timeout: 120
 
 - name: "Wait for certificate to be issued (privkey.pem)"
   wait_for:
-    path: "{{ homecentr_root }}/ssl/live/{{ root_domain }}/privkey.pem"
+    path: "{{ homecentr_root }}/certbot/certs/privkey.pem"
     state: present
     timeout: 120

@@ -1,8 +1,9 @@
 ---
 docker_gid: 8000
-docker_swarm_services_gid: 9000
 docker_macvlan_network: homecentr-services
 docker_macvlan_subnet: 10.1.3.0/24
 docker_macvlan_gateway: 10.1.3.1
 docker_macvlan_iprange: 10.1.3.160/28 # 10.1.3.161 - 10.1.3.174
 homecentr_root: /var/homecentr
+sslcert_readers_group_id: 9501
+homecentr_root_domain: lab.homecentr.io

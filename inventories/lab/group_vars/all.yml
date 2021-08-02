@@ -1,3 +1,2 @@
 # ansible_python_interpreter: "/usr/bin/python3"
 admin_user: lholota
-root_domain: lab.homecentr.io

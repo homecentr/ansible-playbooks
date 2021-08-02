@@ -1,0 +1,25 @@
+accessLog: {}
+
+entryPoints:
+  web:
+    address: ":80"
+
+  websecure:
+    address: ":443"
+
+providers:
+  file:
+    filename: /config/dynamic.yml
+
+  docker:
+    swarmMode: true
+    endpoint: unix:///var/run/docker.sock
+    exposedByDefault: false
+    network: homecentr-ingress
+
+api:
+  dashboard: true
+
+metrics:
+  prometheus:
+    manualrouting: true

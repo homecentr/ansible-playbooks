@@ -4,3 +4,4 @@ container_uid: 9003
 group_name: "certbot"
 user_name: "certbot"
 certbot_use_staging: false
+sslcert_readers_group_name: sslcert-readers

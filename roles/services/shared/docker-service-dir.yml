@@ -16,3 +16,13 @@
     owner: "{{ container_uid | string }}"
     group: "{{ container_gid | string }}"
     mode: '0750'
+
+- name: Create '{{ service_name | mandatory }}/{{ subdir }}'
+  when: subdirs is defined
+  with_items: "{{ subdirs }}"
+  file:
+    path: "{{ homecentr_root | mandatory }}/{{ service_name | mandatory }}/{{ item }}"
+    state: directory
+    owner: "{{ container_uid | string }}"
+    group: "{{ container_gid | string }}"
+    mode: '0750'

@@ -1,0 +1,27 @@
+tls:
+  certificates:
+    - certFile: /ssl/cert.pem
+      keyfile: /ssl/privkey.pem
+#       stores:
+#         - default
+#   stores:
+#     default:
+#       defaultCertificate:
+#         certFile: /ssl/live/{{ homecentr_root_domain }}/cert.pem
+#         keyfile: /ssl/live/{{ homecentr_root_domain }}/privkey.pem
+
+http:
+  routers:
+    api:
+      tls: true
+      rule: "Host(`ingress.{{ homecentr_root_domain }}`)"
+      entrypoints:
+        - websecure
+      service: api@internal
+
+    metrics:
+      tls: true
+      rule: Host(`ingress-metrics.{{ homecentr_root_domain }}`)
+      entrypoints:
+        - websecure
+      service: prometheus@internal

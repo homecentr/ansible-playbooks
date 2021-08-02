@@ -7,7 +7,10 @@ services:
     environment:
       PUID: "{{ container_uid | mandatory }}"
       PGID: "{{ container_gid | mandatory }}"
-      CERTBOT_ARGS: "--email {{ certbot_acme_email | mandatory }} --dns-cloudflare --dns-cloudflare-credentials /secrets/cloudflare.ini --no-eff-email -d *.{{ root_domain }}{% if certbot_use_staging %} --staging{% endif %}"
+      CERTBOT_ARGS: "--email {{ certbot_acme_email | mandatory }} --dns-cloudflare --dns-cloudflare-credentials /secrets/cloudflare.ini --no-eff-email -d *.{{ homecentr_root_domain }}{% if certbot_use_staging %} --staging{% endif %}"
+      CERTS_GID: "{{ sslcert_readers_group_id }}"
     volumes:
-      - "{{ homecentr_root | mandatory }}/certbot:/secrets:ro"
-      - "{{ homecentr_root | mandatory }}/ssl:/etc/letsencrypt"
+      - "{{ homecentr_root | mandatory }}/certbot/secrets:/secrets:ro"
+      - "{{ homecentr_root | mandatory }}/certbot/state:/etc/letsencrypt:rw"
+      - "{{ homecentr_root | mandatory }}/certbot/logs:/logs:rw"
+      - "{{ homecentr_root | mandatory }}/certbot/certs:/data"

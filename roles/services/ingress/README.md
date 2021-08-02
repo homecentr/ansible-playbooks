@@ -11,6 +11,7 @@ This role sets up stack with the [homecentr/traefik](https://github.com/homecent
 | container_uid | 9002 | UID the connector process in the container will use. The user will be created on the host machine if it does not exist. |
 | group_name | traefik | Name of the group the connector process in the container will use. |
 | user_name | traefik | Name of the user the connector process in the container will use. |
+# TODO: Prefix the vars !!!
 
 ## High availability & service criticality
 
