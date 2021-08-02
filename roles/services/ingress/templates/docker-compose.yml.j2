@@ -1,27 +1,17 @@
-version: '3.7'
+version: "3.7"
 services:
   proxy:
     image: homecentr/traefik:{{ docker_image_version | mandatory }}
     deploy:
       mode: global
-      # labels:
-      # - 'traefik.enable=true'
-      # - 'traefik.http.services.traefik.loadbalancer.server.port=888' # required by swarm but not used.
-      # - 'traefik.http.routers.api.rule=Host(`ingress.{{ homecentr_root_domain }}`)'
-      # - 'traefik.http.routers.api.entrypoints=websecure'
-      # - 'traefik.http.routers.api.tls=true'
-      # - 'traefik.http.routers.api.service=api@internal'
-      # - 'traefik.http.routers.metrics.rule=Host(`metrics.ingress.{{ homecentr_root_domain }}`)'
-      # - 'traefik.http.routers.metrics.entrypoints=web'
-      # - 'traefik.http.routers.metrics.service=prometheus@internal'
     ports:
       - "80:80/tcp"
       - "443:443/tcp"
     networks:
       - proxy
     environment:
-      PUID: 0 # "{{ container_uid | mandatory }}"
-      PGID: 0 #"{{ container_gid | mandatory }}"
+      PUID: "{{ container_uid | mandatory }}"
+      PGID: "{{ container_gid | mandatory }}"
       PUID_ADDITIONAL_GROUPS: "{{ docker_gid | mandatory }}:docker,{{ sslcert_readers_group_id | mandatory }}:{{ sslcert_readers_group_name }}"
       LOG_LEVEL: "{{ traefik_log_level | mandatory }}"
       TRAEFIK_PILOT_DASHBOARD: "false"
