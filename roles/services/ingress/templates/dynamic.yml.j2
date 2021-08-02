@@ -11,7 +11,21 @@ tls:
 #         keyfile: /ssl/live/{{ homecentr_root_domain }}/privkey.pem
 
 http:
+  middlewares:
+    redirect-to-https:
+      redirectScheme:
+        scheme: https
+        permanent: true
+
   routers:
+    http-catch-all:
+      rule: HostRegexp(`{any:.+}`)
+      entrypoints:
+        - web
+      middlewares:
+        - redirect-to-https
+      service: noop@internal
+
     api:
       tls: true
       rule: "Host(`ingress.{{ homecentr_root_domain }}`)"
