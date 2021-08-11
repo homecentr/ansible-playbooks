@@ -1,3 +1,0 @@
-# These variables are not user customizable, they are only centralized in one place to ease up maintenance
-ssl_certs_readers_group_name: ""
-ssl_certs_readers_group_id: ""

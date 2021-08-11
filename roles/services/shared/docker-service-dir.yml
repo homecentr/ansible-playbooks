@@ -2,7 +2,7 @@
 - name: Create root directory
   run_once: true
   file:
-    path: "{{ homecentr_root | mandatory }}"
+    path: "{{ root_dir | mandatory }}"
     state: directory
     owner: "root"
     group: "root"

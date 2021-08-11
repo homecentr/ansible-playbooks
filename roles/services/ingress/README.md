@@ -2,22 +2,25 @@
 
 This role sets up stack with the [homecentr/traefik](https://github.com/homecentr/docker-traefik) image. Traefik serves as an SSL termination proxy and allows publishing multiple web apps under different (sub)domains on the same IP/port.
 
-## Variables
+## Role Variables
 
 | Name | Default value | Description |
 |----|-----------|-----------|
-| docker_image_version | latest | Docker image tag in case you want to pin to a specific version |
-| container_gid | 9002 | GID the connector process in the container will use. The group will be created on the host machine if it does not exist. |
-| container_uid | 9002 | UID the connector process in the container will use. The user will be created on the host machine if it does not exist. |
-| group_name | traefik | Name of the group the connector process in the container will use. |
-| user_name | traefik | Name of the user the connector process in the container will use. |
-# TODO: Prefix the vars !!!
+| ingress_docker_image_version | latest | Docker image tag in case you want to pin to a specific version |
+| ingress_group_id | 9002 | GID the traefik process in the container will use. The group will be created on the host machine if it does not exist. |
+| ingress_group_name | traefik | Name of the group the traefik process in the container will use. |
+| ingress_user_id | 9002 | UID the traefik process in the container will use. The user will be created on the host machine if it does not exist. |
+| ingress_user_name | traefik | Name of the user the traefik process in the container will use. |
+| ingress_dashboard_domain | | Domain on which the Traefik dashboard should be published. |
+| ingress_certificates_group_id | | GID of a secondary group the traefik process should be a member of to be able to read the SSL certificates. |
 
-## High availability & service criticality
+## Availability
 
-**Downtime impact** - all services using ingress as reverse proxy/entrypoint are not available. Keeping the service running is considered **CRITICAL**.
+### Downtime impact on the user
+Downtime of ingress effectively cuts the users off all services which are published through ingress and the service is therefore considered **CRITICAL**.
 
-**Resiliency strategy** - the service is running on all nodes of swarm cluster and the DNS to all services should be set as multi-answer. I.e. the DNS server will return IP addresses of all nodes in the cluster. The browser automatically failover to the next address if the first one does not work.
+### High availability strategy
+The traefik container runs on all nodes of swarm cluster and the DNS to all services should be set as multi-answer. I.e. the DNS server will return IP addresses of all nodes in the cluster. Browsers automatically failover to the next address if the first one does not work. This may be visible to the user until the browser realizes it should failover to the next ip but without an external load balancer it's the best option available.
 
 ## Data resiliency
 

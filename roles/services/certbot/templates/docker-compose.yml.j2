@@ -1,16 +1,16 @@
 version: '3.7'
 services:
   wildcard:
-    image: homecentr/certbot:{{ docker_image_version | mandatory }}
+    image: homecentr/certbot:{{ certbot_docker_image_version }}
     deploy:
       mode: replicated
     environment:
-      PUID: "{{ container_uid | mandatory }}"
-      PGID: "{{ container_gid | mandatory }}"
-      CERTBOT_ARGS: "--email {{ certbot_acme_email | mandatory }} --dns-cloudflare --dns-cloudflare-credentials /secrets/cloudflare.ini --no-eff-email -d *.{{ homecentr_root_domain }}{% if certbot_use_staging %} --staging{% endif %}"
-      CERTS_GID: "{{ sslcert_readers_group_id }}"
+      PUID: "{{ certbot_user_id }}"
+      PGID: "{{ certbot_group_id }}"
+      CERTBOT_ARGS: "--email {{ certbot_acme_email }} --dns-cloudflare --dns-cloudflare-credentials /secrets/cloudflare.ini --no-eff-email -d {{ certbot_certificate_domain }}{% if certbot_use_staging %} --staging{% endif %}"
+      CERTS_GID: "{{ certbot_cert_readers_group_id }}"
     volumes:
-      - "{{ homecentr_root | mandatory }}/certbot/secrets:/secrets:ro"
-      - "{{ homecentr_root | mandatory }}/certbot/state:/etc/letsencrypt:rw"
-      - "{{ homecentr_root | mandatory }}/certbot/logs:/logs:rw"
-      - "{{ homecentr_root | mandatory }}/certbot/certs:/data"
+      - "{{ certbot_root_dir }}/secrets:/secrets:ro"
+      - "{{ certbot_root_dir }}/state:/etc/letsencrypt:rw"
+      - "{{ certbot_root_dir }}/logs:/logs:rw"
+      - "{{ certbot_root_dir }}/certs:/data"

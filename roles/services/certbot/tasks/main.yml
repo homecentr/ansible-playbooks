@@ -1,43 +1,38 @@
 ---
-# Create groups and users
-- name: Create 'sslcert-readers' group
-  group:
-    gid: "{{ sslcert_readers_group_id }}"
-    name: "{{ sslcert_readers_group_name }}"
-    state: present
+- name: "Validate variables"
+  fail:
+    msg: "Required variable {{item}} has not been provided"
+  when: vars[item] is undefined
+  loop:
+    - certbot_docker_image_version
+    - certbot_group_id
+    - certbot_group_name
+    - certbot_user_id
+    - certbot_user_name
+    - certbot_use_staging
+    - certbot_cert_readers_group_name
+    - certbot_cert_readers_group_id
+    - certbot_root_dir
+    - certbot_acme_email
+    - certbot_cloudflare_api_token
+    - certbot_certificate_domain
 
-- import_tasks: ../../shared/docker-service-iam.yml
+- import_tasks: ./iam.yml
 
-# Create directories required for Docker volumes
-- import_tasks: ../../shared/docker-service-dir.yml
-  vars:
-    service_name: "certbot"
-    subdirs:
-      - state
-      - logs
-      - secrets
-
-- name: Create 'ssl' directory
+- import_tasks: ./dirs.yml
   run_once: true
-  file:
-    path: "{{ homecentr_root | mandatory }}/certbot/certs"
-    state: directory
-    owner: "{{ container_uid | string }}"
-    group: "{{ sslcert_readers_group_name }}"
-    mode: '0740'
 
-# Create credential file
 - name: "Create cloudflare credential file"
   run_once: true
   template:
     src: cloudflare.ini.j2
-    dest: "{{ homecentr_root | mandatory }}/certbot/secrets/cloudflare.ini"
-    owner: "{{ container_uid | mandatory | string }}"
-    group: "{{ container_gid | mandatory | string }}"
+    dest: "{{ certbot_root_dir }}/secrets/cloudflare.ini"
+    owner: "{{ certbot_user_id | string }}"
+    group: "{{ certbot_group_id | string }}"
     mode: '0600'
 
 # Create Docker stack
-- name: "Certbot docker stack"
+- name: "Certbot Docker stack"
   run_once: true
   docker_stack:
     prune: yes
@@ -45,22 +40,13 @@
     compose:
       - "{{ lookup('template', 'docker-compose.yml.j2') | from_yaml }}"
 
-
 # Wait for the certificate to be issued so that other services can immediately use it
-- name: "Wait for certificate to be issued (fullchain.pem)"
+- name: "Wait for certificates to be issued"
+  with_items:
+    - fullchain.pem
+    - cert.pem
+    - privkey.pem
   wait_for:
-    path: "{{ homecentr_root }}/certbot/certs/fullchain.pem"
-    state: present
-    timeout: 120
-
-- name: "Wait for certificate to be issued (cert.pem)"
-  wait_for:
-    path: "{{ homecentr_root }}/certbot/certs/cert.pem"
-    state: present
-    timeout: 120
-
-- name: "Wait for certificate to be issued (privkey.pem)"
-  wait_for:
-    path: "{{ homecentr_root }}/certbot/certs/privkey.pem"
+    path: "{{ certbot_root_dir }}/certs/{{ item }}"
     state: present
     timeout: 120

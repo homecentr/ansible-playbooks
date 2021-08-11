@@ -2,13 +2,13 @@
 - name: "Create group '{{ group_name }}'"
   group:
     name: "{{ group_name }}"
-    gid: "{{ container_gid | mandatory }}"
+    gid: "{{ group_id | mandatory }}"
     state: present
 
 - name: "Create user '{{ user_name }}'"
   user:
     name: "{{ user_name }}"
-    uid: "{{ container_uid | mandatory }}"
+    uid: "{{ user_id | mandatory }}"
     group: "{{ group_name }}"
     groups: "{{ additional_groups | default([]) }}"
     state: present

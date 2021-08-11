@@ -1,5 +1,9 @@
 # Ansible playbooks
 
+## Overall architecture
+
+![](./homecentr.png)
+
 ## Structure and conventions
 
 ```yaml
@@ -51,9 +55,18 @@ The vault passphrase is committed into the repository because it is encrypted us
 
 To change the encrypted variables, use the `vault` script, for example `./vault edit lab` to edit secrets for the Lab environment.
 
-## Variable naming conventions
+## Ansible conventions
 
-| Variable prefix | Description |
-|-----------------|-------------------------|
-| `secret_` | Variable value is sensitive and should be stored in the `secrets` file for each environment. |
-| `homecentr_<role>_` | Customizable variable defined by one of the roles. |
+### Roles best practices
+- All variables used by the role must be prefixed with the role name
+- All variables must be mentioned in the `defaults/main.yml`. If it's not suitable set a default value for the variable, the variable should be mentioned in a commented line/block at the beginning of the file.
+- All variables should be validated using an `assert` module
+- Role tasks should be split across multiple files where it makes sense
+
+### Reusable task sets/files best practices
+- All variables must be name in a way not to colide with an existing role variable
+- All variables should be validated using an `assert` module
+
+### Playbook best practices
+- Variables should be named semantically
+- Variables which are coming from encrypted file(s) must be prefixed with `secret_`

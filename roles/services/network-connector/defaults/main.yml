@@ -1,5 +1,5 @@
-docker_image_version: "latest"
-container_gid: 9001
-container_uid: 9001
-group_name: "network-connector"
-user_name: "network-connector"
+network_connector_docker_image_version: "latest"
+network_connector_group_id: 9001
+network_connector_group_name: network-connector
+network_connector_user_id: 9001
+network_connector_user_name: network-connector

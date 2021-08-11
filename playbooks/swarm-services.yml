@@ -27,12 +27,23 @@
       - certbot
     import_role:
       name: "./roles/services/certbot"
+    vars:
+      certbot_root_dir: "{{ homecentr_root }}/certbot"
+      certbot_certificate_domain: "*.{{ homecentr_root_domain }}"
+      certbot_cert_readers_group_id: 9103
+      certbot_acme_email: "{{ secret_acme_email }}"
+      certbot_cloudflare_api_token: "{{ secret_cloudflare_api_token }}"
 
   - name: "HTTP/HTTPS Ingress"
     tags:
       - ingress
     import_role:
       name: "./roles/services/ingress"
+    vars:
+      ingress_certificates_group_id: 9103
+      ingress_certificates_dir: "{{ homecentr_root }}/certbot/certs"
+      ingress_root_dir: "{{ homecentr_root }}/ingress"
+      ingress_dashboard_domain: "ingress.{{ homecentr_root_domain }}"
 
   # - name: "DNS"
   #   tags:

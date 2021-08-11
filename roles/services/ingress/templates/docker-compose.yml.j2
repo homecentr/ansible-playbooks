@@ -1,7 +1,7 @@
 version: "3.7"
 services:
   proxy:
-    image: homecentr/traefik:{{ docker_image_version | mandatory }}
+    image: homecentr/traefik:{{ ingress_docker_image_version }}
     deploy:
       mode: global
     ports:
@@ -10,10 +10,10 @@ services:
     networks:
       - proxy
     environment:
-      PUID: "{{ container_uid | mandatory }}"
-      PGID: "{{ container_gid | mandatory }}"
-      PUID_ADDITIONAL_GROUPS: "{{ docker_gid | mandatory }}:docker,{{ sslcert_readers_group_id | mandatory }}:{{ sslcert_readers_group_name }}"
-      LOG_LEVEL: "{{ traefik_log_level | mandatory }}"
+      PUID: "{{ ingress_user_id }}"
+      PGID: "{{ ingress_group_id }}"
+      PUID_ADDITIONAL_GROUPS: "{{ docker_gid }}:docker,{{ ingress_certificates_group_id }}:ssl-read"
+      LOG_LEVEL: "{{ ingress_log_level }}"
       TRAEFIK_PILOT_DASHBOARD: "false"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
@@ -29,11 +29,11 @@ volumes:
   config:
     driver_opts:
       type: none
-      device: "{{ homecentr_root | mandatory }}/{{ ingress_service_name | mandatory }}"
+      device: "{{ ingress_root_dir }}"
       o: bind
 
   ssl:
     driver_opts:
       type: none
-      device: "{{ homecentr_root | mandatory }}/certbot/certs"
+      device: "{{ ingress_certificates_dir }}"
       o: bind
