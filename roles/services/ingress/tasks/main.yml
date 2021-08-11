@@ -10,7 +10,7 @@
     - ingress_docker_image_version
     - ingress_group_id
     - ingress_group_name
-    - ingress_user_uid
+    - ingress_user_id
     - ingress_user_name
     - ingress_log_level
     - ingress_root_dir

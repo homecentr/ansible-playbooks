@@ -27,8 +27,8 @@ http:
       service: api@internal
 
     metrics:
-      tls: true
-      rule: Host(`ingress-metrics.homecentr.io`) # TODO: This should be published on a different (internal) entrypoint
+      tls: false
+      rule: HostRegexp(`{any:.+}`)
       entrypoints:
-        - websecure
+        - metrics
       service: prometheus@internal

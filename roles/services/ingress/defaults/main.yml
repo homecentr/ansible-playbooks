@@ -6,6 +6,6 @@
 ingress_docker_image_version: "latest"
 ingress_group_id: 9002
 ingress_group_name: "ingress"
-ingress_user_uid: 9002
+ingress_user_id: 9002
 ingress_user_name: "ingress"
 ingress_log_level: error
