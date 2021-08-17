@@ -1,0 +1,150 @@
+---
+# Validation
+- name: "Validate variables"
+  fail:
+    msg: "Required variable {{item}} has not been provided"
+  when: vars[item] is undefined
+  loop:
+    - portainer_domain
+    - portainer_docker_image_version
+    - portainer_agent_docker_image_version
+    - portainer_group_id
+    - portainer_group_name
+    - portainer_user_id
+    - portainer_user_name
+    - portainer_root_dir
+    - portainer_agent_secret
+    - portainer_admin_password
+    - portainer_oauth_authorize_endpoint_url
+    - portainer_oauth_token_endpoint_url
+    - portainer_oauth_logout_url
+    - portainer_oauth_client_id
+    - portainer_oauth_client_secret
+    - portainer_oauth_user_profile_endpoint_url
+    - portainer_oauth_user_profile_user_id_field
+    - portainer_session_duration
+
+# IAM
+- name: "Create group '{{ portainer_group_name }}'"
+  group:
+    name: "{{ portainer_group_name }}"
+    gid: "{{ portainer_group_id }}"
+    state: present
+
+- name: "Create user '{{ portainer_user_name }}'"
+  user:
+    name: "{{ portainer_user_name }}"
+    uid: "{{ portainer_user_id }}"
+    group: "{{ portainer_group_name }}"
+    groups:
+      - docker
+    state: present
+
+- name: Create portainer directories
+  run_once: true
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ portainer_user_id | string }}"
+    group: "{{ portainer_group_id | string }}"
+    mode: 0750
+  loop:
+    - "{{ portainer_root_dir }}"
+    - "{{ portainer_root_dir }}/secrets"
+    - "{{ portainer_root_dir }}/state"
+
+- name: Create admin password file
+  copy:
+    content: "{{ portainer_admin_password }}"
+    dest: "{{ portainer_root_dir }}/secrets/admin-password.bcrypt"
+    owner: "{{ portainer_user_id | string }}"
+    group: "{{ portainer_group_id | string }}"
+    mode: 0750
+    force: yes
+
+# Docker
+- name: Docker stack
+  run_once: true
+  docker_stack:
+    prune: yes
+    name: homecentr-portainer
+    compose:
+      - "{{ lookup('template', 'docker-compose.yml.j2') | from_yaml }}"
+
+- name: Wait for Portainer to start
+  run_once: true
+  uri:
+    url: "https://127.0.0.1/api/status"
+    headers:
+      Host: "{{ portainer_domain }}"
+    status_code: "200"
+    method: "GET"
+    validate_certs: no
+    return_content: no
+    force: yes
+  register: portainer_health
+  until: portainer_health.status == 200
+  retries: 60
+  delay: 3
+
+- name: Generate authentication token
+  uri:
+    url: "https://127.0.0.1/api/auth"
+    headers:
+      Host: "{{ portainer_domain }}"
+    method: POST
+    body_format: json
+    body: '{"Username": "admin", "Password": "{{ portainer_admin_password }}"}'
+    return_content: yes
+    validate_certs: no
+    force: yes
+  register: portainer_auth_token
+
+- name: Configure OAuth authentication
+  uri:
+    url: "https://127.0.0.1/api/settings"
+    headers:
+      Host: "{{ portainer_domain }}"
+      Authorization: "{{ (portainer_auth_token.content|from_json).jwt }}"
+    method: PUT
+    body_format: json
+    body: >-
+      {
+        "authenticationMethod": 3,
+        "enableTelemetry": false,
+        "userSessionTimeout": "{{ portainer_session_duration }}",
+        "oauthSettings": {
+          "AccessTokenURI": "{{ portainer_oauth_token_endpoint_url }}",
+          "AuthorizationURI": "{{ portainer_oauth_authorize_endpoint_url }}",
+          "ClientID": "{{ portainer_oauth_client_id }}",
+          "ClientSecret": "{{ portainer_oauth_client_secret }}",
+          "LogoutURI": "{{ portainer_oauth_logout_url }}",
+          "OAuthAutoCreateUsers": true,
+          "RedirectURI": "https://{{ portainer_domain }}",
+          "ResourceURI": "{{ portainer_oauth_user_profile_endpoint_url }}",
+          "SSO": true,
+          "Scopes": "openid email",
+          "UserIdentifier": "{{ portainer_oauth_user_profile_user_id_field }}"
+        }
+      }
+    validate_certs: no
+    force: yes
+
+- name: Add admin users
+  uri:
+    url: "https://127.0.0.1/api/users"
+    headers:
+      Host: "{{ portainer_domain }}"
+      Authorization: "{{ (portainer_auth_token.content|from_json).jwt }}"
+    method: POST
+    status_code: [200, 409] # 409 = Conflict in case the user already exists
+    body_format: json
+    body: >-
+      {
+        "username": "{{ item }}",
+        "role": 1
+      }
+    validate_certs: no
+    force: yes
+  when: portainer_oauth_admin_users is defined
+  loop: "{{ portainer_oauth_admin_users }}"

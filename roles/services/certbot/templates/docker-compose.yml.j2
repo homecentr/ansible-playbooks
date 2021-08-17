@@ -1,7 +1,7 @@
 version: '3.7'
 services:
   wildcard:
-    image: homecentr/certbot:{{ certbot_docker_image_version }}
+    image: ghcr.io/homecentr/certbot:{{ certbot_docker_image_version }}
     deploy:
       mode: replicated
     environment:

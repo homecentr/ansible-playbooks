@@ -23,7 +23,6 @@
     group: "{{ network_connector_group_name }}"
     state: present
 
-
 - name: Network Connector stack
   run_once: true
   docker_stack:

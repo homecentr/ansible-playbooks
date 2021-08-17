@@ -7,3 +7,4 @@ docker_macvlan_iprange: 10.1.3.160/28 # 10.1.3.161 - 10.1.3.174
 homecentr_root: /var/homecentr
 sslcert_readers_group_id: 9501
 homecentr_root_domain: lab.homecentr.io
+azure_ad_tenant_id: 53174009-29d5-4c20-8bd0-0e2b2b0de6a8

@@ -4,7 +4,6 @@
   become: true
   become_method: sudo
   tasks:
-
   - name: "Create local Docker macvlan network on all nodes"
     docker_network:
       name: "{{ docker_macvlan_network }}"
@@ -44,6 +43,26 @@
       ingress_certificates_dir: "{{ homecentr_root }}/certbot/certs"
       ingress_root_dir: "{{ homecentr_root }}/ingress"
       ingress_dashboard_domain: "ingress.{{ homecentr_root_domain }}"
+
+  - name: "Portainer"
+    tags:
+      - portainer
+    import_role:
+      name: "./roles/services/portainer"
+    vars:
+      portainer_root_dir: "{{ homecentr_root }}/portainer"
+      portainer_domain: "portainer.{{ homecentr_root_domain }}"
+      portainer_agent_secret: "{{ secret_portainer_agent_secret }}"
+      portainer_admin_password: "{{ secret_portainer_admin_password }}"
+      portainer_oauth_authorize_endpoint_url: "https://login.microsoftonline.com/{{ azure_ad_tenant_id }}/oauth2/v2.0/authorize"
+      portainer_oauth_token_endpoint_url: "https://login.microsoftonline.com/{{ azure_ad_tenant_id }}/oauth2/v2.0/token"
+      portainer_oauth_user_profile_endpoint_url: "https://graph.microsoft.com/oidc/userinfo"
+      portainer_oauth_user_profile_user_id_field: "email"
+      portainer_oauth_logout_url: "https://login.microsoftonline.com/{{ azure_ad_tenant_id }}/oauth2/v2.0/logout?post_logout_redirect_uri=https%3A%2F%2F{{ portainer_domain | urlencode }}"
+      portainer_oauth_client_id: "{{ secret_portainer_oauth_client_id }}"
+      portainer_oauth_client_secret: "{{ secret_portainer_oauth_client_secret }}"
+      portainer_oauth_admin_users:
+        - me@lholota.com
 
   # - name: "DNS"
   #   tags:

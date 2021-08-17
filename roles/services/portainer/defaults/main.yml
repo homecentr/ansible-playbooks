@@ -1,0 +1,15 @@
+# portainer_domain
+# portainer_admin_password
+# portainer_oauth_authorize_endpoint_url
+# portainer_oauth_token_endpoint_url
+# portainer_oauth_logout_url
+# portainer_oauth_client_id
+# portainer_oauth_client_secret
+# portainer_oauth_user_profile_endpoint_url
+portainer_docker_image_version: latest
+portainer_agent_docker_image_version: latest
+portainer_group_id: 9004
+portainer_group_name: portainer
+portainer_user_id: 9004
+portainer_user_name: portainer
+portainer_session_duration: 720h
