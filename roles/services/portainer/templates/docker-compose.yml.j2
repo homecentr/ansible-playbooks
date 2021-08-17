@@ -22,7 +22,7 @@ services:
     environment:
       PUID: "{{ portainer_user_id }}"
       PGID: "{{ portainer_group_id }}"
-      PORTAINER_ARGS: "-H tcp://tasks.agent:9001 --tlsskipverify --admin-password-file /secrets/admin-password.bcrypt"
+      PORTAINER_ARGS: "-H tcp://tasks.agent:9001 --tlsskipverify --admin-password-file /secrets/admin.password"
       AGENT_SECRET: "{{ portainer_agent_secret }}"
       WAIT_FOR_NS_RECORD: "tasks.agent"
       WAIT_FOR_NS_RECORD_TIMEOUT: 60

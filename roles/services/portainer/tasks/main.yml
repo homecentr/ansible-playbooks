@@ -56,7 +56,7 @@
 - name: Create admin password file
   copy:
     content: "{{ portainer_admin_password }}"
-    dest: "{{ portainer_root_dir }}/secrets/admin-password.bcrypt"
+    dest: "{{ portainer_root_dir }}/secrets/admin.password"
     owner: "{{ portainer_user_id | string }}"
     group: "{{ portainer_group_id | string }}"
     mode: 0750

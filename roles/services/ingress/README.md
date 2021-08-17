@@ -6,13 +6,19 @@ This role sets up stack with the [homecentr/traefik](https://github.com/homecent
 
 | Name | Default value | Description |
 |----|-----------|-----------|
+| ingress_certificates_dir | | Path to the directory where SSL certificates are stored (usually `<certbot_root_dir>/certs`) |
+| ingress_certificates_group_id | | GID of a secondary group the traefik process should be a member of to be able to read the SSL certificates. |
+| ingress_dashboard_domain | | Domain on which the Traefik dashboard should be published. |
 | ingress_docker_image_version | latest | Docker image tag in case you want to pin to a specific version |
 | ingress_group_id | 9002 | GID the traefik process in the container will use. The group will be created on the host machine if it does not exist. |
-| ingress_group_name | traefik | Name of the group the traefik process in the container will use. |
+| ingress_group_name | ingress | Name of the group the traefik process in the container will use. |
+| ingress_log_level | `error` | Log level of the traefik container, valid values are defined in [Traefik's docs](https://doc.traefik.io/traefik/observability/logs/#level). |
+| ingress_root_dir | | Root directory where ingress containers will store their data. |
 | ingress_user_id | 9002 | UID the traefik process in the container will use. The user will be created on the host machine if it does not exist. |
-| ingress_user_name | traefik | Name of the user the traefik process in the container will use. |
-| ingress_dashboard_domain | | Domain on which the Traefik dashboard should be published. |
-| ingress_certificates_group_id | | GID of a secondary group the traefik process should be a member of to be able to read the SSL certificates. |
+| ingress_user_name | ingress | Name of the user the traefik process in the container will use. |
+
+## Auth
+TODO: TBA when centralized SSO middleware is available.
 
 ## Availability
 
