@@ -1,0 +1,31 @@
+---
+# Validation
+- name: "Validate variables"
+  fail:
+    msg: "Required variable {{item}} has not been provided"
+  when: vars[item] is undefined
+  loop:
+    - auth_domain
+    - auth_root_dir
+    - auth_cookie_secret
+    - auth_oauth_client_id
+    - auth_oauth_client_secret
+    - auth_oauth_root_url
+
+- name: Create auth directory
+  run_once: true
+  file:
+    path: "{{ auth_root_dir }}"
+    state: directory
+    # owner: "{{ ingress_user_id | string }}"
+    # group: "{{ ingress_group_id | string }}"
+    mode: 0750
+
+# Docker
+- name: Docker stack
+  run_once: true
+  docker_stack:
+    prune: yes
+    name: homecentr-auth
+    compose:
+      - "{{ lookup('template', 'docker-compose.yml.j2') | from_yaml }}"

@@ -1,0 +1,22 @@
+# See detailed configuration settings : https://www.pomerium.com/docs/reference/
+
+authenticate_service_url: https://{{ auth_domain }}
+
+idp_provider: oidc
+idp_scopes: openid email
+idp_provider_url: {{ auth_oauth_root_url }}
+idp_client_id: {{ auth_oauth_client_id }}
+idp_client_secret: {{ auth_oauth_client_secret }}
+
+# Generate 256 bit random keys  e.g. `head -c32 /dev/urandom | base64`
+cookie_secret: {{ auth_cookie_secret }}
+
+routes:
+  - from: https://verify.lab.homecentr.io.io
+    to: http://verify
+    policy:
+      - allow:
+          or:
+            - email:
+                is: me@lholota.com
+    pass_identity_headers: true

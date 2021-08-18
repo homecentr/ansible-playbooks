@@ -13,13 +13,11 @@
 | portainer_domain | | Domain which should be used to publish the Portainer through [ingress](../ingress) |
 | portainer_group_id | `9004` | GID the portainer server and portainer agent processes will use in their containers. The group will be created on the host machine if it does not exist. |
 | portainer_group_name | `portainer` | Name of the group the portainer server and portainer agent processes will use in their containers. The group will be created on the host machine if it does not exist. |
-| portainer_oauth_authorize_endpoint_url | | URL to the `authorize` endpoint of your OAuth provider. |
-| portainer_oauth_token_endpoint_url | | URL to the `token` endpoint of your OAuth provider. |
-| portainer_oauth_logout_url | | URL to the `logout` endpoint of your OAuth provider. |
-| portainer_oauth_user_profile_endpoint_url | | URL to the `user profile` endpoint which returns data about the user like for example an e-mail. |
-| portainer_oauth_user_profile_user_id_field | | Name of the field from the payload returned by the `user profile` endpoint Portainer will use as a user ID. This ID **must** be unique to each user and **must not** contain spaces (Portainer does not allow this). |
-| portainer_oauth_client_id | | Client ID of the application. You get this when you register the client/application with your OAuth provider. |
-| portainer_oauth_client_secret | | Client secret of the application. You get this when you register the client/application with your OAuth provider. The secret should be regularly rotated for security reasons. |
+| portainer_oidc_client_id | | Client ID of the application. You get this when you register the client/application with your OAuth provider. |
+| portainer_oidc_client_secret | | Client secret of the application. You get this when you register the client/application with your OAuth provider. The secret should be regularly rotated for security reasons. |
+| portainer_oidc_scopes | `openid email` | Scopes to request in the OIDC flow. The scopes must allow fetching user_info endpoint to fetch the field specified in `portainer_oidc_user_info_user_id_field`. |
+| portainer_oidc_url | | Root URL of the OIDC provider. You can verify it by checking `{portainer_oidc_url}/.well-known/openid-configuration` works and returns a JSON document. |
+| portainer_oidc_user_info_user_id_field | `email` | Name of the field from the payload returned by the `user profile` endpoint Portainer will use as a user ID. This ID **must** be unique to each user and **must not** contain spaces (Portainer does not allow this). |
 | portainer_root_dir | | Root directory where portainer containers will store their data. |
 | portainer_session_duration | `720h` | Time before the users are forced to sign in again. Valid format is for example `8h` for 8 hours. |
 | portainer_user_id | `9004` | UID the portainer server and portainer agent processes will use in their containers. The user will be created on the host machine if it does not exist. | 

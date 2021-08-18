@@ -15,14 +15,20 @@
     - portainer_root_dir
     - portainer_agent_secret
     - portainer_admin_password
-    - portainer_oauth_authorize_endpoint_url
-    - portainer_oauth_token_endpoint_url
-    - portainer_oauth_logout_url
-    - portainer_oauth_client_id
-    - portainer_oauth_client_secret
-    - portainer_oauth_user_profile_endpoint_url
-    - portainer_oauth_user_profile_user_id_field
+    - portainer_oidc_url
+    - portainer_oidc_scopes
+    - portainer_oidc_client_id
+    - portainer_oidc_client_secret
+    - portainer_oidc_user_info_user_id_field
     - portainer_session_duration
+
+# Fetch OIDC Discovery
+- name: Fetch discovery document
+  ansible.builtin.uri:
+    url: "{{ portainer_oidc_url }}/.well-known/openid-configuration"
+    method: GET
+    return_content: yes
+  register: portainer_oidc_discovery
 
 # IAM
 - name: "Create group '{{ portainer_group_name }}'"
@@ -114,17 +120,17 @@
         "enableTelemetry": false,
         "userSessionTimeout": "{{ portainer_session_duration }}",
         "oauthSettings": {
-          "AccessTokenURI": "{{ portainer_oauth_token_endpoint_url }}",
-          "AuthorizationURI": "{{ portainer_oauth_authorize_endpoint_url }}",
-          "ClientID": "{{ portainer_oauth_client_id }}",
-          "ClientSecret": "{{ portainer_oauth_client_secret }}",
-          "LogoutURI": "{{ portainer_oauth_logout_url }}",
+          "AccessTokenURI": "{{ (portainer_oidc_discovery.content|from_json).token_endpoint }}",
+          "AuthorizationURI": "{{ (portainer_oidc_discovery.content|from_json).authorization_endpoint }}",
+          "ClientID": "{{ portainer_oidc_client_id }}",
+          "ClientSecret": "{{ portainer_oidc_client_secret }}",
+          "LogoutURI": "{{ (portainer_oidc_discovery.content | from_json).end_session_endpoint ~ '?post_logout_redirect_uri=' ~ (('https://' ~ portainer_domain) | urlencode) if (portainer_oidc_discovery.content | from_json).end_session_endpoint is defined else '' }}",
           "OAuthAutoCreateUsers": true,
           "RedirectURI": "https://{{ portainer_domain }}",
-          "ResourceURI": "{{ portainer_oauth_user_profile_endpoint_url }}",
+          "ResourceURI": "{{ (portainer_oidc_discovery.content|from_json).userinfo_endpoint }}",
           "SSO": true,
-          "Scopes": "openid email",
-          "UserIdentifier": "{{ portainer_oauth_user_profile_user_id_field }}"
+          "Scopes": "{{ portainer_oidc_scopes }}",
+          "UserIdentifier": "{{ portainer_oidc_user_info_user_id_field }}"
         }
       }
     validate_certs: no
@@ -146,5 +152,5 @@
       }
     validate_certs: no
     force: yes
-  when: portainer_oauth_admin_users is defined
-  loop: "{{ portainer_oauth_admin_users }}"
+  when: portainer_admin_users is defined
+  loop: "{{ portainer_admin_users }}"
