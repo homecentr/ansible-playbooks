@@ -5,21 +5,37 @@
     msg: "Required variable {{item}} has not been provided"
   when: vars[item] is undefined
   loop:
+    - auth_docker_image_version
+    - auth_group_id
+    - auth_group_name
+    - auth_user_id
+    - auth_user_name
     - auth_domain
     - auth_root_dir
     - auth_cookie_secret
-    - auth_oauth_client_id
-    - auth_oauth_client_secret
-    - auth_oauth_root_url
+    - auth_oidc_client_id
+    - auth_oidc_client_secret
+    - auth_oidc_url
+    - auth_signing_key
+    - auth_enable_verification_app
 
 - name: Create auth directory
   run_once: true
   file:
     path: "{{ auth_root_dir }}"
     state: directory
-    # owner: "{{ ingress_user_id | string }}"
-    # group: "{{ ingress_group_id | string }}"
+    owner: "{{ auth_user_id | string }}"
+    group: "{{ auth_group_id | string }}"
     mode: 0750
+
+- name: Pomerium config
+  template:
+    src: 'config.yml.j2'
+    dest: "{{ auth_root_dir }}/config.yml"
+    owner: "{{ auth_user_id | string }}"
+    group: "{{ auth_group_id | string }}"
+    force: yes
+    mode: 0440
 
 # Docker
 - name: Docker stack

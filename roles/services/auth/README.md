@@ -6,7 +6,21 @@
 
 | Name | Default value | Description |
 |------|---------------|-------------|
-| TBA | |
+    - auth_docker_image_version
+    - auth_group_id
+    - auth_group_name
+    - auth_user_id
+    - auth_user_name
+    - auth_domain
+    - auth_root_dir
+    - auth_cookie_secret
+    - auth_oidc_client_id
+    - auth_oidc_client_secret
+    - auth_oidc_url
+    - auth_signing_key
+    - auth_enable_verification_app
+
+# openssl ecparam  -genkey  -name prime256v1  -noout | base64
 
 ## Availability
 

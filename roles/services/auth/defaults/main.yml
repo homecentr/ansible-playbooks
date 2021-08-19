@@ -1,0 +1,7 @@
+---
+auth_docker_image_version: "latest"
+auth_group_id: 9005
+auth_group_name: "auth"
+auth_user_id: 9005
+auth_user_name: "auth"
+auth_enable_verification_app: false

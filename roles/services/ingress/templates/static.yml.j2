@@ -3,6 +3,8 @@ accessLog: {}
 entryPoints:
   web:
     address: ":80"
+    forwardedHeaders:
+      insecure: true
 
   websecure:
     address: ":443"
