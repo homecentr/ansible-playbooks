@@ -52,12 +52,16 @@
     vars:
       auth_root_dir: "{{ homecentr_root }}/auth"
       auth_domain: "auth.{{ homecentr_root_domain }}"
-      auth_oidc_url: "https://login.microsoftonline.com/{{ azure_ad_tenant_id }}/v2.0"
       auth_cookie_secret: "{{ secret_auth_cookie_secret }}"
-      auth_oidc_client_id: "{{ secret_auth_oidc_client_id }}"
-      auth_oidc_client_secret: "{{ secret_auth_oidc_client_secret }}"
       auth_signing_key: "{{ secret_auth_signing_key }}"
-      auth_enable_verification_app: no
+      auth_idp_type: azure
+      auth_idp_url: "https://login.microsoftonline.com/{{ azure_ad_tenant_id }}/v2.0"
+      auth_idp_client_id: "{{ secret_auth_idp_client_id }}"
+      auth_idp_client_secret: "{{ secret_auth_idp_client_secret }}"
+      auth_idp_service_account: 
+        client_id: "{{ secret_auth_idp_client_id }}"
+        client_secret: "{{ secret_auth_idp_client_secret }}"
+        directory_id: "{{ azure_ad_tenant_id }}"
 
   - name: "Portainer"
     tags:

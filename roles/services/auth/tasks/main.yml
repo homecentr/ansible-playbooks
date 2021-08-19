@@ -13,11 +13,11 @@
     - auth_domain
     - auth_root_dir
     - auth_cookie_secret
-    - auth_oidc_client_id
-    - auth_oidc_client_secret
-    - auth_oidc_url
     - auth_signing_key
-    - auth_enable_verification_app
+    - auth_idp_type
+    - auth_idp_url
+    - auth_idp_client_id
+    - auth_idp_client_secret
 
 - name: Create auth directory
   run_once: true

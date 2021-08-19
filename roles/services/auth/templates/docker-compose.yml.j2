@@ -20,26 +20,6 @@ services:
       PGID: "{{ auth_group_id }}"
     volumes:
       - "{{ auth_root_dir }}:/config:ro"
-      
-{% if auth_enable_verification_app is sameas true %}
-  verify:
-    image: pomerium/verify:latest
-    deploy:
-      mode: replicated
-      replicas: 1
-      labels:
-       - traefik.enable=true
-       - traefik.http.routers.auth-verify.tls=true
-       - traefik.http.routers.auth-verify.entrypoints=websecure
-       - traefik.http.routers.auth-verify.rule=Host(`verify.lab.homecentr.io`)
-       - traefik.http.routers.auth-verify.middlewares=test-auth@docker
-       - "traefik.http.middlewares.test-auth.forwardauth.authResponseHeadersRegex=.*"
-       - traefik.http.middlewares.test-auth.forwardauth.address=http://fwdauth:80
-       - traefik.http.middlewares.test-auth.forwardauth.trustForwardHeader=true
-       - traefik.http.services.auth-verify.loadbalancer.server.port=80
-    networks:
-      ingress:
-{% endif %}
 
 networks:
   ingress:
