@@ -1,2 +1,0 @@
-ansible_host: 10.1.2.32
-docker_macvlan_interface: ens18

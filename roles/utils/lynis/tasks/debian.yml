@@ -1,7 +1,7 @@
 - name: "Add Lynis repository apt key"
   ansible.builtin.apt_key:
     keyserver: keyserver.ubuntu.com
-    id: C80E383C3DE9F082E01391A0366C67DE91CA5D5F
+    id: 013baa07180c50a7101097ef9de922f1c2fde6c4
 
 - name: "Install apt https support"
   ansible.builtin.apt:
