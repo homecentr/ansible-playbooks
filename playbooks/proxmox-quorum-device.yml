@@ -1,8 +1,0 @@
----
-- name: "Proxmox Virtual Environment Quorum Device configuration"
-  hosts: proxmox_quorum_devices
-  become: true
-  become_method: sudo
-  tasks:
-    - include_tasks: ./shared/chrony.yml
-    - include_tasks: ./shared/ssh.yml

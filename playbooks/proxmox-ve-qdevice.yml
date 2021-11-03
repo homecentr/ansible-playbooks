@@ -1,0 +1,101 @@
+---
+- name: "Proxmox VE - QDevice configuration"
+  hosts: proxmox_quorum_devices
+  become: true
+  become_method: sudo
+  tasks:
+    - name: "Configure Chrony"
+      tags:
+        - chrony
+      include_tasks: ./shared/chrony.yml
+
+    - name: "Install apport (to collect crash logs)"
+      tags:
+        - apport
+      ansible.builtin.apt:
+        name: apport
+        update_cache: yes
+
+    - name: "Ensure the apport service is running"
+      tags:
+        - apport
+      ansible.builtin.service:
+        name: apport
+        state: started
+
+    - name: "Install corosync packages"
+      tags:
+        - qdevice
+      ansible.builtin.apt:
+        name:
+          - corosync-qdevice
+          - corosync-qnetd
+        update_cache: yes
+
+    - name: "Configure SSH (with enabled root and password auth)"
+      tags:
+        - ssh
+        - qdevice
+      include_tasks: ./shared/ssh.yml
+      vars:
+        ssh_allow_root_login: "yes"
+        ssh_allow_password_auth: "yes" # Both are later disabled below
+
+    - name: "Register QDevice IP as fact"
+      tags:
+        - qdevice
+      set_fact:
+        qdevice_ip: "{{ ansible_default_ipv4.address }}"
+
+    - name: "Generate root password"
+      tags:
+        - qdevice
+      set_fact:
+        root_pass: "{{ lookup('password', '/dev/null length=40 chars=ascii_letters') }}"
+
+
+    - name: Debug
+      debug:
+        msg: "Root pass: {{ root_pass }}"
+
+    - name: "Set root user's password"
+      tags:
+        - qdevice
+      ansible.builtin.user:
+        name: root
+        password: "{{ root_pass }}"
+
+- name: "Proxmox VE - QDevice support and registration on PVE nodes"
+  hosts: proxmox_nodes
+  become: true
+  become_method: sudo
+  tasks:
+    - name: "Install corosync packages"
+      tags:
+        - qdevice
+      ansible.builtin.apt:
+        name:
+          - corosync-qdevice
+          - corosync-qnetd
+        update_cache: yes
+
+    - name: "Register QDevice to quorum"
+      run_once: true
+      tags:
+        - qdevice
+      command:
+        cmd: "pvecm qdevice setup {{ ansible_default_ipv4.address }}"
+
+- name: "Proxmox VE - QDevice configuration"
+  hosts: proxmox_quorum_devices
+  become: true
+  become_method: sudo
+  tasks:
+    - name: "Configure SSH - disable root and password auth"
+      tags:
+        - ssh
+        - qdevice
+      include_tasks: ./shared/ssh.yml
+      vars:
+        ssh_allow_root_login: "no"
+        ssh_allow_password_auth: "no"
