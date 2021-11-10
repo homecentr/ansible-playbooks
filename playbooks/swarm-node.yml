@@ -40,38 +40,9 @@
       import_role:
         name: "./roles/utils/lynis"
 
-    # Workaround: Docker dependencies conflict with podman's dependencies which are installed by default with CentOS
-    - name: "Uninstall packages conflicting with Docker on CentOS 8"
-      yum:
-        name:
-          - podman
-          - buildah
-        state: absent
-
     - name: "Install Docker"
-      include_role:
-        name: "geerlingguy.docker"
-      vars:
-        docker_edition: 'ce'
-        docker_install_compose: true
-        docker_service_state: started
-        docker_users:
-          - "{{ admin_user }}"
-
-    - name: "Unify Docker group GID across the cluster"
-      group:
-        gid: "{{ docker_gid | mandatory }}"
-        name: "docker"
-
-    - name: "Install Docker pip module"
-      include_role:
-        name: geerlingguy.pip
-      vars:
-        pip_package: python3-pip
-        pip_install_packages:
-        - name: docker
-        - name: jsondiff
-        - name: pyyaml
+      import_role:
+        name: "./roles/utils/docker"
 
     - name: "Set up Docker Swarm"
       tags:

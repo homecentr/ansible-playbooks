@@ -1,2 +1,12 @@
 ansible_python_interpreter: "/usr/bin/python3"
 admin_user: lholota
+docker_gid: 9000
+
+smtp_server_host: smtp.sendgrid.net
+smtp_server_port: 587
+smtp_username: apikey
+smtp_domain: homecentr.io
+smtp_allowed_cidrs:
+  - "10.1.2.16" # pve1 iDRAC
+  - "10.1.2.21" # pve2 iDRAC
+  - "127.0.0.1"
