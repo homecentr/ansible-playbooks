@@ -10,6 +10,7 @@
       state: present
 
   - name: "Configure smtpd.conf"
+    register: smtpd_conf
     copy:
       dest: /etc/smtpd.conf
       mode: 0600
@@ -33,6 +34,7 @@
           match from src <allowed_sources> mail-from regex "^.*@{{ smtp_domain.replace(".", "\.") }}$" for any action "relay"
 
   - name: Restart the service
+    when: smtpd_conf.changed
     service:
       name: opensmtpd
       state: restarted

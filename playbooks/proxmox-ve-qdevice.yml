@@ -4,28 +4,7 @@
   become: true
   become_method: sudo
   tasks:
-    - name: "Configure Chrony"
-      tags:
-        - chrony
-      include_tasks: ./shared/chrony.yml
-
-    - name: "Install apport (to collect crash logs)"
-      tags:
-        - apport
-      ansible.builtin.apt:
-        name: apport
-        update_cache: yes
-
-    - name: "Ensure the apport service is running"
-      tags:
-        - apport
-      ansible.builtin.service:
-        name: apport
-        state: started
-
     - name: "Install corosync packages"
-      tags:
-        - qdevice
       ansible.builtin.apt:
         name:
           - corosync-qdevice
@@ -33,34 +12,30 @@
         update_cache: yes
 
     - name: "Configure SSH (with enabled root and password auth)"
+      import_role:
+        name: geerlingguy.security
       tags:
         - ssh
-        - qdevice
-      include_tasks: ./shared/ssh.yml
       vars:
-        ssh_allow_root_login: "yes"
-        ssh_allow_password_auth: "yes" # Both are later disabled below
+        security_ssh_password_authentication: "yes" # Both are later disabled below by re-running the ssh playbook of the affected hosts
+        security_ssh_permit_root_login: "yes"
+        security_ssh_usedns: "no"
+        security_ssh_permit_empty_password: "no"
+        security_ssh_challenge_response_auth: "no"
+        security_ssh_gss_api_authentication: "no"
+        security_ssh_x11_forwarding: "no"
+        security_sudoers_passwordless:
+        - "{{ admin_user }}"
 
     - name: "Register QDevice IP as fact"
-      tags:
-        - qdevice
       set_fact:
         qdevice_ip: "{{ ansible_default_ipv4.address }}"
 
     - name: "Generate root password"
-      tags:
-        - qdevice
       set_fact:
         root_pass: "{{ lookup('password', '/dev/null length=40 chars=ascii_letters') }}"
 
-
-    - name: Debug
-      debug:
-        msg: "Root pass: {{ root_pass }}"
-
     - name: "Set root user's password"
-      tags:
-        - qdevice
       ansible.builtin.user:
         name: root
         password: "{{ root_pass }}"
@@ -71,8 +46,6 @@
   become_method: sudo
   tasks:
     - name: "Install corosync packages"
-      tags:
-        - qdevice
       ansible.builtin.apt:
         name:
           - corosync-qdevice
@@ -81,21 +54,14 @@
 
     - name: "Register QDevice to quorum"
       run_once: true
-      tags:
-        - qdevice
       command:
-        cmd: "pvecm qdevice setup {{ ansible_default_ipv4.address }}"
+        cmd: "pvecm qdevice setup {{ hostvars[item].ansible_default_ipv4.address }}"
+      with_items: "{{ groups['proxmox_quorum_devices'] }}"
+      register: qdevice_registration
+      failed_when: "qdevice_registration.rc != 0 and qdevice_registration.stderr is not search('QDevice already configured')"
+      changed_when: "qdevice_registration.rc == 0"
 
-- name: "Proxmox VE - QDevice configuration"
-  hosts: proxmox_quorum_devices
-  become: true
-  become_method: sudo
-  tasks:
-    - name: "Configure SSH - disable root and password auth"
-      tags:
-        - ssh
-        - qdevice
-      include_tasks: ./shared/ssh.yml
-      vars:
-        ssh_allow_root_login: "no"
-        ssh_allow_password_auth: "no"
+# Re-run ssh playbook to make sure the temporary changes have been reverted
+- import_playbook: ssh.yml
+  vars:
+    hostlist: proxmox_quorum_devices

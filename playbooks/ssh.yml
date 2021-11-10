@@ -1,6 +1,6 @@
 ---
 - name: "SSH hardening & basic set up"
-  hosts: all
+  hosts: "{{ hostlist | default('all') }}" # To allow calling this playbook from other playbooks on a specified set of hosts
   become: true
   become_method: sudo
   tasks:
