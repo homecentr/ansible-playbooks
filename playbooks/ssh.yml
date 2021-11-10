@@ -1,0 +1,39 @@
+---
+- name: "SSH hardening & basic set up"
+  hosts: all
+  become: true
+  become_method: sudo
+  tasks:
+  - name: "Create user {{ admin_user | mandatory }}"
+    ansible.builtin.user:
+      name: "{{ admin_user | mandatory }}"
+      shell: /bin/bash
+      state: present
+
+  - name: "Download public keys from GitHub"
+    uri:
+      url: "https://github.com/{{ admin_user_github_name | default(admin_user) }}.keys"
+      return_content: yes
+    register: public_keys
+
+  - name: Set authorized key
+    authorized_key:
+      user: "{{ admin_user | mandatory }}"
+      state: present
+      key: "{{ public_keys['content'] }}"
+
+  - name: "SSH hardening"
+    import_role:
+      name: geerlingguy.security
+    tags:
+      - ssh
+    vars:
+      security_ssh_password_authentication: "no"
+      security_ssh_permit_root_login: "no"
+      security_ssh_usedns: "no"
+      security_ssh_permit_empty_password: "no"
+      security_ssh_challenge_response_auth: "no"
+      security_ssh_gss_api_authentication: "no"
+      security_ssh_x11_forwarding: "no"
+      security_sudoers_passwordless:
+      - "{{ admin_user }}"

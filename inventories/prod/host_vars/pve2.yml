@@ -1,1 +1,2 @@
 ansible_host: 10.1.2.22
+ups_name: eaton1

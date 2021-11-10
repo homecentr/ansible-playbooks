@@ -4,23 +4,27 @@
   become: true
   become_method: sudo
   tasks:
-    - name: "Use pve apt repository which does not require subscription"
-      import_role: 
-        name: "./roles/utils/pve-apt-repository"
+    - name: Remove enteprise repository
+      ansible.builtin.file:
+        path: /etc/apt/sources.list.d/pve-enterprise.list
+        state: absent
+
+    - name: Add free (no-subscription) repository
+      register: add_nosub
+      copy:
+        dest: /etc/apt/sources.list.d/pve-no-subscription.list
+        content: |
+          deb http://download.proxmox.com/debian/pve buster pve-no-subscription
+
+    - name: Update apt sources
+      ansible.builtin.apt:
+        update_cache: yes
+      when: add_nosub.changed
 
     - name: "Install sudo"
       package:
         name: sudo
         state: present
-
-    - import_tasks: ./shared/chrony.yml
-    - import_tasks: ./shared/ssh.yml
-
-    - name: "Install Lynis"
-      tags:
-        - lynis
-      import_role:
-        name: "./roles/utils/lynis"
 
     - name: "Set up port redirect (443 -> 8006)"
       tags:
@@ -33,6 +37,3 @@
         to_ports: 8006
         jump: REDIRECT
         comment: "Enable Proxmox admin interface on 443"
-
-
-    # TODO: Configure glusterfs cluster
