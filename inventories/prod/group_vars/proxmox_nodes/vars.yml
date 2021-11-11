@@ -1,2 +1,2 @@
 ---
-test_var: "Hello, world from PVE!"
+ssh_permit_root_login: "yes" # It is required for VNC proxy between the nodes

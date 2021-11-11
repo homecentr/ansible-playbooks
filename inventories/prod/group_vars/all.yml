@@ -1,5 +1,8 @@
 ansible_python_interpreter: "/usr/bin/python3"
 admin_user: lholota
+
+ssh_permit_root_login: "no"
+
 docker_gid: 9000
 
 server_nodes_domain: homecentr.io
