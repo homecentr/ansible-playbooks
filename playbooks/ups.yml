@@ -54,7 +54,7 @@
       register: upsd_users
       copy:
         dest: /etc/nut/upsd.users
-        force: yes # allowfrom = {{ hostvars[slave]['ansible_host'] }}
+        force: yes
         mode: 0640
         owner: root
         group: nut
@@ -70,6 +70,7 @@
 
           [{{ slave }}]
           password = {{ secret_ups_slave_password }}
+          allowfrom = {{ hostvars[slave]['ansible_host'] }}
           {% endfor %}
 
     - name: "Configure UPS Tools Monitor"
@@ -145,9 +146,11 @@
         owner: root
         group: nut
         content: |
-          MONITOR {{ ups_name }}@{{ hostvars[groups['ups_masters'][0]]['ansible_host'] }} 1 {{ inventory_hostname  }} {{ secret_ups_slave_password }} slave
+          MONITOR {{ ups_name }}@{{ groups['ups_masters'][0] }} 1 {{ inventory_hostname }} {{ secret_ups_slave_password }} slave
           POWERDOWNFLAG /etc/killpower
           SHUTDOWNCMD "/sbin/shutdown -h now"
+
+      # Note PVE nodes may need a delay so that the VMs have time to shutdown (e.g. 3 minutes)
 
     - name: "Restart the monitor service"
       service:

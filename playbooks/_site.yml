@@ -1,13 +1,16 @@
 ---
-#- import_playbook: ssh.yml
-#- import_playbook: chrony.yml
-#- import_playbook: proxmox-ve-node.yml
+- import_playbook: hosts.yml
+- import_playbook: ssh.yml
+- import_playbook: chrony.yml
+- import_playbook: proxmox-ve-node.yml
 - import_playbook: proxmox-ve-qdevice.yml
-#- import_playbook: smtp-relay.yml
-#- import_playbook: ups.yml
+- import_playbook: smtp-relay.yml
+- import_playbook: ups.yml
 
 
 
 
+# TODO: swarm-cluster
+# TODO: swarm-dns (playbook per service?)
 
 # TODO: Lynis

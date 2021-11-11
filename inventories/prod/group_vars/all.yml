@@ -2,6 +2,8 @@ ansible_python_interpreter: "/usr/bin/python3"
 admin_user: lholota
 docker_gid: 9000
 
+server_nodes_domain: homecentr.io
+
 smtp_server_host: smtp.sendgrid.net
 smtp_server_port: 587
 smtp_username: apikey
