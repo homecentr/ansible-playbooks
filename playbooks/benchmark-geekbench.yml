@@ -1,6 +1,6 @@
 ---
 - name: "Geekbench installation"
-  hosts: benchmarkable_nodes
+  hosts: x86_64_nodes
   become: true
   become_method: sudo
   tasks:

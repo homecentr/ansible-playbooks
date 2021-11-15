@@ -1,11 +1,15 @@
 ---
 - import_playbook: hosts.yml
+- import_playbook: user-admin.yml
+- import_playbook: user-root.yml
 - import_playbook: ssh.yml
 - import_playbook: chrony.yml
 - import_playbook: proxmox-ve-node.yml
 - import_playbook: proxmox-ve-qdevice.yml
 - import_playbook: smtp-relay.yml
 - import_playbook: ups.yml
+- import_playbook: benchmark-geekbench.yml
+- import_playbook: benchmark-iperf.yml
 
 
 

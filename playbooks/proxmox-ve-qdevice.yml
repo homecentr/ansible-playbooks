@@ -31,15 +31,6 @@
       set_fact:
         qdevice_ip: "{{ ansible_default_ipv4.address }}"
 
-    - name: "Generate root password"
-      set_fact:
-        root_pass: "{{ lookup('password', '/dev/null length=40 chars=ascii_letters') }}"
-
-    - name: "Set root user's password"
-      ansible.builtin.user:
-        name: root
-        password: "{{ root_pass }}"
-
 - name: "Proxmox VE - QDevice support and registration on PVE nodes"
   hosts: proxmox_nodes
   become: true

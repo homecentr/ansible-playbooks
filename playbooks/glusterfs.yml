@@ -1,0 +1,16 @@
+---
+- name: "Install and configure glusterfs"
+  hosts: proxmox_nodes
+  become: true
+  become_method: sudo
+  tasks:
+  # Create ZFS volume(s)
+
+  - name: "Add glusterfs apt repository"
+    # ...
+
+  - name: "Install glusterfs"
+    # ...
+
+  # Build cluster (run once)
+  # Create volumes and bricks - note: the ZFS Volumes/datasets should be already mounted to /mnt/user-data and /mnt/service-data
