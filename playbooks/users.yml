@@ -22,6 +22,7 @@
       user: "{{ admin_user | mandatory }}"
       state: present
       key: "{{ public_keys['content'] }}"
+    when: not ansible_check_mode
 
 - name: "Manage root user"
   hosts: all

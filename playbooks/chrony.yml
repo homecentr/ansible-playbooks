@@ -5,12 +5,8 @@
   become_method: sudo
   tasks:
   - name: "Set up ntp/chrony"
-    tags:
-      - chrony
     import_role:
       name: oasis_roles.system.chrony
 
   - name: "Force chrony to sync time immediately"
-    tags:
-      - chrony
     command: chronyc makestep

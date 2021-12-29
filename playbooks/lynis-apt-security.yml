@@ -1,0 +1,15 @@
+---
+- name: "Install recommended apt tools"
+  hosts: proxmox_nodes 
+  become: true
+  become_method: sudo
+  tasks:
+  - name: Install debsums
+    package:
+      name: debsums
+      state: present
+
+  - name: Install apt-show-versions
+    package:
+      name: apt-show-versions
+      state: present

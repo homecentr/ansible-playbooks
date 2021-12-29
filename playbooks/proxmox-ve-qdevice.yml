@@ -11,11 +11,10 @@
           - corosync-qnetd
         update_cache: yes
 
+    # Root ssh is allowed globally because of vnc proxy, server should have the certificates to sign in (?)
     - name: "Configure SSH (with enabled root and password auth)"
       import_role:
         name: geerlingguy.security
-      tags:
-        - ssh
       vars:
         security_ssh_password_authentication: "yes" # Both are later disabled below by re-running the ssh playbook of the affected hosts
         security_ssh_permit_root_login: "yes"

@@ -7,3 +7,4 @@ roles:
   version: 3.0.0
 - name: geerlingguy.pip
 - name: geerlingguy.security
+- name: geerlingguy.clamav

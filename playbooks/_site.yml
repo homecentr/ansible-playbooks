@@ -1,9 +1,15 @@
 ---
 - import_playbook: hosts.yml
-- import_playbook: user-admin.yml
-- import_playbook: user-root.yml
+- import_playbook: users.yml
 - import_playbook: ssh.yml
 - import_playbook: chrony.yml
+- import_playbook: clamav.yml
+- import_playbook: lynis.yml
+- import_playbook: lynis-apt-security.yml
+- import_playbook: lynis-compilers.yml
+- import_playbook: lynis-file-permissions.yml
+- import_playbook: lynis-kernel-modules.yml
+- import_playbook: lynis-rkhunter.yml
 - import_playbook: proxmox-ve-node.yml
 - import_playbook: proxmox-ve-qdevice.yml
 - import_playbook: smtp-relay.yml

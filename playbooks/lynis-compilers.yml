@@ -1,0 +1,11 @@
+---
+- name: "Restrict access compilers to increase security"
+  hosts: proxmox_nodes
+  become: true
+  become_method: sudo
+  tasks:
+  - name: "/usr/bin/as"
+    file:
+      path: "/usr/bin/as"
+      state: file
+      mode: 0700

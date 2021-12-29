@@ -1,2 +1,2 @@
 ---
-ssh_permit_root_login: "yes" # It is required for VNC proxy between the nodes
+ssh_permit_root_login: "without-password" # It is required for VNC proxy between the nodes

@@ -1,0 +1,21 @@
+- name: "Restrict file permissions"
+  hosts: all 
+  become: true
+  become_method: sudo
+  tasks:
+  - name: "Admin user's home directory"
+    file:
+      path: "/home/{{ admin_user }}"
+      state: directory
+      owner: "{{ admin_user }}"
+      group: "{{ admin_user }}"
+      mode: 0750
+
+  - name: "Cron directories"
+    file:
+      path: "/etc/cron.{{ item }}"
+      mode: 0700
+    with_items:
+      - hourly
+      - weekly
+      - monthly

@@ -1,0 +1,29 @@
+---
+- name: "Disable unused network kernel modules"
+  hosts: proxmox_nodes
+  become: true
+  become_method: sudo
+  vars:
+    modules:
+    - dccp
+    - sctp
+    - rds
+    - tipc
+  tasks:
+  - name: "Disable loading kernel module"
+    copy:
+      dest: /etc/modprobe.d/{{ item }}.conf
+      owner: root
+      group: root
+      mode: 0644
+      content: "install {{ item }} /bin/true"
+    with_items: "{{ modules }}"
+
+  - name: "Blacklist module"
+    lineinfile:
+      create: yes
+      path: /etc/modprobe.d/blacklist.conf
+      state: present
+      regexp: '^blacklist {{ item }}$'
+      line: 'blacklist {{ item }}'
+    with_items: "{{ modules }}"
