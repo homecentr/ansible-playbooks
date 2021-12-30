@@ -1,11 +1,17 @@
 ---
 - name: "Restrict access compilers to increase security"
-  hosts: proxmox_nodes
+  hosts: x86_64_nodes
   become: true
   become_method: sudo
   tasks:
+  - name: Check that the /usr/bin/as exists
+    stat:
+      path: /usr/bin/as
+    register: stat_result
+
   - name: "/usr/bin/as"
     file:
       path: "/usr/bin/as"
       state: file
       mode: 0700
+    when: stat_result.stat.exists

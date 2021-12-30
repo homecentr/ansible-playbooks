@@ -1,6 +1,6 @@
 ---
 - name: "Disable unused network kernel modules"
-  hosts: proxmox_nodes
+  hosts: x86_64_nodes
   become: true
   become_method: sudo
   vars:

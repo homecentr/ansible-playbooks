@@ -4,12 +4,6 @@
   become: true
   become_method: sudo
   tasks:
-    - name: "Install EPEL on RHEL hosts"
-      yum:
-        name: epel-release
-        state: present
-      when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
-
     - name: "Install s-nail"
       package:
         name: s-nail
@@ -24,7 +18,6 @@
             state: absent
           - regexp: '^.*LocalSocket .*$'
             line: 'LocalSocket {{ clamav_daemon_localsocket }}'
-            # TODO: Excluded dirs (different on each server/group)
         clamav_daemon_state: stopped
         clamav_daemon_enabled: false
         clamav_freshclam_daemon_state: started
@@ -65,5 +58,16 @@
 
           exit 0
 
-    # TODO: Create cron entry
-    # TODO: Cron to remove old log files
+    - name: Create a cron job for ClamAV scan
+      ansible.builtin.cron:
+        name: "ClamAV scan"
+        minute: "0"
+        hour: "{{ clamav_cron_hour }}"
+        job: "bash /usr/bin/scan-clamav"
+
+    - name: Create a cron job to delete old ClamAV scan logs
+      ansible.builtin.cron:
+        name: "ClamAV log files clean up"
+        minute: "0"
+        hour: "{{ (clamav_cron_hour + 1) % 24 }}"
+        job: "find /var/log/clamav/clamav-* -mtime +{{ clamav_log_retention_days }} -exec rm {} \\;"

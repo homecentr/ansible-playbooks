@@ -1,5 +1,5 @@
 ---
-- name: "Docker Swarm Cluster Nodes Configuration"
+- name: "SMTP Relay set up"
   hosts: smtp_relays
   become: true
   become_method: sudo

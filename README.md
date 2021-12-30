@@ -36,9 +36,23 @@ vault                         # Script to ease up managing the encrypted secrets
 - **Lab** - test environment used to develop the roles. Usually running locally inside of HyperV on a developer workstation.
 - **Production** - the actual deployment used by the users.
 
+## Initiating a new node
+Please make sure the node complies with the following requirements:
+- non admin user is created
+- sudo is installed
+- non admin user is allowed to sudo
+- node is registered in the inventory
+
+Run the `access` playbook against the new node using the command below:
+```bash
+./apply <environment> access -k -K --user <user> --limit <node-name>
+```
+
+After running this command, you can connect and/or apply other playbooks using your **SSH key**.
+
 ## Applying playbooks
 
-Simply run the followin bash command:
+Simply run the following bash command:
 
 ```
 ./apply <environment> <playbook>

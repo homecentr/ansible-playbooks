@@ -1,6 +1,6 @@
 ---
 - name: "Install recommended apt tools"
-  hosts: proxmox_nodes 
+  hosts: x86_64_nodes 
   become: true
   become_method: sudo
   tasks:

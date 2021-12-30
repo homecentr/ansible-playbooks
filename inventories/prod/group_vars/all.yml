@@ -1,5 +1,8 @@
 ansible_python_interpreter: "/usr/bin/python3"
+
 admin_user: lholota
+admin_user_ssh_keys:
+- ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC3pB3TCUmH11RBDQWIV76eU1Q67yCrgLe4qUY4Ry2KE1lyX4T2xoDtEpFk2Zl4w9fO7ZqmHXAiF/+CdGIopeTOR95h30RJvqgBUuI2HJafJlhpA8YRrhaRldMPPPN/smMW3iFOXO3gGKxCLFv0O3labaYr0P60XA0PCjmpVt46sROp8jPtbmVrLZNvuLhoJvBPY/GQWJbYiU3cKEeAvKKJUCAdfjVMGGq/SOhR339Bh/DotvZkwt4vIBHQWub58VpUznLEOKjc1A3+CyYvs4bHc9SyLvbKr17gu/QWX+mkz2EZWxzuLob6zDt6X5xCCWcWsgvjUs+cXowRec0g+TQSuqVGg3gLHXSDQrTe56SmSxH50jAGMSOG3sKpnTyVrEMnjJrZfd1hpo5g/4xZFhCKEgfHF1ES1FBmH5NG5Q8IziY/y4jzblQl+p6T7tf4XfwUiItDjOQTXDYVb2rB5uHJUmsWL5arLuJk6mKPA4lxcUU3q3YYiPrKPz5AwgQTYc6o/7BmC1dguzkyJTD9zplG3cIBqAdzhuTr5PU0QLjqWM8cIwQnkMioZWZWmLIq7NxZ5pkj2F2KKQmurMwS5C/m7jrSja1u7S60XjiGEmXqErzIT61iZLeuZ/yw/2ipxhG7JxwO5a2HFglogAXbd9VOAqGsIUhYY3TYSchVIrzpcQ==
 
 ssh_permit_root_login: "no"
 
@@ -16,8 +19,10 @@ smtp_anonymous_allowed_cidrs:
   - "10.1.2.21" # pve2 iDRAC
   - "127.0.0.1"
 
+clamav_cron_hour: 1
 clamav_scanned_dirs:
 - /tmp
+clamav_log_retention_days: 10
 clamav_alert_smtp_recipient: "clamav@techcentr-ops.eu.opsgenie.net"
 clamav_alert_smtp_sender: "clamav@homecentr.io"
 clamav_alert_smtp_host: "smtp.sendgrid.net"

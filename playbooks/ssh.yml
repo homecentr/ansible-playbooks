@@ -9,7 +9,7 @@
       name: geerlingguy.security
     vars:
       security_ssh_password_authentication: "no"
-      security_ssh_permit_root_login: "{{ ssh_permit_root_login }}" # TODO: Can this be replaced by WITHOUT_PASSWORD on proxmox nodes?
+      security_ssh_permit_root_login: "{{ ssh_permit_root_login }}"
       security_ssh_usedns: "no"
       security_ssh_permit_empty_password: "no"
       security_ssh_challenge_response_auth: "no"
