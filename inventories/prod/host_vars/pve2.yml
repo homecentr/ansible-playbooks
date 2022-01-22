@@ -1,2 +1,6 @@
 ansible_host: 10.1.2.22
 ups_name: eaton1
+
+gluster_hostname: gfs-pve2
+gluster_ip: 10.1.7.22
+gluster_has_direct_connection: yes

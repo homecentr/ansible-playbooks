@@ -1,0 +1,4 @@
+ansible_host: 10.1.2.30
+
+gluster_hostname: gfs-minion
+gluster_has_direct_connection: no

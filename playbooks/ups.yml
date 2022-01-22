@@ -129,6 +129,7 @@
         state: present
 
     - name: "Configure Network UPS Tools Mode"
+      register: nut_conf
       copy:
         dest: /etc/nut/nut.conf
         mode: 0640
@@ -139,6 +140,7 @@
           MODE=netclient
 
     - name: "Configure Network UPS Tools Monitor"
+      register: upsmon_conf
       copy:
         dest: /etc/nut/upsmon.conf
         force: yes
@@ -156,3 +158,4 @@
       service:
         name: nut-monitor
         state: restarted
+      when: upsmon_conf.changed or nut_conf.changed

@@ -23,7 +23,7 @@ clamav_cron_hour: 1
 clamav_scanned_dirs:
 - /tmp
 clamav_log_retention_days: 10
-clamav_alert_smtp_recipient: "clamav@techcentr-ops.eu.opsgenie.net"
+clamav_alert_smtp_recipient: "clavmav@homecentr.eu.pagerduty.com"
 clamav_alert_smtp_sender: "clamav@homecentr.io"
 clamav_alert_smtp_host: "smtp.sendgrid.net"
 clamav_alert_smtp_port: 587

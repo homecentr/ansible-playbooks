@@ -1,16 +1,67 @@
 ---
 - name: "Install and configure glusterfs"
-  hosts: proxmox_nodes
+  hosts: glusterfs_nodes
   become: true
   become_method: sudo
   tasks:
-  # Create ZFS volume(s)
+  - name: Add host entries for other glusterfs nodes (with and without domain)
+    lineinfile:
+      path: /etc/hosts
+      regexp: "^{{ (gluster_has_direct_connection and hostvars[item].gluster_ip is defined) | ternary(hostvars[item].gluster_ip, hostvars[item].ansible_host) | replace('.', '\\.') }}\\W+{{ hostvars[item]['gluster_hostname'] | replace('.', '\\.') }}\\W+{{ hostvars[item]['gluster_hostname'] | replace('.', '\\.') }}\\.{{ server_nodes_domain | replace('.', '\\.') }}\\W*$"
+      line: "{{ (gluster_has_direct_connection and hostvars[item].gluster_ip is defined) | ternary(hostvars[item].gluster_ip, hostvars[item].ansible_host) }} {{ hostvars[item].gluster_hostname }} {{ hostvars[item]['gluster_hostname'] }}.{{ server_nodes_domain }}"
+    with_items: "{{ groups['glusterfs_nodes'] }}"
 
-  - name: "Add glusterfs apt repository"
-    # ...
+  - name: Get Debian version ID
+    shell: grep 'VERSION_ID=' /etc/os-release | cut -d '=' -f 2 | tr -d '"'
+    register: debid
+    when: ansible_distribution == 'Debian'
 
-  - name: "Install glusterfs"
-    # ...
+  - name: Get Debian version
+    shell: "grep 'VERSION=' /etc/os-release | grep -Eo '[a-z]+'"
+    register: debver
+    when: ansible_distribution == 'Debian'
 
-  # Build cluster (run once)
-  # Create volumes and bricks - note: the ZFS Volumes/datasets should be already mounted to /mnt/user-data and /mnt/service-data
+  - name: Get architecture
+    shell: "dpkg --print-architecture"
+    register: debarch
+    when: ansible_distribution == 'Debian'
+
+  - name: Add GlusterFS apt repository key
+    ansible.builtin.apt_key:
+      url: https://download.gluster.org/pub/gluster/glusterfs/9/rsa.pub
+      state: present
+    when: ansible_distribution == 'Debian'
+
+  - name: Add Gluster repository into sources
+    ansible.builtin.apt_repository:
+      repo: deb https://download.gluster.org/pub/gluster/glusterfs/LATEST/Debian/{{ debid.stdout | trim }}/{{ debarch.stdout | trim }}/apt {{ debver.stdout | trim }} main
+      state: present
+    when: ansible_distribution == 'Debian'
+
+  - name: Install Ubuntu dependencies
+    apt:
+      name: software-properties-common
+      state: present
+    when: ansible_distribution == 'Ubuntu'
+
+  - name: Add Gluster repository into sources
+    ansible.builtin.apt_repository:
+      repo: ppa:gluster/glusterfs-10
+      state: present
+    when: ansible_distribution == 'Ubuntu'
+
+  - name: Install Gluster server
+    apt:
+      name: glusterfs-server
+      state: present
+      update_cache: yes
+
+  - name: Start the Gluster daemon
+    service:
+      name: glusterd
+      state: started
+
+  - name: Probe nodes
+    gluster.gluster.gluster_peer:
+      state: present
+      nodes: "{{ groups['glusterfs_nodes'] | map('extract', hostvars) | map(attribute='gluster_hostname') }}" # Probing self does not matter
