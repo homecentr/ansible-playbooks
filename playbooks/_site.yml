@@ -1,6 +1,7 @@
 ---
 - import_playbook: hosts.yml
 - import_playbook: access.yml
+- import_playbook: ssh-known-hosts.yml
 - import_playbook: ssh.yml
 - import_playbook: chrony.yml
 - import_playbook: clamav.yml
@@ -15,14 +16,11 @@
 - import_playbook: docker-cluster.yml
 - import_playbook: smtp-relay.yml
 - import_playbook: ups.yml
-
-
 - import_playbook: benchmark-geekbench.yml
 - import_playbook: benchmark-iperf.yml
-- import_playbook: gluster.yml
+- import_playbook: glusterfs.yml
 
 # TODO: Gluster
 
 
-# TODO: swarm-cluster
 # TODO: swarm-dns (playbook per service?)

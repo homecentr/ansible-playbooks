@@ -26,9 +26,13 @@
         security_sudoers_passwordless:
         - "{{ admin_user }}"
 
-    - name: "Register QDevice IP as fact"
+    - name: "Get QDevice ssh key"
+      command: "ssh-keyscan -t rsa {{ ansible_host }} | cut -d' ' -f 3"
+      register: qdevice_sshkey
+
+    - name: "Register QDevice ssh public key as fact"
       set_fact:
-        qdevice_ip: "{{ ansible_default_ipv4.address }}"
+        qdevice_ssh_key: "{{ qdevice_sshkey.stdout }}"
 
 - name: "Proxmox VE - QDevice support and registration on PVE nodes"
   hosts: proxmox_nodes
@@ -42,10 +46,16 @@
           - corosync-qnetd
         update_cache: yes
 
+    - name: "Add QDevice(s) to known hosts"
+      known_hosts:
+        path: /etc/ssh/ssh_known_hosts
+        name: "{{ hostvars[item].ansible_default_ipv4.address }}"
+        key: "{{ hostvars[item].qdevice_ssh_key }}"
+      with_items: "{{ groups['proxmox_quorum_devices'] }}"
+
     - name: "Register QDevice to quorum"
       run_once: true
-      command:
-        cmd: "pvecm qdevice setup {{ hostvars[item].ansible_default_ipv4.address }}"
+      command: "pvecm qdevice setup {{ hostvars[item].ansible_default_ipv4.address }}"
       with_items: "{{ groups['proxmox_quorum_devices'] }}"
       register: qdevice_registration
       failed_when: "qdevice_registration.rc != 0 and qdevice_registration.stderr is not search('QDevice already configured')"
