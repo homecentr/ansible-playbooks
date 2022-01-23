@@ -1,4 +1,5 @@
 ---
+- import_playbook: ssh-client-config.yml
 - import_playbook: hosts.yml
 - import_playbook: access.yml
 - import_playbook: ssh-known-hosts.yml

@@ -4,35 +4,19 @@
   become: true
   become_method: sudo
   tasks:
-    - name: "Install corosync packages"
+    - name: Install corosync packages
       ansible.builtin.apt:
         name:
           - corosync-qdevice
           - corosync-qnetd
         update_cache: yes
 
-    # Root ssh is allowed globally because of vnc proxy, server should have the certificates to sign in (?)
-    - name: "Configure SSH (with enabled root and password auth)"
-      import_role:
-        name: geerlingguy.security
-      vars:
-        security_ssh_password_authentication: "yes" # Both are later disabled below by re-running the ssh playbook of the affected hosts
-        security_ssh_permit_root_login: "yes"
-        security_ssh_usedns: "no"
-        security_ssh_permit_empty_password: "no"
-        security_ssh_challenge_response_auth: "no"
-        security_ssh_gss_api_authentication: "no"
-        security_ssh_x11_forwarding: "no"
-        security_sudoers_passwordless:
-        - "{{ admin_user }}"
-
-    - name: "Get QDevice ssh key"
-      command: "ssh-keyscan -t rsa {{ ansible_host }} | cut -d' ' -f 3"
-      register: qdevice_sshkey
-
-    - name: "Register QDevice ssh public key as fact"
-      set_fact:
-        qdevice_ssh_key: "{{ qdevice_sshkey.stdout }}"
+# Allow ssh to qdevice as root with password (this is reverted after the set up)
+- import_playbook: ssh.yml
+  vars:
+    hostlist: proxmox_quorum_devices
+    ssh_permit_root_login: "yes"
+    ssh_permit_password_auth: "yes"
 
 - name: "Proxmox VE - QDevice support and registration on PVE nodes"
   hosts: proxmox_nodes
@@ -46,20 +30,30 @@
           - corosync-qnetd
         update_cache: yes
 
-    - name: "Add QDevice(s) to known hosts"
-      known_hosts:
-        path: /etc/ssh/ssh_known_hosts
-        name: "{{ hostvars[item].ansible_default_ipv4.address }}"
-        key: "{{ hostvars[item].qdevice_ssh_key }}"
-      with_items: "{{ groups['proxmox_quorum_devices'] }}"
+    - name: "Install required pip module"
+      include_role:
+        name: geerlingguy.pip
+      vars:
+        pip_package: python3-pip
+        pip_install_packages:
+        - name: pexpect
 
     - name: "Register QDevice to quorum"
-      run_once: true
-      command: "pvecm qdevice setup {{ hostvars[item].ansible_default_ipv4.address }}"
+      expect:
+        command: "pvecm qdevice setup {{ hostvars[item].ansible_host }}"
+        echo: no
+        responses:
+          "root@\\d+\\.\\d+\\.\\d+\\.\\d+'s password:": "{{ secret_root_user_password }}"
       with_items: "{{ groups['proxmox_quorum_devices'] }}"
       register: qdevice_registration
-      failed_when: "qdevice_registration.rc != 0 and qdevice_registration.stderr is not search('QDevice already configured')"
-      changed_when: "qdevice_registration.rc == 0"
+      ignore_errors: yes # Ignore because failed_when can't access return code
+
+    - name: "Evaluate setup return code"
+      assert:
+        that:
+          # Either the command passed or it didn't pass because the device is already registered
+          - item.rc == 0 or (item.stdout is defined and item.stdout is search('QDevice already configured'))
+      with_items: "{{ qdevice_registration.results }}"
 
 # Re-run ssh playbook to make sure the temporary changes have been reverted
 - import_playbook: ssh.yml
