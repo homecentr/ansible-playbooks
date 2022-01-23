@@ -84,6 +84,7 @@
         content: |
           MONITOR eaton1@localhost 1 local_monitor {{ secret_ups_slave_password }} master
           POWERDOWNFLAG /etc/killpower
+          FINALDELAY 240
           SHUTDOWNCMD "/sbin/shutdown -h now"
 
     - name: "Configure Network UPS Tools Mode"
@@ -150,6 +151,7 @@
         content: |
           MONITOR {{ ups_name }}@{{ groups['ups_masters'][0] }} 1 {{ inventory_hostname }} {{ secret_ups_slave_password }} slave
           POWERDOWNFLAG /etc/killpower
+          FINALDELAY {{ ups_shutdown_delay_seconds }}
           SHUTDOWNCMD "/sbin/shutdown -h now"
 
       # Note PVE nodes may need a delay so that the VMs have time to shutdown (e.g. 3 minutes)

@@ -7,8 +7,8 @@
   - name: Add host entries for other glusterfs nodes (with and without domain)
     lineinfile:
       path: /etc/hosts
-      regexp: "^{{ (gluster_has_direct_connection and hostvars[item].gluster_ip is defined) | ternary(hostvars[item].gluster_ip, hostvars[item].ansible_host) | replace('.', '\\.') }}\\W+{{ hostvars[item]['gluster_hostname'] | replace('.', '\\.') }}\\W+{{ hostvars[item]['gluster_hostname'] | replace('.', '\\.') }}\\.{{ server_nodes_domain | replace('.', '\\.') }}\\W*$"
-      line: "{{ (gluster_has_direct_connection and hostvars[item].gluster_ip is defined) | ternary(hostvars[item].gluster_ip, hostvars[item].ansible_host) }} {{ hostvars[item].gluster_hostname }} {{ hostvars[item]['gluster_hostname'] }}.{{ server_nodes_domain }}"
+      regexp: "^{{ (gluster_has_direct_connection and hostvars[item].gluster_ip is defined) | ternary(hostvars[item].gluster_ip, hostvars[item].ansible_host) | replace('.', '\\.') }}\\W+{{ hostvars[item]['gluster_hostname'] | replace('.', '\\.') }}\\W+{{ hostvars[item]['gluster_fqdn'] | replace('.', '\\.') }}\\W*$"
+      line: "{{ (gluster_has_direct_connection and hostvars[item].gluster_ip is defined) | ternary(hostvars[item].gluster_ip, hostvars[item].ansible_host) }} {{ hostvars[item].gluster_hostname }} {{ hostvars[item]['fqdn'] }}"
     with_items: "{{ groups['glusterfs_nodes'] }}"
 
   - name: Get Debian version ID

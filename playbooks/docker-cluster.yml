@@ -1,0 +1,75 @@
+---
+- name: "Install Docker"
+  hosts: swarm_nodes
+  become: true
+  become_method: sudo
+  handlers:
+  - name: restart-node
+    reboot:
+      reboot_timeout: 10 * 60 # Wait up to 10 minutes for the host to start
+
+  tasks:
+  - name: Install Docker
+    import_role:
+      name: geerlingguy.docker
+    notify: restart-node
+    vars:
+      docker_edition: 'ce'
+      docker_users:
+        - "{{ admin_user }}"
+      docker_service_state: started
+      docker_install_compose: true
+      docker_compose_version: "1.29.2"
+      
+  - name: Unify docker group gid across nodes
+    ansible.builtin.group:
+      name: docker
+      state: present
+      gid: "{{ docker_gid }}"
+
+  - name: "Install Docker pip module"
+    include_role:
+      name: geerlingguy.pip
+    vars:
+      pip_package: python3-pip
+      pip_install_packages:
+      - name: docker
+      - name: docker-compose
+      - name: jsondiff
+      - name: pyyaml
+  
+  - name: "Create local Docker macvlan network on all nodes"
+    docker_network:
+      name: "{{ docker_macvlan_network }}"
+      driver: macvlan
+      driver_options:
+        parent: "{{ docker_macvlan_interface }}"
+      ipam_config:
+        - subnet: "{{ docker_macvlan_subnet }}"
+          gateway: "{{ docker_macvlan_gateway }}"
+          iprange: "{{ docker_macvlan_iprange }}"
+
+  - name: Find swarm init node
+    set_fact:
+      swarm_init_node: "{{ (groups['swarm_nodes'] | map('extract', hostvars) | map(attribute='ansible_hostname'))[0] }}"
+
+  - name: "Initialize swarm cluster with the first node from swarm_nodes grouo"
+    docker_swarm:
+      state: present
+      advertise_addr: "{{ ansible_host }}"
+    when: inventory_hostname == swarm_init_node
+    register: swarm_info
+
+  - name: "Join cluster with all nodes from swarm_nodes except for the first one"
+    docker_swarm:
+      state: join
+      advertise_addr: "{{ ansible_host }}"
+      remote_addrs: "{{ hostvars[swarm_init_node].ansible_host }}"
+      join_token: "{{ hostvars[swarm_init_node].swarm_info.swarm_facts.JoinTokens.Manager }}"
+    when: inventory_hostname != swarm_init_node
+
+  - name: "Set node labels"
+    docker_node:
+      hostname: "{{ inventory_hostname }}"
+      labels: "{{ docker_node_labels }}"
+    when: docker_node_labels is defined

@@ -1,5 +1,7 @@
 ansible_python_interpreter: "/usr/bin/python3"
 
+server_nodes_domain: homecentr.io
+
 admin_user: lholota
 admin_user_ssh_keys:
 - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC3pB3TCUmH11RBDQWIV76eU1Q67yCrgLe4qUY4Ry2KE1lyX4T2xoDtEpFk2Zl4w9fO7ZqmHXAiF/+CdGIopeTOR95h30RJvqgBUuI2HJafJlhpA8YRrhaRldMPPPN/smMW3iFOXO3gGKxCLFv0O3labaYr0P60XA0PCjmpVt46sROp8jPtbmVrLZNvuLhoJvBPY/GQWJbYiU3cKEeAvKKJUCAdfjVMGGq/SOhR339Bh/DotvZkwt4vIBHQWub58VpUznLEOKjc1A3+CyYvs4bHc9SyLvbKr17gu/QWX+mkz2EZWxzuLob6zDt6X5xCCWcWsgvjUs+cXowRec0g+TQSuqVGg3gLHXSDQrTe56SmSxH50jAGMSOG3sKpnTyVrEMnjJrZfd1hpo5g/4xZFhCKEgfHF1ES1FBmH5NG5Q8IziY/y4jzblQl+p6T7tf4XfwUiItDjOQTXDYVb2rB5uHJUmsWL5arLuJk6mKPA4lxcUU3q3YYiPrKPz5AwgQTYc6o/7BmC1dguzkyJTD9zplG3cIBqAdzhuTr5PU0QLjqWM8cIwQnkMioZWZWmLIq7NxZ5pkj2F2KKQmurMwS5C/m7jrSja1u7S60XjiGEmXqErzIT61iZLeuZ/yw/2ipxhG7JxwO5a2HFglogAXbd9VOAqGsIUhYY3TYSchVIrzpcQ==
@@ -7,17 +9,28 @@ admin_user_ssh_keys:
 ssh_permit_root_login: "no"
 
 docker_gid: 9000
+docker_macvlan_network: homecentr-services
+docker_macvlan_subnet: "10.1.2.0/24"
+docker_macvlan_gateway: "10.1.2.1"
+docker_macvlan_iprange: "10.1.2.128/26"
 
-server_nodes_domain: homecentr.io
+services_root_dir: /var/homecentr
 
-smtp_server_host: smtp.sendgrid.net
-smtp_server_port: 587
-smtp_username: apikey
-smtp_domain: homecentr.io
-smtp_anonymous_allowed_cidrs:
-  - "10.1.2.16" # pve1 iDRAC
-  - "10.1.2.21" # pve2 iDRAC
-  - "127.0.0.1"
+opensmtpd_relay_docker_image_tag: "1.0.0"
+opensmtpd_relay_service_name: smtp-relay
+opensmtpd_relay_network: "{{ docker_macvlan_network }}"
+opensmtpd_relay_ipv4_address: "10.1.2.128"
+opensmtpd_relay_service_uid: 9100
+opensmtpd_relay_service_gid: 9100
+opensmtpd_relay_smtp_host: smtp.sendgrid.net
+opensmtpd_relay_smtp_port: 587
+opensmtpd_relay_smtp_username: apikey
+opensmtpd_relay_smtp_password: "{{ secret_smtp_password }}"
+opensmtpd_relay_domain: homecentr.io
+opensmtpd_relay_anonymous_allowed_cidrs:
+  - "10.1.2.16/32" # pve1 iDRAC
+  - "10.1.2.21/32" # pve2 iDRAC
+  - "127.0.0.1/8"
 
 clamav_cron_hour: 1
 clamav_scanned_dirs:

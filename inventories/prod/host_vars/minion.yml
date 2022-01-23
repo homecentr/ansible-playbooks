@@ -1,4 +1,8 @@
 ansible_host: 10.1.2.30
 
+fqdn: minion.homecentr.io
+docker_macvlan_interface: enp1s0
+
 gluster_hostname: gfs-minion
+gluster_fqdn: gfs-minion.homecentr.io
 gluster_has_direct_connection: no

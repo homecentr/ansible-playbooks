@@ -4,37 +4,9 @@
   become: true
   become_method: sudo
   tasks:
-  - name: "Install opensmtpd"
-    package:
-      name: opensmtpd
-      state: present
-
-  - name: "Configure smtpd.conf"
-    register: smtpd_conf
-    copy:
-      dest: /etc/smtpd.conf
-      mode: 0600
-      owner: root
-      group: root
-      force: yes
-      content: |
-          # Listen on all interfaces (limited by the scope of Docker container so there is no point in filtering the interfaces)
-          listen on 0.0.0.0
-
-          # Only clients connecting from allowed CIDRs can send e-mails
-          table allowed_sources { {{ smtp_anonymous_allowed_cidrs | join(',') }} }
-
-          # SMTP Relay credentials
-          table secrets { secret-relay = "{{ smtp_username | mandatory }}:{{ secret_smtp_password | mandatory }}" }
-
-          # Define relay rule for all incoming e-mails
-          action "relay" relay host smtp+tls://secret-relay@{{ smtp_server_host | mandatory }}:{{ smtp_server_port | mandatory }} auth <secrets>
-
-          # Relay without authentication only e-mails from trusted IP addresses
-          match from src <allowed_sources> mail-from regex "^.*@{{ smtp_domain.replace(".", "\.") }}$" for any action "relay"
-
-  - name: Restart the service
-    when: smtpd_conf.changed
-    service:
-      name: opensmtpd
-      state: restarted
+  
+  - name: "Execute opensmtpd-relay role"
+    import_role:
+      name: "../roles/opensmtpd-relay"
+    vars:
+      opensmtpd_relay_dir: "{{ services_root_dir }}/opensmtpd-relay"

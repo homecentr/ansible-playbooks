@@ -68,7 +68,3 @@
         skip-test=BOOT-5264
         # Passwords are just a back up and should not be used anyway, expiring passwords puts us in danger or locking ourselves from the server
         skip-test=AUTH-9229
-
-
-
-# TODO: Swarm nodes
