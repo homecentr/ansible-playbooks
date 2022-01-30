@@ -8,7 +8,7 @@
     lineinfile:
       path: /etc/hosts
       regexp: "^{{ (gluster_has_direct_connection and hostvars[item].gluster_ip is defined) | ternary(hostvars[item].gluster_ip, hostvars[item].ansible_host) | replace('.', '\\.') }}\\W+{{ hostvars[item]['gluster_hostname'] | replace('.', '\\.') }}\\W+{{ hostvars[item]['gluster_fqdn'] | replace('.', '\\.') }}\\W*$"
-      line: "{{ (gluster_has_direct_connection and hostvars[item].gluster_ip is defined) | ternary(hostvars[item].gluster_ip, hostvars[item].ansible_host) }} {{ hostvars[item].gluster_hostname }} {{ hostvars[item]['fqdn'] }}"
+      line: "{{ (gluster_has_direct_connection and hostvars[item].gluster_ip is defined) | ternary(hostvars[item].gluster_ip, hostvars[item].ansible_host) }} {{ hostvars[item].gluster_hostname }} {{ hostvars[item]['gluster_fqdn'] }}"
     with_items: "{{ groups['glusterfs_nodes'] }}"
 
   - name: Get Debian version ID
@@ -49,7 +49,8 @@
       name: glusterd
       state: started
 
-  # - name: Probe nodes
-  #   gluster.gluster.gluster_peer:
-  #     state: present
-  #     nodes: "{{ groups['glusterfs_nodes'] | map('extract', hostvars) | map(attribute='gluster_hostname') }}" # Probing self does not matter
+  - name: Probe nodes
+    gluster.gluster.gluster_peer:
+      state: present
+      # Current node has to be removed from the list because probing self throws an error
+      nodes: "{{ groups['glusterfs_nodes'] | map('extract', hostvars) | map(attribute='gluster_hostname') | difference([ gluster_hostname ])  }}" 
