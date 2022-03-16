@@ -1,0 +1,19 @@
+- name: "Common set up on all servers"
+  hosts: all
+  become: true
+  tasks:
+  # - include_role: name=../roles/common/hosts
+  # - include_role: name=../roles/common/chrony
+  # - include_role: name=../roles/common/users
+  # - include_role: name=../roles/common/benchmarks
+  # - include_role: name=../roles/common/lynis-hardening
+  # - include_role: name=../roles/common/clamav
+  # - include_role: name=../roles/common/ssh
+  - include_role: name=../roles/common/ups
+
+
+
+
+
+
+  # TODO: !!! uninstall unattended upgrades from Jeffs security role !!!

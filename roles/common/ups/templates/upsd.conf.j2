@@ -1,0 +1,13 @@
+LISTEN 127.0.0.1
+LISTEN {{ hostname }}
+
+ACL all 0.0.0.0/0
+ACL localhost 127.0.0.1/32
+{% for server in groups['all'] %}
+ACL {{ hostvars[server]['hostname'] }} {{ hostvars[server]['ansible_host'] }}/32
+{% endfor %}
+ACCEPT localhost
+{% for server in groups['all'] %}
+ACCEPT {{ hostvars[server]['hostname'] }}
+{% endfor %}
+REJECT all

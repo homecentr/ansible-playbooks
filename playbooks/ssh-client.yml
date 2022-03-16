@@ -1,0 +1,32 @@
+---
+- name: Get machine ssh keys
+  hosts: all
+  tasks:
+    - name: "Get host ssh key"
+      command: "ssh-keyscan -t rsa {{ inventory_hostname }} | cut -d' ' -f 3"
+      register: ssh_key
+
+- name: "Configure ssh client"
+  hosts: localhost
+  connection: local
+  become: true
+  tasks:
+  - name: Make sure StormSSH module is installed (required for the ssh_config module below)
+    pip:
+      name: stormssh
+
+  - name: "Add ssh key to known_hosts"
+    known_hosts:
+      path: /etc/ssh/ssh_known_hosts
+      name: "{{ hostvars[item].inventory_hostname }}"
+      key: "{{ hostvars[item].ansible_hostname }} ssh-rsa {{ hostvars[item].ssh_key }}"
+    with_items: "{{ groups['all'] }}"
+
+  - name: Add a host into the configuration
+    community.general.ssh_config:
+      user: "{{ ansible_user_id }}"
+      host: "{{ item }}"
+      hostname: "{{ hostvars[item].fqdn }}"
+      forward_agent: yes # To enable YubiKey forwarding
+      state: present
+    with_items: "{{ groups['all'] }}"

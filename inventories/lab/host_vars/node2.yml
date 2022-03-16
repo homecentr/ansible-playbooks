@@ -1,0 +1,6 @@
+ansible_host: 192.168.2.12
+hostname: node2
+fqdn: node2.lab.homecentr.io
+
+ups_name: dummy1
+ups_server: node3

@@ -1,2 +1,0 @@
-- name: restart_opensmtpd
-  command: "docker service update --force homecentr-{{ opensmtpd_relay_service_name }}_opensmtpd"

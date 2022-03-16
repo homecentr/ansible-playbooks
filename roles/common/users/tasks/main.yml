@@ -1,0 +1,44 @@
+---
+- name: "Create admin user '{{ users_admin_name | mandatory }}' if it doesn't exist"
+  ansible.builtin.user:
+    name: "{{ users_admin_name | mandatory }}"
+    shell: /bin/bash
+    groups:
+    - sudo
+    state: present
+
+- name: Set admin user SSH keys
+  authorized_key:
+    user: "{{ users_admin_name | mandatory }}"
+    state: present
+    key: "{{ item }}"
+  with_items: "{{ users_admin_keys }}"
+
+- name: Set admin user password
+  ansible.builtin.user:
+    password: "{{ users_admin_password | mandatory | password_hash('sha512', users_admin_password_salt) }}"
+    name: "{{ users_admin_name | mandatory }}"
+    shell: /bin/bash
+    groups: "{{ users_admin_groups }}"
+    state: present
+
+- name: Enable passwordless sudo for admin user
+  lineinfile:
+    path: /etc/sudoers
+    state: present
+    regexp: '^{{ users_admin_name | mandatory }}'
+    line: '{{ users_admin_name | mandatory }} ALL=(ALL) NOPASSWD: ALL'
+    validate: 'visudo -cf %s'
+
+- name: "Tighten admin user's home directory permissions"
+  file:
+    path: "/home/{{ users_admin_name | mandatory }}"
+    state: directory
+    owner: "{{ users_admin_name | mandatory }}"
+    group: "{{ users_admin_name | mandatory }}"
+    mode: 0750
+
+- name: "Set root user's password"
+  ansible.builtin.user:
+    name: root
+    password: "{{ users_root_password | mandatory | password_hash('sha512', users_root_password_salt) }}"

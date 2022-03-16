@@ -1,0 +1,4 @@
+MONITOR {{ ups_name | mandatory }}@{{ ups_server | mandatory }} 1 {{ hostname }} {{ ups_slave_password | mandatory }} slave
+POWERDOWNFLAG /etc/killpower
+FINALDELAY {{ ups_shutdown_delay_seconds }}
+SHUTDOWNCMD "/sbin/shutdown -h now"

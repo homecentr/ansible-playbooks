@@ -1,0 +1,36 @@
+site.yml
+- common.yaml
+- pve-cluster.yml
+- k3s-cluster.yml
+- k3s-services.yml
+
+
+servers.yml
+======================================
+- common/chrony
+- common/ssh
+- common/users
+- common/lynis-hardening
+- common/clamav
+- common/hosts
+- common/ups (slave + master in one role driven by node level variables - prepare as if there could be multiple masters each with different UPS attached)
+- common/benchmarks
+
+pve-nodes
+======================================
+- pve/init
+- pve/quorum (qdevice)
+
+k3s-cluster             = k3s-cluster
+======================================
+- k3s/cluster
+- k3s/core-dns
+- k3s/metal-lb
+- k3s/longhorn
+
+k3s-services
+======================================
+- k3s/prometheus
+- k3s/grafana
+- k3s/...
+- all services, the division between platform and apps is too blury

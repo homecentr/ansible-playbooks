@@ -1,5 +1,0 @@
-network_connector_docker_image_version: "latest"
-network_connector_group_id: 9001
-network_connector_group_name: network-connector
-network_connector_user_id: 9001
-network_connector_user_name: network-connector

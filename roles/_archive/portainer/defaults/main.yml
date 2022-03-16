@@ -1,9 +1,0 @@
-portainer_docker_image_version: latest
-portainer_agent_docker_image_version: latest
-portainer_group_id: 9004
-portainer_group_name: portainer
-portainer_user_id: 9004
-portainer_user_name: portainer
-portainer_session_duration: 720h
-portainer_oidc_scopes: "openid email"
-portainer_oidc_user_info_user_id_field: email
