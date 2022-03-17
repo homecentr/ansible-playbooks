@@ -5,7 +5,15 @@
   become_method: sudo
   tasks:
     - include_role: name=geerlingguy.helm
+
+    # Reset k3S
     
-    - include_role: name=../roles/k3s/node
-    - include_role: name=../roles/k3s/metal-lb
-    
+    # - service:
+    #     name: k3s
+    #     state: stopped
+
+    # - file:
+    #     path: /var/lib/rancher/k3s
+    #     state: absent
+
+    - include_role: name=../roles/k3s/cluster

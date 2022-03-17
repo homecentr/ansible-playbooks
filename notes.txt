@@ -1,20 +1,13 @@
 Next tasks
 ======================================
-- Install helm (take from PoC)
-- Install K3s without coredns
 
-
-- Enabling Traefik dashboard may be done through K8s config map too - which is better ?
-
-- Role k3s/coredns - custom deployment of coredns with k8s external etc.
-    - Expose via metallb VIP
+- Test longhorn set up with additional virtual disks
 
 - Role sample-apps
     - Create an nginx sample - published via ingress for testing
     - Create an nginx sample - published via metallb vip for testing
 
 - Role k3s/k8sdash (not standard dashboard...)
-- Test longhorn set up with additional virtual disks
 
 
 k3s-cluster             = k3s-cluster

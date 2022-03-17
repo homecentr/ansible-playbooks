@@ -1,0 +1,12 @@
+disable:
+- servicelb
+- coredns
+cluster-cidr: {{ k3s_cluster_cidr | mandatory }}
+service-cidr: {{ k3s_cluster_services_cidr | mandatory }}
+cluster-dns: {{ k3s_cluster_dns_internal_ip | mandatory }}
+{% if k3s_cluster_init is defined and k3s_cluster_init %}
+cluster-init: true
+{% else %}
+server: {{ k3s_connect_to | mandatory }}
+{% endif %}
+token: "{{ k3s_cluster_secret | mandatory }}"

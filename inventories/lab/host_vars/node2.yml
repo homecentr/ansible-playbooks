@@ -4,3 +4,6 @@ fqdn: node2.lab.homecentr.io
 
 ups_name: dummy1
 ups_server: node3
+
+k3s_extra_server_args: "--bind-address 192.168.2.12 --node-ip 192.168.2.12"
+k3s_connect_to: https://node1:6443

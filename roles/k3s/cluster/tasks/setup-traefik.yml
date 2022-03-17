@@ -1,0 +1,7 @@
+- name: Enable traefik dashboard
+  copy:
+    dest: /var/lib/rancher/k3s/server/manifests/traefik-custom.yaml
+    content: "{{ lookup('file', 'traefik-custom.yaml') }}"
+    owner: root
+    group: root
+    mode: 0644

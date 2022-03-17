@@ -2,19 +2,19 @@
   run_once: true
   k8s:
     kubeconfig: "{{ kubeconfig_path }}"
-    definition: "{{ lookup('file', 'namespace.yml') }}"
+    definition: "{{ lookup('file', 'metallb-namespace.yml') }}"
     state: present
 
 - name: Set up metallb
   run_once: true
   k8s:
     kubeconfig: "{{ kubeconfig_path }}"
-    definition: "{{ lookup('file', 'metallb.yml') }}"
+    definition: "{{ lookup('file', 'metallb-resources.yml') }}"
     state: present
 
 - name: Set up metallb pool config
   run_once: true
   k8s:
     kubeconfig: "{{ kubeconfig_path }}"
-    definition: "{{ lookup('template', 'pools.yml') }}"
+    definition: "{{ lookup('template', 'metallb-pools.yml.j2') }}"
     state: present

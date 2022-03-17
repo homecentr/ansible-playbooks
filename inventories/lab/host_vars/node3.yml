@@ -8,3 +8,6 @@ ups_server: localhost
 ssh_allow_root_login_exception_hosts: # simulating qdevice requirements allow qdevice
 - node1
 - node2
+
+k3s_extra_server_args: "--bind-address 192.168.2.13 --node-ip 192.168.2.13"
+k3s_connect_to: https://node1:6443
