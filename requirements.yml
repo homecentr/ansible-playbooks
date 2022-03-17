@@ -10,3 +10,4 @@ roles:
 - name: geerlingguy.pip
 - name: geerlingguy.security
 - name: geerlingguy.clamav
+- name: geerlingguy.helm

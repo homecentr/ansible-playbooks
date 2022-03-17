@@ -1,0 +1,7 @@
+---
+- name: "Proxmox Virtual Environment Configuration"
+  hosts: proxmox_nodes
+  become: true
+  become_method: sudo
+  tasks:
+    - include_role: name=../roles/proxmox/pve-node

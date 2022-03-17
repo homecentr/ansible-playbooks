@@ -1,31 +1,25 @@
-site.yml
-- common.yaml
-- pve-cluster.yml
-- k3s-cluster.yml
-- k3s-services.yml
-
-
-servers.yml
+Next tasks
 ======================================
-- common/chrony
-- common/ssh
-- common/users
-- common/lynis-hardening
-- common/clamav
-- common/hosts
-- common/ups (slave + master in one role driven by node level variables - prepare as if there could be multiple masters each with different UPS attached)
-- common/benchmarks
+- Install helm (take from PoC)
+- Install K3s without coredns
 
-pve-nodes
-======================================
-- pve/init
-- pve/quorum (qdevice)
+
+- Enabling Traefik dashboard may be done through K8s config map too - which is better ?
+
+- Role k3s/coredns - custom deployment of coredns with k8s external etc.
+    - Expose via metallb VIP
+
+- Role sample-apps
+    - Create an nginx sample - published via ingress for testing
+    - Create an nginx sample - published via metallb vip for testing
+
+- Role k3s/k8sdash (not standard dashboard...)
+- Test longhorn set up with additional virtual disks
+
 
 k3s-cluster             = k3s-cluster
 ======================================
-- k3s/cluster
 - k3s/core-dns
-- k3s/metal-lb
 - k3s/longhorn
 
 k3s-services
@@ -34,3 +28,9 @@ k3s-services
 - k3s/grafana
 - k3s/...
 - all services, the division between platform and apps is too blury
+
+Nice to have
+======================================
+- motd message with ascii art
+- print sysinfo (hostname, ips etc)
+- print info about upgradable packages

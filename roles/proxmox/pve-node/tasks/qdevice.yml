@@ -1,0 +1,31 @@
+- name: Install corosync packages
+  ansible.builtin.apt:
+    name:
+      - corosync-qdevice
+      - corosync-qnetd
+    update_cache: yes
+
+- name: "Install required pip module"
+  include_role:
+    name: geerlingguy.pip
+  vars:
+    pip_package: python3-pip
+    pip_install_packages:
+    - name: pexpect
+
+- name: "Register QDevice to quorum"
+  expect:
+    command: "pvecm qdevice setup {{ hostvars[item].ansible_host }}"
+    echo: no
+    responses:
+      "root@\\d+\\.\\d+\\.\\d+\\.\\d+'s password:": "{{ secret_root_user_password }}"
+  with_items: "{{ groups['pve_qdevices'] }}"
+  register: qdevice_registration
+  ignore_errors: yes # Ignore because failed_when can't access return code
+
+- name: "Evaluate setup return code"
+  assert:
+    that:
+      # Either the command passed or it didn't pass because the device is already registered
+      - item.rc == 0 or (item.stdout is defined and item.stdout is search('QDevice already configured'))
+  with_items: "{{ qdevice_registration.results }}"

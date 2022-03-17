@@ -21,3 +21,5 @@ ups_devices:
   description: Testing UPS
   port: evolution500.seq
   monitored_by: node3
+
+k3s_services_vips_cidr: 192.168.2.128/28

@@ -9,11 +9,5 @@
   # - include_role: name=../roles/common/lynis-hardening
   # - include_role: name=../roles/common/clamav
   # - include_role: name=../roles/common/ssh
-  - include_role: name=../roles/common/ups
-
-
-
-
-
-
-  # TODO: !!! uninstall unattended upgrades from Jeffs security role !!!
+  # - include_role: name=../roles/common/ups
+  - include_role: name=../roles/common/motd

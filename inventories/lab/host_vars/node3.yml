@@ -4,3 +4,7 @@ fqdn: node3.lab.homecentr.io
 
 ups_name: dummy1
 ups_server: localhost
+
+ssh_allow_root_login_exception_hosts: # simulating qdevice requirements allow qdevice
+- node1
+- node2

@@ -1,0 +1,20 @@
+- name: Create metallb namespace
+  run_once: true
+  k8s:
+    kubeconfig: "{{ kubeconfig_path }}"
+    definition: "{{ lookup('file', 'namespace.yml') }}"
+    state: present
+
+- name: Set up metallb
+  run_once: true
+  k8s:
+    kubeconfig: "{{ kubeconfig_path }}"
+    definition: "{{ lookup('file', 'metallb.yml') }}"
+    state: present
+
+- name: Set up metallb pool config
+  run_once: true
+  k8s:
+    kubeconfig: "{{ kubeconfig_path }}"
+    definition: "{{ lookup('template', 'pools.yml') }}"
+    state: present

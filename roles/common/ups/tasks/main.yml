@@ -35,3 +35,11 @@
   service:
     name: nut-monitor
     state: started
+
+- name: "Dump the ups name to /etc/ups"
+  copy:
+    dest: /etc/ups
+    content: "{{ ups_name | mandatory }}@{{ ups_server | mandatory }}"
+    owner: root
+    group: root
+    mode: 0644

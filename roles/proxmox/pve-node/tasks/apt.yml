@@ -1,0 +1,16 @@
+- name: Remove enteprise repository
+  ansible.builtin.file:
+    path: /etc/apt/sources.list.d/pve-enterprise.list
+    state: absent
+
+- name: Add free (no-subscription) repository
+  register: add_nosub
+  copy:
+    dest: /etc/apt/sources.list.d/pve-no-subscription.list
+    content: |
+      deb http://download.proxmox.com/debian/pve buster pve-no-subscription
+
+- name: Update apt sources
+  ansible.builtin.apt:
+    update_cache: yes
+  when: add_nosub.changed
