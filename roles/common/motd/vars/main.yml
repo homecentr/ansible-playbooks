@@ -1,6 +1,7 @@
 motd_common_scripts:
 - 10-hostname-color
 - 20-sysinfo
+- 25-ups
 - 35-disk-space
 
 motd_zfs_scripts:
