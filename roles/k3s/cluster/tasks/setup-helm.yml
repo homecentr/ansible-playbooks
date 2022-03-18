@@ -1,1 +1,5 @@
 - include_role: name=geerlingguy.helm
+  vars:
+    helm_version: "{{ k3s_cluster_helm_version }}"
+    helm_platform: linux
+    helm_arch: amd64

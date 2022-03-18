@@ -6,79 +6,27 @@
     group: root
     mode: 0755
 
-- name: "Create motd.d directory if doesn't exist"
-  file:
-    path: /etc/motd.d
-    state: absent
+- include_tasks: clear-defaults.yml
 
-- name: Delete default banner
-  file:
-    path: /etc/motd
-    state: absent
+- include_tasks: setup-common-scripts.yml
 
-- name: Install required packages
-  package:
-    name:
-      - figlet
-      - lolcat
-    state: present
-
-- name: Install required packages for hardware related scripts
-  when: motd_enable_hw_status
-  package:
-    name:
-      - hddtemp
-    state: present
-
-- name: Copy apt-check script
-  copy:
-    dest: /usr/local/bin/apt-check
-    mode: 0755
-    owner: root
-    group: root
-    content: "{{ lookup('file', 'apt-check') }}"
-
-- name: Copy common scripts
-  copy:
-    src: "motd/{{ item }}.sh"
-    dest: /etc/update-motd.d/{{ item }}.sh
-    owner: root
-    group: root
-    mode: 0755
-  with_items: "{{ motd_common_scripts }}"
-
-- name: Copy zfs related scripts
+# ZFS
+- include_tasks: setup-zfs-scripts.yml
   when: motd_enable_zfs_status
-  copy:
-    src: "motd/{{ item }}.sh"
-    dest: /etc/update-motd.d/{{ item }}.sh
-    owner: root
-    group: root
-    mode: 0755
-  with_items: "{{ motd_zfs_scripts }}"
 
-- name: Copy hw related scripts
+- include_tasks: clear-zfs-scripts.yml
+  when: not motd_enable_zfs_status
+
+# HW
+- include_tasks: setup-hw-scripts.yml
   when: motd_enable_hw_status
-  copy:
-    src: "motd/{{ item }}.sh"
-    dest: /etc/update-motd.d/{{ item }}.sh
-    owner: root
-    group: root
-    mode: 0755
-  with_items: motd_hw_scripts
 
-- name: Copy services script
+- include_tasks: clear-hw-scripts.yml
+  when: not motd_enable_hw_status
+
+# Services
+- include_tasks: setup-services-scripts.yml
   when: motd_services is defined and (motd_services | length) > 0
-  template:
-    src: 40-services.sh.j2
-    dest: /etc/update-motd.d/40-services.sh
-    owner: root
-    group: root
-    mode: 0755
-    force: yes
 
-- name: Delete services script if not needed
+- include_tasks: clear-services-scripts.yml
   when: (not motd_services is defined) or (motd_services | length) == 0
-  file: 
-    path: /etc/update-motd.d/40-services.sh
-    state: absent

@@ -4,8 +4,6 @@
   become: true
   become_method: sudo
   tasks:
-    - include_role: name=geerlingguy.helm
-
     # Reset k3S
     
     # - service:
@@ -17,3 +15,4 @@
     #     state: absent
 
     - include_role: name=../roles/k3s/cluster
+    # - include_role: name=../roles/k3s/longhorn
