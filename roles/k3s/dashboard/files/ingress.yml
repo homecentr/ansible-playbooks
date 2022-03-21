@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: k8dash
+  namespace: kube-system
+  annotations:
+    kubernetes.io/ingress.class: "traefik"
+    traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
+    traefik.ingress.kubernetes.io/router.tls: "false"
+spec:
+  rules:
+  #- host: k8dash.example.com - TODO
+  - http:
+      paths:
+      - path: /dash
+        pathType: Prefix
+        backend:
+          service:
+            name: k8dash
+            port:
+              number: 80

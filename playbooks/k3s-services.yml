@@ -1,0 +1,29 @@
+- name: "K3s services"
+  hosts: k3s_nodes
+  become: true
+  become_method: sudo
+  tasks:
+  - include_role: name=../roles/k3s/dashboard
+
+
+
+# - K8s dash                        -> https://github.com/hashmapinc/k8dash
+# - cert_manager -> ingress config
+# - authelia
+# - prometheus
+# - loki
+# - grafana - with dashboards loaded from config maps ideally
+# - Sambda 4 DC
+# - Samba shares
+# - rclone (multiple deployments might be needed)
+# - qbittorrent
+# - dns (later maybe pihole with forwarding? for now coredns config should work)
+# - dhcp
+# - netboot.xyz
+# - Unifi controller
+# - Plex - pass GPUs to the VMs
+# - Organizr
+#
+# - radius server - is it needed?
+# - alerting
+# - gitpod

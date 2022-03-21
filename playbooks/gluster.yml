@@ -1,0 +1,7 @@
+---
+
+# TODO: Set up glusterfs cluster
+# - Install glusterfs
+# - Probe peers
+# - Set up volumes and bricks
+# - Set up cluster security

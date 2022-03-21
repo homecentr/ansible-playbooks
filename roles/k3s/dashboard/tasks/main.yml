@@ -1,0 +1,23 @@
+# https://github.com/hashmapinc/k8dash
+- include_tasks: ../../load-kubeconfig.yml
+
+- name: Set up k8dash deployment
+  run_once: true
+  k8s:
+    kubeconfig: "{{ kubeconfig_path }}"
+    definition: "{{ lookup('file', 'deployment.yml') }}"
+    state: present
+
+- name: Set up service account
+  run_once: true
+  k8s:
+    kubeconfig: "{{ kubeconfig_path }}"
+    definition: "{{ lookup('file', 'service-account.yml') }}"
+    state: present
+
+- name: Set up k8dash ingress
+  run_once: true
+  k8s:
+    kubeconfig: "{{ kubeconfig_path }}"
+    definition: "{{ lookup('file', 'ingress.yml') }}"
+    state: present
