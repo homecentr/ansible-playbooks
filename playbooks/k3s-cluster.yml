@@ -15,4 +15,4 @@
     #     state: absent
 
     - include_role: name=../roles/k3s/cluster
-    # - include_role: name=../roles/k3s/longhorn
+#    - include_role: name=../roles/k3s/longhorn

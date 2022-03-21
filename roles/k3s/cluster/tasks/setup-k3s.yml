@@ -71,3 +71,13 @@
     src: /usr/local/bin/k3s
     dest: /usr/local/bin/kubectl
     state: link
+
+- name: "Force the k3s restart immediately if it needs to happen"
+  meta: flush_handlers
+
+- name: Wait for K3s management port to be available
+  wait_for:
+    host: "{{ ansible_host }}"
+    port: 6443
+    delay: 5
+    state: started 

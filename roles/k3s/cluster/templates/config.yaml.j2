@@ -1,6 +1,7 @@
 disable:
 - servicelb
 - coredns
+# cluster-domain: k3s.{{ k3s_services_external_domain }}
 cluster-cidr: {{ k3s_cluster_cidr | mandatory }}
 service-cidr: {{ k3s_cluster_services_cidr | mandatory }}
 cluster-dns: {{ k3s_cluster_dns_internal_ip | mandatory }}
@@ -12,7 +13,10 @@ server: {{ k3s_connect_to | mandatory }}
 token: "{{ k3s_cluster_secret | mandatory }}"
 
 node-label:
-{%- filter indent(width=2) %}
+{% for key, value in k3s_labels.items() %}
+    - {{ key }}={{ value }}
+{% endfor %}
 
-{{ k3s_labels | to_nice_yaml }}
-{%- endfilter %}
+# etcd-expose-metrics: true
+write-kubeconfig-mode: 644
+kube-controller-manager-arg: "--pod-eviction-timeout={{ k3s_pod_eviction_timeout }}"

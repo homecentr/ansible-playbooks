@@ -8,4 +8,4 @@ ups_server: node3
 k3s_extra_server_args: "--bind-address 192.168.2.12 --node-ip 192.168.2.12"
 k3s_connect_to: https://node1:6443
 k3s_labels:
-  homecentr.io/allow-longhorn: true
+  "allow-longhorn": "true"

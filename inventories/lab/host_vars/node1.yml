@@ -8,4 +8,4 @@ ups_server: node3
 k3s_extra_server_args: "--bind-address 192.168.2.11 --node-ip 192.168.2.11"
 k3s_cluster_init: yes
 k3s_labels:
-  "allow-longhorn": true
+  "allow-longhorn": "true"
