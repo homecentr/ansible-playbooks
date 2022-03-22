@@ -1,0 +1,9 @@
+- include_tasks: volume.yml
+  vars:
+    gluster_volume_config: "{{ item }}"
+  with_items: "{{ gluster_volumes }}"
+
+- include_tasks: mount.yml
+  vars:
+    gluster_volume_config: "{{ item }}"
+  with_items: "{{ gluster_volumes }}"

@@ -1,0 +1,27 @@
+# Note:
+# This role is not using the existing gluster.gluster modules because the module for managing volumes is buggy and poorly designed.
+# Another reason is that this way ansible creates the volume(s) if they don't exist but doesn't touch them if they already do.
+# This isn't ideal but it's safer because it can never corrupt a volume containing data.
+
+- name: Check if volume exists
+  command: "gluster volume info {{ gluster_volume_config.name }}"
+  failed_when: false
+  register: volume_exists
+
+- name: Create volume if does not exist
+  run_once: true
+  command: "gluster volume create {{ gluster_volume_config.name }} replica {{ gluster_volume_config.replicas }} arbiter {{ gluster_volume_config.arbiters }} {{ gluster_volume_config.storage_bricks | join(' ') }} {{ gluster_volume_config.arbiter_bricks | join(' ') }}"
+  when: volume_exists.rc != 0
+
+- name: Set allowed clients
+  run_once: true
+  command: "gluster volume set {{ gluster_volume_config.name }} auth.allow '{{ (gluster_volume_config.allowed_clients | map('extract', hostvars) | map(attribute='gluster_ip') + ['127.0.0.1']) | join(',') }}'"
+
+- name: Check volume status
+  shell: "sudo gluster volume info {{ gluster_volume_config.name }} | grep 'Status:' | cut -d' ' -f2"
+  register: volume_status
+
+- name: Start the volume
+  run_once: true
+  command: "gluster volume start {{ gluster_volume_config.name }}"
+  when: volume_status.stdout != "Started"

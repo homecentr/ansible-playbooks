@@ -4,8 +4,7 @@
   become: true
   become_method: sudo
   tasks:
-    # Reset k3S
-    
+    # Reset k3S    
     # - service:
     #     name: k3s
     #     state: stopped
@@ -15,4 +14,4 @@
     #     state: absent
 
     - include_role: name=../roles/k3s/cluster
-    # TODO: Set up kanadu
+    - include_role: name=../roles/k3s/kadalu

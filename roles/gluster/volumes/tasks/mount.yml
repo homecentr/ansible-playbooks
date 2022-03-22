@@ -5,13 +5,13 @@
 
 - name: Create mount directory
   file:
-    path: "/mnt/gfs/{{ gluster_volume_name }}"
+    path: "/mnt/gfs/{{ gluster_volume_config.name }}"
     state: directory
 
 - name: Mount volume
   ansible.posix.mount:
-    path: "/mnt/gfs/{{ gluster_volume_name }}"
-    src: "{{ gluster_hostname }}:/{{ gluster_volume_name }}"
+    path: "/mnt/gfs/{{ gluster_volume_config.name }}"
+    src: "{{ gluster_hostname }}:/{{ gluster_volume_config.name }}"
     fstype: glusterfs
     opts: defaults,_netdev
     state: mounted
