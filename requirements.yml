@@ -3,6 +3,8 @@ collections:
 - name: oasis_roles.system
 - name: community.general
   version: 4.2.0
+- name: gluster.gluster
+  version: 1.0.2
 
 roles:
 - name: geerlingguy.docker

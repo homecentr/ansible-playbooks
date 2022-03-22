@@ -1,7 +1,26 @@
 ---
+- name: "Install and configure glusterfs"
+  hosts: gluster_nodes
+  become: true
+  become_method: sudo
+  tasks:
+  # - include_role: name=../roles/gluster/cluster
 
-# TODO: Set up glusterfs cluster
-# - Install glusterfs
-# - Probe peers
-# - Set up volumes and bricks
-# - Set up cluster security
+  - include_role: name=../roles/gluster/volume
+    vars:
+      gluster_volume_name: service-data
+      gluster_volume_storage_bricks: "{{ gluster_volume_service_data_storage_bricks }}"
+      gluster_volume_arbiter_bricks: "{{ gluster_volume_service_data_arbiter_bricks }}"
+      gluster_volume_replicas_count: 2
+      gluster_volume_arbiters_count: 1
+      gluster_volume_allowed_hosts: "{{ groups['k3s_nodes'] }}"
+      
+
+
+  # Custom role per, execute per volume
+
+  # Command - check if volume exists with "gluster volume info <name>" --> zero exit code -> exists, non zero -> does not exist
+  # Assemble command - specify path per node, specify arbiter bricks, use the jinja template file
+  # Start the template (may be done with the built-in module)
+  # Set the volumes' auth.allow with a list of allowed ip addreses
+  # Mount the volume via /etc/fstab to /mnt/gfs/<volume-name> -> run this on ALL nodes, always mount against localhost

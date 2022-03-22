@@ -1,0 +1,6 @@
+- name: Probe nodes
+  run_once: true
+  gluster.gluster.gluster_peer:
+    state: present
+    # Current node has to be removed from the list because probing self throws an error
+    nodes: "{{ play_hosts | map('extract', hostvars) | map(attribute='gluster_hostname') | difference([ gluster_hostname ]) }}" 

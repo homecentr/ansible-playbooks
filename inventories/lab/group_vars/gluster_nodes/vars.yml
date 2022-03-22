@@ -1,0 +1,12 @@
+gluster_major_version: 9
+gluster_minor_version: 5
+
+gluster_volume_service_data_storage_bricks:
+  - "node1:/media/lholota/gfs/service-data0"
+  - "node2:/media/lholota/gfs/service-data0"
+
+gluster_volume_service_data_arbiter_bricks:
+  - "node3:/media/lholota/gfs-arbiter/service-data-0"
+
+gluster_volume_user_data_bricks_paths:
+- /media/lholota/user-data0

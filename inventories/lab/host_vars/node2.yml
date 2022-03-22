@@ -2,6 +2,18 @@ ansible_host: 192.168.2.12
 hostname: node2
 fqdn: node2.lab.homecentr.io
 
+gluster_ip: 192.168.2.12
+gluster_hostname: node2
+gluster_fqdn: node2.lab.homecentr.io
+
+gluster_volume_bricks_paths:
+  "service-data":
+    - /home/lholota/service-data-brick0 # It must be an already existing directory
+    - /home/lholota/service-data-brick1
+    - /home/lholota/service-data-brick2
+  "user-data":
+    - /home/lholota/user-data-brick0
+
 ups_name: dummy1
 ups_server: node3
 
