@@ -15,3 +15,14 @@
     validate:
       fail_on_error: yes
       strict: yes
+
+
+- name: Deploy Kadalu CSI plugin
+  run_once: true
+  k8s:
+    kubeconfig: "{{ kubeconfig_path }}"
+    definition: "{{ lookup('file', 'kadalu-csi-plugin.yml') }}"
+    state: present
+    validate:
+      fail_on_error: yes
+      strict: yes

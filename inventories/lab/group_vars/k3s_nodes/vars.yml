@@ -1,8 +1,47 @@
 k3s_cluster_helm_version: 'v3.8.1'
 k3s_cluster_cidr: 172.16.0.0/16
 k3s_cluster_services_cidr: 172.17.0.0/16
+k3s_cluster_dns_forwarders:
+  - 8.8.8.8
+  - 8.8.4.4
 k3s_cluster_dns_internal_ip: 172.17.0.10
-k3s_cluster_dns_external_ip: 192.168.2.128 
+k3s_cluster_dns_external_ip: 192.168.2.128
+k3s_cluster_dns_additional_hosts:
+  - name: node1
+    var_names:
+      - hostname
+      - fqdn
+  - name: node2
+    var_names:
+      - hostname
+      - fqdn
+  - name: node3
+    var_names:
+      - hostname
+      - fqdn
 
 k3s_services_external_ip_range: 192.168.2.129-192.168.2.143
-k3s_services_external_domain: lab.homecentr.io
+k3s_services_external_domain: k3s.lab.homecentr.io
+k3s_namespace: homecentr
+
+kadalu_gluster_volumes:
+  - name: service-data
+    hosts:
+      - node1
+      - node2
+    mode: native # i.e. kadalu can create as many PVs as it wants
+  
+  - name: images
+    hosts:
+      - node1
+      - node2
+    mode: non-native # i.e. kadalu can create as many PVs as it wants
+
+certmanager_target_namespace: homecentr
+certmanager_acme_use_staging: true
+certmanager_certificates:
+  - name: "wildcard-lab-homecentr-io"
+    duration: 2160h # 90d
+    renewBefore: 360h # 15d
+    domains:
+      - "*.lab.homecentr.io"

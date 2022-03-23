@@ -4,14 +4,5 @@
   become: true
   become_method: sudo
   tasks:
-    # Reset k3S    
-    # - service:
-    #     name: k3s
-    #     state: stopped
-
-    # - file:
-    #     path: /var/lib/rancher/k3s
-    #     state: absent
-
     - include_role: name=../roles/k3s/cluster
     - include_role: name=../roles/k3s/kadalu

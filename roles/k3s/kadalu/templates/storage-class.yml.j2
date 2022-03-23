@@ -1,0 +1,13 @@
+---
+apiVersion: kadalu-operator.storage/v1alpha1
+kind: KadaluStorage
+metadata:
+  name: gluster-{{ name }}
+  namespace: default
+spec:
+  type: External
+  kadalu_format: {{ mode }}
+  details:
+    gluster_hosts: [ {{ hosts | join(',') }} ]   # Change to your gluster host
+    gluster_volname: {{ name }}
+    gluster_options: log-level=DEBUG

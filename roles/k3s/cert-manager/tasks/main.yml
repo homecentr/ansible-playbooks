@@ -1,0 +1,30 @@
+- include_tasks: ../load-kubeconfig.yml
+
+- name: Deploy cert-manager
+  run_once: true
+  k8s:
+    kubeconfig: "{{ kubeconfig_path }}"
+    definition: "{{ lookup('file', 'cert-manager.yml') }}"
+    state: present
+
+- name: Create Cloudflare API token secret
+  run_once: true
+  k8s:
+    kubeconfig: "{{ kubeconfig_path }}"
+    definition: "{{ lookup('template', 'cloudflare-secret.yml.j2') }}"
+    state: present
+
+- name: Create Cloudflare dns based issuer
+  run_once: true
+  k8s:
+    kubeconfig: "{{ kubeconfig_path }}"
+    definition: "{{ lookup('template', 'cloudflare-issuer.yml.j2') }}"
+    state: present
+
+- name: Create certificates
+  run_once: true
+  k8s:
+    kubeconfig: "{{ kubeconfig_path }}"
+    definition: "{{ lookup('template', 'certificate.yml.j2',template_vars=(item | combine({'certmanager_target_namespace': certmanager_target_namespace }))) }}"
+    state: present
+  with_items: "{{ certmanager_certificates }}"

@@ -1,0 +1,6 @@
+- name: Set up namespace
+  run_once: true
+  k8s:
+    kubeconfig: "{{ kubeconfig_path }}"
+    definition: "{{ lookup('template', 'namespace.yaml.j2') }}"
+    state: present

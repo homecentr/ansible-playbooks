@@ -3,8 +3,10 @@
   become: true
   become_method: sudo
   tasks:
-  - include_role: name=../roles/k3s/dashboard
-
+  - include_role: name=../roles/k3s/cert-manager
+  # - include_role: name=../roles/k3s/dashboard
+      # TODO: Publish through traefik on a specific domain (e.g. k8s.<domain>)
+      # TODO: Configure tls
 
 
 # - K8s dash                        -> https://github.com/hashmapinc/k8dash
