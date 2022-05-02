@@ -14,6 +14,6 @@ data:
     - name: reserved-dns
       protocol: layer2
       addresses:
-      - {{ k3s_cluster_dns_external_ip | mandatory }}/32
+      - "{{ k3s_services_external_reserved_ip_range | mandatory }}"
       avoid-buggy-ips: true
       auto-assign: false

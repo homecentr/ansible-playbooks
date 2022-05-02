@@ -20,7 +20,8 @@ k3s_cluster_dns_additional_hosts:
       - hostname
       - fqdn
 
-k3s_services_external_ip_range: 192.168.2.129-192.168.2.143
+k3s_services_external_ip_range: 192.168.2.141-192.168.2.191
+k3s_services_external_reserved_ip_range: 192.168.2.129-192.168.2.140
 k3s_services_external_domain: k3s.lab.homecentr.io
 k3s_namespace: homecentr
 
@@ -45,3 +46,17 @@ certmanager_certificates:
     renewBefore: 360h # 15d
     domains:
       - "*.lab.homecentr.io"
+
+
+smtp_relay_target_namespace: homecentr
+smtp_relay_ipv4_address: 192.168.2.129
+smtp_relay_host: smtp.sendgrid.net
+smtp_relay_port: 587
+smtp_relay_username: apikey
+smtp_relay_domain: homecentr.io
+smtp_relay_allowed_clients_cidr_blocks:
+  - "127.0.0.0/8"
+  - "192.0.0.0/8"
+
+authelia_root_domain: lab.homecentr.io
+authelia_storage_class: kadalu.gluster-service-data

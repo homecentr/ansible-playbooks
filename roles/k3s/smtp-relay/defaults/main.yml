@@ -1,0 +1,9 @@
+# smtp_relay_ipv4_address
+# smtp_relay_host
+# smtp_relay_port
+# smtp_relay_username
+# smtp_relay_password
+# smtp_relay_domain
+# smtp_relay_allowed_clients_cidr_blocks
+# smtp_relay_target_namespace
+smtp_relay_opensmtpd_image_image: "latest"

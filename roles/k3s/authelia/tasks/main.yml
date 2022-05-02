@@ -1,0 +1,79 @@
+- include_tasks: ../load-kubeconfig.yml
+
+- name: Add bitnami helm repo
+  kubernetes.core.helm_repository:
+    name: bitnami
+    repo_url: https://charts.bitnami.com/bitnami
+    state: present
+
+- name: Add authelia helm repo
+  kubernetes.core.helm_repository:
+    name: authelia 
+    repo_url: https://charts.authelia.com
+    state: present
+
+- name: Deploy redis
+  run_once: true
+  kubernetes.core.helm:
+    state: present
+    release_name: authelia-redis
+    release_namespace: homecentr
+    create_namespace: no
+    chart_version: "{{ authelia_redis_chart_version }}"
+    chart_ref: bitnami/redis
+    kubeconfig_path: "{{ kubeconfig_path }}"
+    values:
+      metrics:
+        enabled: true
+      auth:
+        enabled: false
+        sentinel: false
+      global:
+        storageClass: "{{ authelia_storage_class }}"
+      sentinel:
+        enabled: true
+
+      # TODO: Set storage classes individually
+      # TODO: Does it make sense to put redis on GFS when it has its own replication?
+      # TODO: 
+
+
+- name: Deploy authelia
+  run_once: true
+  kubernetes.core.helm:
+    state: present
+    release_name: authelia
+    release_namespace: homecentr
+    create_namespace: no
+    chart_version: "{{ authelia_chart_version }}"
+    chart_ref: authelia/authelia
+    kubeconfig_path: "{{ kubeconfig_path }}"
+    values:
+      configMap:
+        domain: "{{ authelia_root_domain }}"
+        persistence:
+          storageClass: "{{ authelia_storage_class }}"
+        regulation:
+          max_retries: 3
+          find_time: 2m
+          ban_time: 5m
+        session:
+          redis:
+            enabled: true
+            host: authelia-redis
+            port: 6379
+            high_availability:
+              sentinel_name: authelia-redis
+              nodes:
+                - host: authelia-redis
+                  port: 26379
+              route_by_latency: false
+              route_randomly: false
+        storage:
+          encryption_key: "{{ authelia_storage_encryption_key }}"
+        ntp:
+          address: 0.rhel.pool.ntp.org
+
+        # TODO: Setup smtp via sendgrid
+        # TODO: Set up LDAP servers
+        # TEST: Setup ntp servers

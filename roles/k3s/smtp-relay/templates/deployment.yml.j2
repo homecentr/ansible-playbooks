@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: smtp-relay
+  namespace: "{{ smtp_relay_target_namespace | mandatory }}"
+  labels:
+    app: smtp-relay
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: smtp-relay
+  template:
+    metadata:
+      labels:
+        app: smtp-relay
+    spec:
+      containers:
+      - name: opensmtpd
+        image: ghcr.io/homecentr/opensmtpd:{{ smtp_relay_opensmtpd_image_image }}
+        ports:
+        - containerPort: 25
+        volumeMounts:
+        - name: smtpd-config
+          mountPath: "/config/smtpd.conf"
+          subPath: smtpd.conf
+          readOnly: true
+        - name: smtp-credentials
+          mountPath: "/config/smtp-credentials"
+          subPath: relay_credentials
+          readOnly: true
+      volumes:
+        - name: smtpd-config
+          configMap:
+            name: smtp-relay
+            items:
+            - key: "smtpd"
+              path: smtpd.conf
+        - name: smtp-credentials
+          secret:
+            secretName: smtp-relay-credentials
+            optional: false

@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: smtp-relay
+  namespace: "{{ smtp_relay_target_namespace | mandatory }}"
+  annotations:
+    metallb.universe.tf/loadBalancerIPs: {{ smtp_relay_ipv4_address }}
+spec:
+  ports:
+  - port: 25
+    targetPort: 25
+  selector:
+    app: smtp-relay
+  type: LoadBalancer

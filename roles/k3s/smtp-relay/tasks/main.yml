@@ -1,0 +1,22 @@
+- include_tasks: ../../load-kubeconfig.yml
+
+- name: Create resources
+  run_once: true
+  k8s:
+    kubeconfig: "{{ kubeconfig_path }}"
+    definition: "{{ lookup('template', item) }}"
+    state: present
+    validate:
+      fail_on_error: yes
+      strict: yes
+  with_items:
+    - "secret.yml.j2"
+    - "config-map.yml.j2"
+    - "deployment.yml.j2"
+    - "service.yml.j2"
+
+
+
+# Create deployment
+# Create ingress via metal lb - assign static ip
+# Create security policy - use the same ip ranges

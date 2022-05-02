@@ -1,1 +1,2 @@
 certmanager_acme_use_staging: false
+certmanager_chart_version: "1.7.1"
