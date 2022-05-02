@@ -21,7 +21,7 @@ k3s_cluster_dns_additional_hosts:
       - fqdn
 
 k3s_services_external_ip_range: 192.168.2.141-192.168.2.191
-k3s_services_external_reserved_ip_range: 192.168.2.129-192.168.2.140
+k3s_services_external_reserved_ip_range: 192.168.2.128-192.168.2.140
 k3s_services_external_domain: k3s.lab.homecentr.io
 k3s_namespace: homecentr
 

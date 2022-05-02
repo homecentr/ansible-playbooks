@@ -218,7 +218,6 @@ metadata:
     metallb.universe.tf/loadBalancerIPs: {{ k3s_cluster_dns_external_ip | mandatory }}
 spec:
   type: LoadBalancer
-  loadBalancerIP: {{ k3s_cluster_dns_external_ip | mandatory }}
   ports:
   - port: 53
     targetPort: 53
@@ -236,7 +235,6 @@ metadata:
     metallb.universe.tf/loadBalancerIPs: {{ k3s_cluster_dns_external_ip | mandatory }}
 spec:
   type: LoadBalancer
-  loadBalancerIP: {{ k3s_cluster_dns_external_ip | mandatory }}
   ports:
   - port: 53
     targetPort: 53
