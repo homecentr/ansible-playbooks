@@ -20,6 +20,10 @@
       tags:
         - smtp-relay
 
+    - import_role: name=../roles/k3s/unifi-controller
+      tags:
+        - unifi-controller
+
     # TODO: Samba DC
     # TODO: Unifi controller
 

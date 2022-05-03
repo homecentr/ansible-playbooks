@@ -1,3 +1,11 @@
+- name: Make sure the manifests directory exists
+  file:
+    path: /var/lib/rancher/k3s/server/manifests
+    state: directory
+    owner: root
+    group: root
+    mode: 0750
+
 - name: Enable traefik dashboard
   copy:
     dest: /var/lib/rancher/k3s/server/manifests/traefik-custom.yaml

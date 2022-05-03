@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: unifi-controller
+  namespace: "homecentr"
+  annotations:
+    kubernetes.io/ingress.class: "traefik"
+    traefik.ingress.kubernetes.io/service.serversscheme: https
+    traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
+    traefik.ingress.kubernetes.io/serversTransport.insecureSkipVerify: "true"
+spec:
+  rules:
+  - host: {{ unifi_controller_hostname }}
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: unifi-controller
+            port:
+              number: 8443
+  tls:
+    - secretName: {{ unifi_controller_tls_certificate_name }}

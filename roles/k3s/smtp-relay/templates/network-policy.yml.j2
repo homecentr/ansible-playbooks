@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: smtp-relay
+  namespace: "{{ smtp_relay_target_namespace | mandatory }}"
+spec:
+  podSelector:
+    matchLabels:
+      app: smtp-relay
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+{% for cidr_block in smtp_relay_allowed_clients_cidr_blocks %}
+        - ipBlock:
+            cidr: "{{ cidr_block }}"
+{% endfor -%}

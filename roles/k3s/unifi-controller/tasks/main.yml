@@ -1,12 +1,5 @@
 - include_tasks: ../../load-kubeconfig.yml
 
-- name: Debug
-  delegate_to: localhost
-  become: false
-  copy:
-    dest: /tmp/debug.yml
-    content: "{{ lookup('template', 'network-policy.yml.j2') }}"
-
 - name: Create resources
   run_once: true
   k8s:
@@ -17,8 +10,6 @@
       fail_on_error: yes
       strict: yes
   with_items:
-    - "secret.yml.j2"
-    - "config-map.yml.j2"
     - "deployment.yml.j2"
     - "service.yml.j2"
-    - "network-policy.yml.j2"
+    - "ingress.yml.j2"

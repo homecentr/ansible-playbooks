@@ -6,4 +6,4 @@
 # smtp_relay_domain
 # smtp_relay_allowed_clients_cidr_blocks
 # smtp_relay_target_namespace
-smtp_relay_opensmtpd_image_image: "latest"
+smtp_relay_opensmtpd_image_tag: "latest"

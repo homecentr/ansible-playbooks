@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: unifi-controller
+  namespace: "{{ unifi_controller_target_namespace | mandatory }}"
+spec:
+  ports:
+  - name: "https-web-ui" # name must start with https in order for traefik to use https to communicate with the pod
+    port: 8443
+  - name: "stun"
+    port: 3478
+    protocol: UDP    
+  - name: "ap-discovery"
+    port: 10001
+    protocol: UDP
+  - name: "devices-communication"
+    port: 8080
+    protocol: UDP
+  - name: "l2-discovery"
+    port: 1900
+    protocol: UDP
+  - name: "guest-portal-https"
+    port: 8843
+  - name: "guest-portal-http"
+    port: 8880
+  - name: "mobile-throughput-test"
+    port: 6789
+  # - name: "syslog"
+  #   port: 5514
+  #   protocol: UDP
+  selector:
+    app: unifi-controller
