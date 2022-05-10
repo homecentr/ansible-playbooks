@@ -1,7 +1,9 @@
 apiVersion: traefik.containo.us/v1alpha1
-kind: ServersTransport
+kind: Middleware
 metadata:
-  name: unifi-controller
+  name: unifi-controller-redirect
   namespace: "{{ unifi_controller_target_namespace | mandatory }}"
 spec:
-  insecureSkipVerify: true
+  redirectScheme:
+    scheme: https
+    permanent: true
