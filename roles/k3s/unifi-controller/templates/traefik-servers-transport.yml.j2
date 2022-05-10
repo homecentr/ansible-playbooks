@@ -1,0 +1,8 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: ServersTransport
+metadata:
+  name: unifi-controller
+  namespace: "{{ unifi_controller_target_namespace | mandatory }}"
+spec:
+  insecureSkipVerify: true
+  fff: aaa

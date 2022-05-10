@@ -24,9 +24,6 @@
       tags:
         - unifi-controller
 
-    # TODO: Samba DC
-    # TODO: Unifi controller
-
     # TODO: Netboot.xyz
     # TODO: Images samba share (both in one role)
 

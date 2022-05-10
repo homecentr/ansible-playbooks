@@ -2,14 +2,19 @@
 
 - name: Create resources
   run_once: true
+  register: dummy
   k8s:
     kubeconfig: "{{ kubeconfig_path }}"
     definition: "{{ lookup('template', item) }}"
     state: present
+    apply: yes
     validate:
       fail_on_error: yes
       strict: yes
   with_items:
     - "deployment.yml.j2"
-    - "service.yml.j2"
+    - "service-infra-tcp.yml.j2"
+    - "service-infra-udp.yml.j2"
+    - "service-webui.yml.j2"
+    - "traefik-servers-transport.yml.j2"
     - "ingress.yml.j2"
