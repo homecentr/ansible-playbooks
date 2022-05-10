@@ -12,6 +12,7 @@
       fail_on_error: yes
       strict: yes
   with_items:
+    - "persistent-volume-claim.yml.j2"
     - "deployment.yml.j2"
     - "service-infra-tcp.yml.j2"
     - "service-infra-udp.yml.j2"

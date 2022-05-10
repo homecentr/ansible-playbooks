@@ -38,7 +38,10 @@ spec:
           - containerPort: 6789
           - containerPort: 5514
             protocol: UDP
-      #   volumeMounts:
-      # volumes:
-
-# TODO: Mount config volume !!!
+        volumeMounts:
+          - mountPath: /config
+            name: config
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: unifi-controller
