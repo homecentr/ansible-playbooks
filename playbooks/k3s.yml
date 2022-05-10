@@ -24,6 +24,10 @@
       tags:
         - unifi-controller
 
+    - import_role: name=../roles/k3s/qbittorrent
+      tags:
+        - qbittorrent
+
     # TODO: Netboot.xyz
     # TODO: Images samba share (both in one role)
 

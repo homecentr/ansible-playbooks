@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: qbittorrent-http
+  namespace: "{{ qbittorrent_target_namespace | mandatory }}"
+  annotations:
+    kubernetes.io/ingress.class: "traefik"
+    traefik.ingress.kubernetes.io/router.middlewares: "{{ qbittorrent_target_namespace | mandatory }}-qbittorrent-redirect-to-https@kubernetescrd"
+    traefik.ingress.kubernetes.io/router.entrypoints: web
+spec:
+  rules:
+  - host: {{ qbittorrent_hostname | mandatory }}
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: qbittorrent
+            port:
+              number: 8080

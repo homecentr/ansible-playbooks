@@ -11,12 +11,9 @@
       fail_on_error: yes
       strict: yes
   with_items:
+    - "traefik-redirect-to-https-middleware.yml.j2"
     - "persistent-volume-claim.yml.j2"
     - "deployment.yml.j2"
-    - "service-infra-tcp.yml.j2"
-    - "service-infra-udp.yml.j2"
-    - "service-webui.yml.j2"
-    - "traefik-servers-transport.yml.j2"
-    - "traefik-redirect-to-https-middleware.yml.j2"
+    - "service.yml.j2"
     - "ingress-http.yml.j2"
     - "ingress-https.yml.j2"

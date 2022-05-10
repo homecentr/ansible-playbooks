@@ -1,0 +1,5 @@
+# qbittorrent_target_namespace
+# qbittorrent_hostname
+# qbittorrent_tls_certificate_name
+# qbittorrent_storage_class
+qbittorrent_image_tag: latest

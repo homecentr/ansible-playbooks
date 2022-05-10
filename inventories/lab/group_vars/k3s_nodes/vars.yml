@@ -64,5 +64,10 @@ unifi_controller_hostname: unifi.lab.homecentr.io
 unifi_controller_tls_certificate_name: wildcard-lab-homecentr-io
 unifi_controller_infra_ipv4_address: 192.168.2.130
 
+qbittorrent_target_namespace: homecentr
+qbittorrent_hostname: torrent.lab.homecentr.io
+qbittorrent_tls_certificate_name: wildcard-lab-homecentr-io
+qbittorrent_storage_class: kadalu.gluster-service-data
+
 authelia_root_domain: lab.homecentr.io
 authelia_storage_class: kadalu.gluster-service-data
