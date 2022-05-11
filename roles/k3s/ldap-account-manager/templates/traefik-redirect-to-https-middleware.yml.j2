@@ -1,9 +1,0 @@
-apiVersion: traefik.containo.us/v1alpha1
-kind: Middleware
-metadata:
-  name: ldap-account-manager-redirect-to-https
-  namespace: "{{ ldap_account_manager_target_namespace | mandatory }}"
-spec:
-  redirectScheme:
-    scheme: https
-    permanent: true

@@ -1,7 +1,0 @@
-# ldap_account_manager_hostname
-# ldap_account_manager_target_namespace
-# ldap_account_manager_tls_certificate_name
-# ldap_account_manager_storage_class
-ldap_account_manager_image_tag: latest
-ldap_account_manager: latest
-ldap_account_manager_storage_size: 200Mi
