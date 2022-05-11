@@ -28,15 +28,6 @@
       tags:
         - qbittorrent
 
-    # - import_role: name=../roles/k3s/openldap
-    #   tags:
-    #     - openldap
-
-    # - import_role: name=../roles/k3s/ldap-account-manager
-    #   tags:
-    #     - lam
-    #     - ldap-account-manager
-
     - import_role: name=../roles/k3s/authentik
       tags:
         - authentik
@@ -64,19 +55,6 @@
     # TODO: Organizr
 
     # TODO: Radius for VPN (?)
-
-    # - import_role: name=../roles/k3s/authelia
-    #   tags:
-    #     - authelia
-                          # TODO: Deploy redis via helm chart
-                          # TODO: Deploy authelia
-                          # TODO: Traefik based ingress at auth.<domain>
-                          # TODO: Replace file based user database for a Samba DC
-                          # TODO: Network policy - restrict who can talk to redis
-
-
-
-
 
 
   # - import_role: name=../roles/k3s/dashboard

@@ -69,21 +69,8 @@ qbittorrent_hostname: torrent.lab.homecentr.io
 qbittorrent_tls_certificate_name: wildcard-lab-homecentr-io
 qbittorrent_storage_class: kadalu.gluster-service-data
 
-openldap_target_namespace: homecentr
-openldap_ipv4_address: 192.168.2.131
-openldap_root_domain: lab.homecentr.io
-openldap_storage_class: kadalu.gluster-service-data
-
-ldap_account_manager_hostname: iam.lab.homecentr.io
-ldap_account_manager_target_namespace: homecentr
-ldap_account_manager_tls_certificate_name: wildcard-lab-homecentr-io
-ldap_account_manager_storage_class: kadalu.gluster-service-data
-
 authentik_target_namespace: homecentr
 authentik_database_storage_class: kadalu.gluster-service-data
 authentik_chart_version: 2022.4.2
 authentik_hostname: authentik.lab.homecentr.io
 authentik_tls_certificate_name: wildcard-lab-homecentr-io
-
-authelia_root_domain: lab.homecentr.io
-authelia_storage_class: kadalu.gluster-service-data
