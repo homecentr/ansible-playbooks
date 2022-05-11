@@ -18,7 +18,7 @@ spec:
       containers:
       - name: unifi-controller
         image: lscr.io/linuxserver/unifi-controller:{{ unifi_controller_image_tag }}
-        environment:
+        env:
           - name: PUID
             value: "1000"
           - name: PGID

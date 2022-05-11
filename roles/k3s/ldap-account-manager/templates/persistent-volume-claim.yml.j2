@@ -1,0 +1,12 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: ldap-account-manager
+  namespace: "{{ ldap_account_manager_target_namespace | mandatory }}"
+spec:
+  storageClassName: {{ ldap_account_manager_storage_class | mandatory }}
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ ldap_account_manager_storage_size }}

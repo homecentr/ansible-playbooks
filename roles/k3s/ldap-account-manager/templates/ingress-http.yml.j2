@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ldap-account-manager-http
+  namespace: "{{ ldap_account_manager_target_namespace | mandatory }}"
+  annotations:
+    kubernetes.io/ingress.class: "traefik"
+    traefik.ingress.kubernetes.io/router.middlewares: "{{ ldap_account_manager_target_namespace | mandatory }}-ldap_account_manager-redirect-to-https@kubernetescrd"
+    traefik.ingress.kubernetes.io/router.entrypoints: web
+spec:
+  rules:
+  - host: {{ ldap_account_manager_hostname | mandatory }}
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: ldap-account-manager
+            port:
+              number: 8080

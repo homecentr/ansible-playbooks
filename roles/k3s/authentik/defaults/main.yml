@@ -1,0 +1,5 @@
+# authentik_chart_version
+# authentik_cookie_signing_key
+# authentik_database_password
+# authentik_database_storage_class
+authentik_image_tag: latest

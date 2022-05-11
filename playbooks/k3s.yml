@@ -28,6 +28,23 @@
       tags:
         - qbittorrent
 
+    # - import_role: name=../roles/k3s/openldap
+    #   tags:
+    #     - openldap
+
+    # - import_role: name=../roles/k3s/ldap-account-manager
+    #   tags:
+    #     - lam
+    #     - ldap-account-manager
+
+    - import_role: name=../roles/k3s/authentik
+      tags:
+        - authentik
+
+
+        
+    # Authelia
+
     # TODO: Netboot.xyz
     # TODO: Images samba share (both in one role)
 

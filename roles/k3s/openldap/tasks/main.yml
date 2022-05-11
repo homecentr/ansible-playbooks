@@ -1,0 +1,32 @@
+- include_tasks: ../../load-kubeconfig.yml
+
+- name: Create resources
+  run_once: true
+  k8s:
+    kubeconfig: "{{ kubeconfig_path }}"
+    definition: "{{ lookup('template', item) }}"
+    state: present
+    apply: yes
+    validate:
+      fail_on_error: yes
+      strict: yes
+  with_items:
+    - "persistent-volume-claim.yml.j2"
+    - "secret-tls.yml.j2"
+    - "secret-admin-user.yml.j2"
+    - "deployment.yml.j2"
+    - "service.yml.j2"
+
+# TODO: Create a backup account (?)
+
+- name: Wait for ldap to start
+  run_once: true
+  wait_for:
+    host: "{{ openldap_ipv4_address }}"
+    port: 389
+    delay: 10
+    sleep: 3
+    timeout: 120
+    state: started # = open
+
+# TODO: Wait for 686

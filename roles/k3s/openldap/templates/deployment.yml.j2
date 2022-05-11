@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openldap
+  namespace: "{{ openldap_target_namespace | mandatory }}"
+  labels:
+    app: openldap
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: openldap
+  template:
+    metadata:
+      labels:
+        app: openldap
+    spec:
+      containers:
+      - name: openldap
+        image: bitnami/openldap:{{ openldap_image_tag }}
+        env:
+          - name: LDAP_ADMIN_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: openldap-admin-user
+                key: username
+                optional: false
+          - name: LDAP_ADMIN_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: openldap-admin-user
+                key: password
+                optional: false
+          - name: LDAP_ROOT
+            value: "{{ openldap_root_domain.split('.') | map('regex_replace', '^(.*)$', 'dc=\\1') | join(",") }}"
+          # - name: LDAP_USERS
+          #   value: "user1"
+          # - name: LDAP_PASSWORDS
+          #   value: "pass1"
+          # - name: ALLOW_EMPTY_PASSWORD
+          #   value: "no"
+          # - name: LDAP_ALLOW_ANON_BINDING
+          #   value: "yes" # TODO
+          - name: LDAP_ENABLE_TLS
+            value: "yes"
+          - name: "LDAP_TLS_CA_FILE"
+            value: "/opt/bitnami/certs/ca_cert"
+          - name: "LDAP_TLS_CERT_FILE"
+            value: "/opt/bitnami/certs/server_cert"
+          - name: "LDAP_TLS_KEY_FILE"
+            value: "/opt/bitnami/certs/server_key"
+        ports:
+          - name: ldap
+            containerPort: 1389
+          - name: ldaps
+            containerPort: 1636
+        volumeMounts:
+          - mountPath: /bitnami/openldap
+            name: config
+          - name: tls
+            mountPath: "/opt/bitnami/certs"
+            readOnly: true
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: openldap
+        - name: tls
+          secret:
+            secretName: openldap-tls
+            optional: false
