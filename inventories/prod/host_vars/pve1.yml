@@ -1,10 +1,14 @@
 ansible_host: 10.1.2.17
-ups_name: eaton1
-
 fqdn: pve1.homecentr.io
+
+ssh_allow_root_login_trusted_clients:
+- monion
+- pve2
 
 gluster_hostname: gfs-pve1
 gluster_fqdn: gfs-pve1.homecentr.io
 gluster_ip: 10.1.7.17
 gluster_has_direct_connection: yes
+
+ups_name: eaton1
 ups_shutdown_delay_seconds: 180 # Wait 3 minutes before shutting down to give the VMs time to shutdown themselves

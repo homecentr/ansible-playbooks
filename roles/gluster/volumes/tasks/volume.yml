@@ -7,14 +7,35 @@
   failed_when: false
   register: volume_exists
 
+- name: Create storage bricks directories if they do not exist
+  file:
+    path: "{{ item.path }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0770
+  with_items: "{{ gluster_volume_config.storage_bricks | selectattr('host', 'equalto', inventory_hostname) }}"
+  when: volume_exists.rc != 0
+
+- name: Create arbiter bricks directories if they do not exist
+  file:
+    path: "{{ item.path }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0770
+  with_items: "{{ gluster_volume_config.arbiter_bricks | selectattr('host', 'equalto', inventory_hostname) }}"
+  when: volume_exists.rc != 0
+
 - name: Create volume if does not exist
   run_once: true
-  command: "gluster volume create {{ gluster_volume_config.name }} replica {{ gluster_volume_config.replicas }} arbiter {{ gluster_volume_config.arbiters }} {{ gluster_volume_config.storage_bricks | join(' ') }} {{ gluster_volume_config.arbiter_bricks | join(' ') }}"
+  command: "{{ lookup('template', 'create-volume-command.j2') }}"
   when: volume_exists.rc != 0
 
 - name: Set allowed clients
   run_once: true
-  command: "gluster volume set {{ gluster_volume_config.name }} auth.allow '{{ (gluster_volume_config.allowed_clients | map('extract', hostvars) | map(attribute='gluster_ip') + ['127.0.0.1']) | join(',') }}'"
+  # command: "gluster volume set {{ gluster_volume_config.name }} auth.allow '{{ (gluster_volume_config.allowed_clients | map('extract', hostvars) | map(attribute='gluster_ip') + ['127.0.0.1']) | join(',') }}'"
+  command: "gluster volume set {{ gluster_volume_config.name }} auth.allow '*'"
 
 - name: Check volume status
   shell: "sudo gluster volume info {{ gluster_volume_config.name }} | grep 'Status:' | cut -d' ' -f2"

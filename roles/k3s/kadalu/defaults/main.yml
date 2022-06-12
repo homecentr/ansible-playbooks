@@ -1,1 +1,5 @@
+# k3s_namespace
 k3s_kadalu_version: 0.8.12
+k3s_kadalu_mode_mapping:
+  pv_direct: "non-native"
+  pv_pool: "native"

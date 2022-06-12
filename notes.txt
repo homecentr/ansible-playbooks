@@ -1,29 +1,50 @@
 Next tasks
 ======================================
+- Server users and auth
+    - manage root user password (allowed for ssh where required - e.g. for proxmox), will be used for ad-hoc fixing when physically present at the machine
+    - remove "admin" user (i.e. lholota), create only "ansible" user, without password, store ssh private and public key in the vault via ansible_ssh_private_key variable
+        - store also public key for automated user set up
+    - configure ldap via pam on all machines (must be done in a separate playbook at the end of site.yml - ldap must be running in order to use it)
+        - in proxmox this might need to be configured via ui (TBC)
+- GlusterFS
+- User data structure
+    - downloads
+    - images
+    - private (per user data owned by Nextcloud)
+    - photos
+    - entertainment
+- SMTP Relay
+- Authentik
+    - Provide background image
+    - Deploy LDAP outpost
+- QBittorrent
+    - Forward auth
+    - Automate the initial set up - update the image to watch the config file and update the required keys
+- Nextcloud
+    - SSO
+    - Mount all volumes (downloads, images, private, photos, entertainment)
+- CCTV recording with SSO
+- Netboot.xyz
+    - Nice to have: Put logo on menu background
+- Authentik - enable prometheus metrics
+- Prometheus
+- Grafana
+- DHCP + exporter
+- Radius
+- Plex/Emby
+- Homepage - Organizr/Heimdall
+    - With Homecentr logo
+- Snipe it
+- RClone with Web UI & SSO
+- K3s based development environments
+- UPS and other exporters
+- Wazuh - endpoint and server security monitoring
+- Kubernetes dashboard (k8dash or the standard one)
+    - Exposed via traefik
+    - Get around the annoying token thing and replace it with sso with Authentik
 
-- Test longhorn set up with additional virtual disks
+Note - check motd - doesn't seem to be working
 
-- Role sample-apps
-    - Create an nginx sample - published via ingress for testing
-    - Create an nginx sample - published via metallb vip for testing
-
-- Role k3s/k8sdash (not standard dashboard...)
-
-
-k3s-cluster             = k3s-cluster
-======================================
-- k3s/core-dns
-- k3s/longhorn
-
-k3s-services
-======================================
-- k3s/prometheus
-- k3s/grafana
-- k3s/...
-- all services, the division between platform and apps is too blury
-
-Nice to have
-======================================
-- motd message with ascii art
-- print sysinfo (hostname, ips etc)
-- print info about upgradable packages
+In production only:
+- Outgoing VPN set up - NordVPN with 2 year deal, if possible route on gateway level or configure K8s egress
+- Incoming VPN set up

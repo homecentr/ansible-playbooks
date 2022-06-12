@@ -2,10 +2,10 @@ apiVersion: v1
 kind: Service
 metadata:
   name: unifi-controller-webui
-  namespace: "{{ unifi_controller_target_namespace | mandatory }}"
+  namespace: "{{ k3s_namespace | mandatory }}"
   annotations:
     traefik.ingress.kubernetes.io/service.serversscheme: https
-    traefik.ingress.kubernetes.io/service.serverstransport: {{ unifi_controller_target_namespace | mandatory }}-unifi-controller@kubernetescrd
+    traefik.ingress.kubernetes.io/service.serverstransport: {{ k3s_namespace | mandatory }}-unifi-controller@kubernetescrd
 spec:
   ports:
   - name: "https-web-ui" # name must start with https in order for traefik to use https to communicate with the pod

@@ -1,0 +1,12 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ name }}
+  namespace: "{{ k3s_namespace }}"
+spec:
+  storageClassName: kadalu.gluster-{{ name }}
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 100Mi # Ignored but must be specified to pass K8s validation

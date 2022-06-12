@@ -43,14 +43,14 @@
   notify: restart ssh
 
 - name: Allow root login from specific hosts
-  when: ssh_allow_root_login_exception_hosts is defined
+  when: ssh_allow_root_login_trusted_clients is defined
   blockinfile:
     path: /etc/ssh/sshd_config
     marker: "# {mark} ANSIBLE MANAGED BLOCK"
     block: |
-      Match Host {{ ssh_allow_root_login_exception_hosts | join(",") }}
-        PermitRootLogin yes
-    backup: yes
+      Match Host {{ ssh_allow_root_login_trusted_clients | join(",") }}
+        PermitRootLogin without-password
+    backup: yes # Will the without-password work with PVE?
     state: present
     validate: 'sshd -T -f %s'
     mode: 0644

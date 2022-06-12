@@ -37,6 +37,6 @@
   run_once: true
   k8s:
     kubeconfig: "{{ kubeconfig_path }}"
-    definition: "{{ lookup('template', 'certificate.yml.j2',template_vars=(item | combine({'certmanager_target_namespace': certmanager_target_namespace }))) }}"
+    definition: "{{ lookup('template', 'certificate.yml.j2',template_vars=(item | combine({'k3s_namespace': k3s_namespace }))) }}"
     state: present
   with_items: "{{ certmanager_certificates }}"

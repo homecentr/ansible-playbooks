@@ -24,17 +24,14 @@
       tags:
         - unifi-controller
 
-    - import_role: name=../roles/k3s/qbittorrent
-      tags:
-        - qbittorrent
-
     - import_role: name=../roles/k3s/authentik
       tags:
         - authentik
 
+    - import_role: name=../roles/k3s/qbittorrent
+      tags:
+        - qbittorrent
 
-        
-    # Authelia
 
     # TODO: Netboot.xyz
     # TODO: Images samba share (both in one role)

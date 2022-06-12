@@ -5,10 +5,14 @@
 
 - name: "Check if node is hosting a ups device"
   set_fact:
-    hosted_ups_devices: "{{ ups_devices | selectattr('monitored_by', 'equalto', inventory_hostname) | map(attribute='name')  }}"
+    hosted_ups_devices: "{{ ups_devices | selectattr('monitored_by', 'equalto', inventory_hostname) | map(attribute='name') }}"
 
 - include_tasks: master.yml
   when: (hosted_ups_devices | length) > 0
+
+- name: Set facts
+  set_fact:
+    ups_server: "{{ (ups_devices | selectattr('name', 'equalto', ups_name) | map(attribute='monitored_by'))[0] }}"
 
 - name: "Configure UPS Monitor mode"
   notify: restart ups_monitor
@@ -39,7 +43,7 @@
 - name: "Dump the ups name to /etc/ups"
   copy:
     dest: /etc/ups
-    content: "{{ ups_name | mandatory }}@{{ ups_server | mandatory }}"
+    content: "{{ ups_name }}@{{ ups_server }}"
     owner: root
     group: root
     mode: 0644

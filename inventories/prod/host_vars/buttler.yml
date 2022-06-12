@@ -1,7 +1,0 @@
-ansible_host: 10.1.2.31
-
-fqdn: buttler.homecentr.io
-
-gluster_hostname: gfs-buttler
-gluster_fqdn: gfs-buttler.homecentr.io
-gluster_has_direct_connection: no

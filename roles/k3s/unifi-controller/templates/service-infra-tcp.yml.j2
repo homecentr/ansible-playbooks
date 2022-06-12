@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: unifi-controller-infra-tcp
-  namespace: "{{ unifi_controller_target_namespace | mandatory }}"
+  namespace: "{{ k3s_namespace | mandatory }}"
   annotations:
     metallb.universe.tf/allow-shared-ip: "UnifiController"
     metallb.universe.tf/loadBalancerIPs: "{{ unifi_controller_infra_ipv4_address }}"

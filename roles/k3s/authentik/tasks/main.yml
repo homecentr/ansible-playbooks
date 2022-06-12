@@ -9,15 +9,12 @@
 
 # Note: the helm chart has a built-in prometheus configuration which can be used an inspiration for the other services
 
-# TODO: Define http ingress with redirect to https
-# TODO: Define https ingress
-
 - name: Deploy Authentik
   run_once: true
   kubernetes.core.helm:
     state: present
     release_name: authentik
-    release_namespace: "{{ authentik_target_namespace }}"
+    release_namespace: "{{ k3s_namespace }}"
     create_namespace: no
     chart_version: "{{ authentik_chart_version }}"
     chart_ref: authentik/authentik

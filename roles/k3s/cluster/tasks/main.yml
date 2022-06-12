@@ -6,3 +6,4 @@
 - include_tasks: setup-metallb.yml
 - include_tasks: setup-coredns.yml
 - include_tasks: setup-namespace.yml
+- include_tasks: setup-middlewares.yml

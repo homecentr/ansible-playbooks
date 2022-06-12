@@ -2,7 +2,7 @@ apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
   name: certmanager-cloudflare-issuer
-  namespace: {{ certmanager_target_namespace }}
+  namespace: {{ k3s_namespace }}
 spec:
   acme:
     email: {{ certmanager_acme_email }}

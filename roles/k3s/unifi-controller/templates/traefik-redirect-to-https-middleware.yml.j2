@@ -1,9 +1,0 @@
-apiVersion: traefik.containo.us/v1alpha1
-kind: Middleware
-metadata:
-  name: unifi-controller-redirect-to-https
-  namespace: "{{ unifi_controller_target_namespace | mandatory }}"
-spec:
-  redirectScheme:
-    scheme: https
-    permanent: true

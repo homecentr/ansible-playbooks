@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: unifi-controller
-  namespace: "{{ unifi_controller_target_namespace | mandatory }}"
+  namespace: "{{ k3s_namespace | mandatory }}"
   labels:
     app: unifi-controller
 spec:

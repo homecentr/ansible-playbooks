@@ -1,6 +1,6 @@
-ansible_host: 10.1.2.49
+ansible_host: 10.1.2.48
 ups_name: eaton1
 
-fqdn: swarm2.homecentr.io
+fqdn: kube1.homecentr.io
 docker_macvlan_interface: ens18
 ups_shutdown_delay_seconds: 60 # Wait 1 minute so the system doesn't shutdown on power hick ups but shuts down before T+3 when the PVE nodes start shutting down

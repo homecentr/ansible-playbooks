@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: smtp-relay
-  namespace: "{{ smtp_relay_target_namespace | mandatory }}"
+  namespace: "{{ k3s_namespace | mandatory }}"
   labels:
     app: smtp-relay
 spec:

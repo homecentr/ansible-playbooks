@@ -7,7 +7,7 @@ allowfrom = localhost
 upsmon master
 {% for server in groups['all'] %}
 
-[{{ hostvars[server]['hostname'] }}]
+[{{ hostvars[server]['inventory_hostname'] }}]
 password = {{ ups_slave_password }}
 allowfrom = {{ hostvars[server]['ansible_host'] }}
 {% endfor %}

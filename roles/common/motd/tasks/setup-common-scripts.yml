@@ -13,6 +13,10 @@
     group: root
     content: "{{ lookup('file', 'apt-check') }}"
 
+- name: Install apt-check dependencies
+  package:
+    name: python3-distro-info
+
 - name: Copy common scripts
   copy:
     src: "motd/{{ item }}.sh"

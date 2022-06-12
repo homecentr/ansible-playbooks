@@ -1,9 +1,11 @@
 ansible_host: 10.1.2.30
-
-ssh_permit_root_login: "yes" # To allow QDevice communication
-
 fqdn: minion.homecentr.io
-docker_macvlan_interface: enp1s0
+ups_name: eaton1
+ups_shutdown_delay_seconds: 300 # Wait 5 minutes before shutting down to give other machines time to recognize they need to shut down
+
+ssh_allow_root_login_trusted_clients:
+- pve1
+- pve2
 
 gluster_hostname: gfs-minion
 gluster_fqdn: gfs-minion.homecentr.io

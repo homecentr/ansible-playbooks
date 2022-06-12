@@ -11,8 +11,8 @@
       fail_on_error: yes
       strict: yes
   with_items:
-    - "traefik-redirect-to-https-middleware.yml.j2"
-    - "persistent-volume-claim.yml.j2"
+    - "pvc-config.yml.j2"
+    - "pvc-downloads.yml.j2"
     - "deployment.yml.j2"
     - "service.yml.j2"
     - "ingress-http.yml.j2"

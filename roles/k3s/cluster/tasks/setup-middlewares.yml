@@ -1,0 +1,8 @@
+- name: Set up Traefik middlewares
+  run_once: true
+  k8s:
+    kubeconfig: "{{ kubeconfig_path }}"
+    definition: "{{ lookup('template', item) }}"
+    state: present
+  with_items:
+    - middleware-http-redirect.yml.j2

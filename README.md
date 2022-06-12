@@ -22,10 +22,8 @@ playbooks/
 |   ├── swarm-cluster.yml     # Initializes Swarm cluster and configures swarm nodes for hosting services
 |   └── swarm-services.yml    # Deploys Docker swarm stacks running the services
 roles/
-|   ├── services
-|   |   └── <role>            # Roles contains Swarm cluster services which present value for the end user
-|   ├── utils
-|   |   └── <role>            # General roles which can be used ad-hoc
+|   └── <group>
+|       └── <role>            # Roles contains Swarm cluster services which present value for the end user
 .vault-pass.gpg               # Vault password encrypted by a hardware token
 apply                         # Script to ease up running playbooks
 vault                         # Script to ease up managing the encrypted secrets
@@ -43,9 +41,9 @@ Please make sure the node complies with the following requirements:
 - non admin user is allowed to sudo
 - node is registered in the inventory
 
-Run the `access` playbook against the new node using the command below:
+Run the `users` playbook against the new node using the command below:
 ```bash
-./apply <environment> access -k -K --user <user> --limit <node-name>
+./apply <environment> users -k -K --user <user> --limit <node-name>
 ```
 
 After running this command, you can connect and/or apply other playbooks using your **SSH key**.
@@ -58,7 +56,7 @@ Simply run the following bash command:
 ./apply <environment> <playbook>
 ```
 
-for example `./apply lab swarm-services`
+for example `./apply lab common`
 
 The script automatically installs dependencies from Ansible Galaxy and runs the playbook.
 

@@ -23,13 +23,13 @@
       line: "MIRRORS_MODE=0"
       state: present
     
-  - name: Set whether root ssh access is supposed to be allowed
-    lineinfile:
-      path: /etc/rkhunter.conf
-      regexp: "ALLOW_SSH_ROOT_USER=.*"
-      line: "ALLOW_SSH_ROOT_USER={{ ssh_permit_root_login }}"
-      state: present
-    when: lynis_hardening_ignore_root_ssh
+  # - name: Set whether root ssh access is supposed to be allowed
+  #   lineinfile:
+  #     path: /etc/rkhunter.conf
+  #     regexp: "ALLOW_SSH_ROOT_USER=.*"
+  #     line: "ALLOW_SSH_ROOT_USER=no"
+  #     state: present
+  #   when: lynis_hardening_ignore_root_ssh
 
   - name: Disable test for promisc interfaces
     lineinfile:

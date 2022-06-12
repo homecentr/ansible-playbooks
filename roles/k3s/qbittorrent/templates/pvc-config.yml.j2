@@ -2,11 +2,11 @@ kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
   name: qbittorrent-config
-  namespace: "{{ qbittorrent_target_namespace | mandatory }}"
+  namespace: "{{ k3s_namespace }}"
 spec:
-  storageClassName: {{ qbittorrent_storage_class | mandatory }}
+  storageClassName: {{ qbittorrent_config_storage_class }}
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 1Gi
+      storage: {{ qbittorrent_config_storage_size }}

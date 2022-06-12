@@ -1,8 +1,8 @@
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
 metadata:
-  name: authentik-redirect-to-https
-  namespace: "{{ authentik_target_namespace | mandatory }}"
+  name: redirect-to-https
+  namespace: "{{ k3s_namespace | mandatory }}"
 spec:
   redirectScheme:
     scheme: https

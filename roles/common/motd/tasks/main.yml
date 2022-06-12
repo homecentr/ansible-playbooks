@@ -30,3 +30,9 @@
 
 - include_tasks: clear-services-scripts.yml
   when: (not motd_services is defined) or (motd_services | length) == 0
+
+- name: Update PAM configuration to point to correct motd file
+  replace:
+    path: /etc/pam.d/sshd
+    regexp: "motd=/run/motd.dynamic$"
+    replace: "motd=/run/motd.dynamic.new"

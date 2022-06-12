@@ -2,7 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: qbittorrent-https
-  namespace: "{{ qbittorrent_target_namespace | mandatory }}"
+  namespace: "{{ k3s_namespace | mandatory }}"
   annotations:
     kubernetes.io/ingress.class: "traefik"
     traefik.ingress.kubernetes.io/router.entrypoints: websecure

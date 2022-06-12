@@ -30,15 +30,21 @@ kadalu_gluster_volumes:
     hosts:
       - node1
       - node2
-    mode: native # i.e. kadalu can create as many PVs as it wants
+    mode: pv_pool
+    reclaim_mode: archive
   
   - name: images
     hosts:
       - node1
       - node2
-    mode: non-native # i.e. kadalu can create as many PVs as it wants
+    mode: pv_direct
 
-certmanager_target_namespace: homecentr
+  - name: downloads
+    hosts:
+      - node1
+      - node2
+    mode: pv_direct
+
 certmanager_acme_use_staging: true
 certmanager_certificates:
   - name: "wildcard-lab-homecentr-io"
@@ -48,7 +54,6 @@ certmanager_certificates:
       - "*.lab.homecentr.io"
 
 
-smtp_relay_target_namespace: homecentr
 smtp_relay_ipv4_address: 192.168.2.129
 smtp_relay_host: smtp.sendgrid.net
 smtp_relay_port: 587
@@ -58,18 +63,17 @@ smtp_relay_allowed_clients_cidr_blocks:
   - "127.0.0.0/8"
   - "192.0.0.0/8"
 
-unifi_controller_target_namespace: homecentr
 unifi_controller_storage_class: kadalu.gluster-service-data
 unifi_controller_hostname: unifi.lab.homecentr.io
 unifi_controller_tls_certificate_name: wildcard-lab-homecentr-io
 unifi_controller_infra_ipv4_address: 192.168.2.130
 
-qbittorrent_target_namespace: homecentr
 qbittorrent_hostname: torrent.lab.homecentr.io
 qbittorrent_tls_certificate_name: wildcard-lab-homecentr-io
-qbittorrent_storage_class: kadalu.gluster-service-data
+qbittorrent_config_storage_class: kadalu.gluster-service-data
+qbittorrent_downloads_storage_class: kadalu.gluster-downloads
+qbittorrent_downloads_storage_size: 1000Mi # Ignored because the storage is pv_direct in Kadalu
 
-authentik_target_namespace: homecentr
 authentik_database_storage_class: kadalu.gluster-service-data
 authentik_chart_version: 2022.4.2
 authentik_hostname: authentik.lab.homecentr.io

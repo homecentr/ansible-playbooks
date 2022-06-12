@@ -17,7 +17,7 @@ W="\e[0;39m"
 G="\e[1;32m"
 
 echo -e "
-${W}system info:
+${W}System info:
 $W  Distro......: $W`cat /etc/*release | grep "PRETTY_NAME" | cut -d "=" -f 2- | sed 's/"//g'`
 $W  Kernel......: $W`uname -sr`
 

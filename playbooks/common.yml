@@ -8,9 +8,6 @@
   - import_role: name=../roles/common/chrony
     tags: [ chrony, ntp ]
 
-  - import_role: name=../roles/common/users
-    tags: [ users ]
-
   - import_role: name=../roles/common/benchmarks
     tags: [ benchmarks ]
 
@@ -23,7 +20,7 @@
   - import_role: name=../roles/common/ssh
     tags: [ ssh ]
 
-  - import_role: name=../roles/common/ups
+  - import_role: name=../roles/common/ups # To be continued here - needs variables
     tags: [ ups ]
   
   - import_role: name=../roles/common/motd

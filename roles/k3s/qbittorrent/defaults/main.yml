@@ -1,5 +1,8 @@
-# qbittorrent_target_namespace
+# k3s_namespace
 # qbittorrent_hostname
 # qbittorrent_tls_certificate_name
-# qbittorrent_storage_class
+# qbittorrent_config_storage_class
+qbittorrent_config_storage_size: 1Gi
+# qbittorrent_downloads_storage_class
+# qbittorrent_downloads_storage_size
 qbittorrent_image_tag: latest
