@@ -1,6 +1,6 @@
 ---
 - name: "Proxmox Virtual Environment Configuration"
-  hosts: proxmox_nodes
+  hosts: pve_nodes
   become: true
   become_method: sudo
   tasks:

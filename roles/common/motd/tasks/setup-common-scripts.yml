@@ -25,3 +25,20 @@
     group: root
     mode: 0755
   with_items: "{{ motd_common_scripts }}"
+
+- name: Get lolcat full path
+  become: false
+  shell: "which lolcat"
+  register: lolcat_lookup
+
+- name: Create common scripts from templates
+  template:
+    src: "{{ item }}.sh.j2"
+    dest: /etc/update-motd.d/{{ item }}
+    owner: root
+    group: root
+    mode: 0755
+    force: yes
+  with_items: "{{ motd_common_scripts_templates }}"
+  vars:
+    lolcat_path: "{{ lolcat_lookup.stdout }}"

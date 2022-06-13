@@ -31,5 +31,4 @@ fi
 echo -e "
 ${W}UPS Status:
 $W  Name........: $UPS_NAME
-$W  Status......: ${UPS_STATUS_COLOR}$UPS_STATUS
-"
+$W  Status......: ${UPS_STATUS_COLOR}$UPS_STATUS$W"
