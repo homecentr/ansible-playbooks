@@ -4,10 +4,16 @@
   become: true
   become_method: sudo
   tasks:
-  - include_role: name=../roles/gluster/cluster
+  - import_role: name=../roles/gluster/cluster
+    tags:
+      - cluster
 
   - name: "Service data volume"
-    include_role: name=../roles/gluster/volumes
+    import_role: name=../roles/gluster/volumes
+    tags:
+      - volumes
+
+
 
   # TODO: User data volumes
   # - they end up on the same hdd(s) but contain different data, this will then give an option to move the data to different disks if/when needed.
@@ -17,4 +23,4 @@
   # personal
   # cctv
   # images
-  # gitpod (?)
+  # gitpod

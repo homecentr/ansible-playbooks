@@ -1,6 +1,7 @@
+---
 - name: Set up coredns
   run_once: true
   k8s:
     kubeconfig: "{{ kubeconfig_path }}"
     definition: "{{ lookup('template', 'coredns.yml.j2') }}"
-    state: present
+    state: absent

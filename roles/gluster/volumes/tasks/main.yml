@@ -1,3 +1,4 @@
+---
 - include_tasks: volume.yml
   vars:
     gluster_volume_config: "{{ item }}"
@@ -7,3 +8,4 @@
   vars:
     gluster_volume_config: "{{ item }}"
   with_items: "{{ gluster_volumes }}"
+  # Only where current node hosts data !!!

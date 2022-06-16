@@ -1,0 +1,4 @@
+unifi_controller_storage_class: kadalu.gluster-service-data
+unifi_controller_hostname: unifi.lab.homecentr.io
+unifi_controller_tls_certificate_name: wildcard-lab-homecentr-io
+unifi_controller_infra_ipv4_address: 192.168.2.130

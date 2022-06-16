@@ -1,0 +1,30 @@
+external_dns_ipv4_address: 10.1.2.128 # TBA Secondary address (?)
+external_dns_cluster_domain: homecentr.io
+external_dns_forwarders:
+  - 8.8.8.8
+  - 8.8.4.4
+
+external_dns_rewrites:
+    # SMTP service does not have ingress so k8s_gateway uses <service-name>.<namespace>.<cluster-domain>
+    # which works but it's ugly so adding a rewrite (sort of cname) to make it more user friendly
+  - from: smtp.homecentr.io
+    to: smtp-relay.homecentr.homecentr.io
+  - from: dummy.homecentr.io
+    to: another.homecentr.homecentr.io
+
+external_dns_additional_hosts:
+  - name: pve1
+    var_names:
+      - fqdn
+  - name: pve2
+    var_names:
+      - fqdn
+  - name: minion
+    var_names:
+      - fqdn
+  - name: kube1
+    var_names:
+      - fqdn
+  - name: kube2
+    var_names:
+      - fqdn

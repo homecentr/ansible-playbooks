@@ -18,4 +18,4 @@ data:
     action "relay" relay host smtp+tls://secret-relay@{{ smtp_relay_host | mandatory }}:{{ smtp_relay_port | mandatory }} auth <secrets>
 
     # Relay without authentication only e-mails from trusted IP addresses
-    match from src <allowed_sources> mail-from regex "^.*@{{ smtp_relay_domain.replace(".", "\.") }}$" for any action "relay"
+    match from src <allowed_sources> mail-from regex "^.*@{{ smtp_relay_sender_domain.replace(".", "\.") }}$" for any action "relay"

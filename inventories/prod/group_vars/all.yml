@@ -18,19 +18,3 @@ ups_devices:
   description: Eaton 5E 1100i USB
   port: auto
   monitored_by: minion
-
-# opensmtpd_relay_docker_image_tag: "1.0.0"
-# opensmtpd_relay_service_name: smtp-relay
-# opensmtpd_relay_network: "{{ docker_macvlan_network }}"
-# opensmtpd_relay_ipv4_address: "10.1.2.128"
-# opensmtpd_relay_service_uid: 9100
-# opensmtpd_relay_service_gid: 9100
-# opensmtpd_relay_smtp_host: smtp.sendgrid.net
-# opensmtpd_relay_smtp_port: 587
-# opensmtpd_relay_smtp_username: apikey
-# opensmtpd_relay_smtp_password: "{{ secret_smtp_password }}"
-# opensmtpd_relay_domain: homecentr.io
-# opensmtpd_relay_anonymous_allowed_cidrs:
-#   - "10.1.2.16/32" # pve1 iDRAC
-#   - "10.1.2.21/32" # pve2 iDRAC
-#   - "127.0.0.1/8"

@@ -11,8 +11,10 @@
       fail_on_error: yes
       strict: yes
   with_items:
-    - "secret.yml.j2"
+    - "service-account.yml.j2"
+    - "cluster-role.yml.j2"
+    - "cluster-role-binding.yml.j2"
     - "config-map.yml.j2"
     - "deployment.yml.j2"
-    - "service.yml.j2"
-    - "network-policy.yml.j2"
+    - "service-tcp.yml.j2"
+    - "service-udp.yml.j2"

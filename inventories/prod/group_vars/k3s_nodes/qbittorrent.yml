@@ -1,0 +1,5 @@
+qbittorrent_hostname: torrent.lab.homecentr.io
+qbittorrent_tls_certificate_name: wildcard-lab-homecentr-io
+qbittorrent_config_storage_class: kadalu.gluster-service-data
+qbittorrent_downloads_storage_class: kadalu.gluster-downloads
+qbittorrent_downloads_storage_size: 1000Mi # Ignored because the storage is pv_direct in Kadalu

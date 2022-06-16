@@ -45,6 +45,8 @@ Next tasks
 
 Note - check motd - doesn't seem to be working
 
+- Cron job for ZFS snapshots of configured pools
+
 In production only:
 - Outgoing VPN set up - NordVPN with 2 year deal, if possible route on gateway level or configure K8s egress
 - Incoming VPN set up

@@ -1,0 +1,4 @@
+authentik_database_storage_class: kadalu.gluster-service-data
+authentik_chart_version: 2022.4.2
+authentik_hostname: authentik.lab.homecentr.io
+authentik_tls_certificate_name: wildcard-lab-homecentr-io

@@ -7,11 +7,15 @@
   file:
     path: "/mnt/gfs/{{ gluster_volume_config.name }}"
     state: directory
+  # Only mount the volume if the node hosts data
+  when: gluster_volume_config.storage_bricks | selectattr('host','equalto', inventory_hostname) | count > 0
 
-- name: Mount volume
+- name: Mount volume to localhost
   ansible.posix.mount:
     path: "/mnt/gfs/{{ gluster_volume_config.name }}"
     src: "{{ gluster_hostname }}:/{{ gluster_volume_config.name }}"
     fstype: glusterfs
     opts: defaults,_netdev
     state: mounted
+  # Only mount the volume if the node hosts data
+  when: gluster_volume_config.storage_bricks | selectattr('host','equalto', inventory_hostname) | count > 0

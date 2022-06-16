@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: external-dns
+  namespace: "{{ k3s_namespace | mandatory }}"
+data:
+  Corefile: |
+    .:53 {
+        log
+        errors
+        health {
+          lameduck 5s
+        }
+        ready
+        hosts {
+    {% filter indent(width=4) %}
+    {% for host in external_dns_additional_hosts %}
+    {{ hostvars[host.name]['ansible_host'] }}{% for var_name in host.var_names %} {{ hostvars[host.name][var_name] }}{% endfor %}
+
+    {% endfor %}
+    {% endfilter %}
+
+          fallthrough
+        }
+
+    {% filter indent(width=1) %}
+    {% for rewrite in external_dns_rewrites %}
+    rewrite continue name exact {{ rewrite.from }} {{ rewrite.to }}
+
+    {% endfor %}
+    {% endfilter %}
+
+        k8s_gateway {{ external_dns_cluster_domain }} {}
+        forward . {{ external_dns_forwarders | join(" ") }} {
+          max_concurrent 1000
+        }
+        prometheus :9153
+        cache 30
+        loop
+        reload
+        loadbalance
+    }

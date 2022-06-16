@@ -18,10 +18,10 @@
     command: "pvecm qdevice setup {{ hostvars[item].ansible_host }}"
     echo: no
     responses:
-      "root@\\d+\\.\\d+\\.\\d+\\.\\d+'s password:": "{{ secret_root_user_password }}"
+      "root@\\d+\\.\\d+\\.\\d+\\.\\d+'s password:": "{{ users_root_password }}"
   with_items: "{{ groups['pve_qdevices'] }}"
   register: qdevice_registration
-  ignore_errors: yes # Ignore because failed_when can't access return code
+  ignore_errors: true # Ignore because failed_when can't access return code
 
 - name: "Evaluate setup return code"
   assert:

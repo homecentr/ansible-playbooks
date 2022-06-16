@@ -12,3 +12,9 @@ spec:
   selector:
     app: smtp-relay
   type: LoadBalancer
+  # externalIps:
+  # - {{ smtp_relay_ipv4_address }}
+status:
+  loadBalancer:
+    ingress:
+    - ip: {{ smtp_relay_ipv4_address }}
