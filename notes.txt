@@ -13,7 +13,6 @@ Next tasks
     - private (per user data owned by Nextcloud)
     - photos
     - entertainment
-- SMTP Relay
 - Authentik
     - Provide background image
     - Deploy LDAP outpost

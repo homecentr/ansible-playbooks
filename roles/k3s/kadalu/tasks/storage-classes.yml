@@ -1,6 +1,7 @@
 - name: "Define storage classes for Gluster volumes"
   run_once: true
   k8s:
+    apply: true
     kubeconfig: "{{ kubeconfig_path }}"
     definition: "{{ lookup('template', 'storage-class.yml.j2', template_vars=item) }}"
     state: present

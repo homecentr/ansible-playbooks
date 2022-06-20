@@ -1,19 +1,19 @@
 kadalu_gluster_volumes:
   - name: k3s-services
     hosts:
-      - pve1
-      - pve2
+      - gfs-pve1
+      - gfs-pve2
     mode: pv_pool
     reclaim_mode: archive
   
-  - name: images
+  - name: boot-images
     hosts:
-      - pve1
-      - pve2
+      - gfs-pve1
+      - gfs-pve2
     mode: pv_direct
 
   # - name: downloads
   #   hosts:
-  #     - node1
-  #     - node2
+  #     - gfs-pve1
+  #     - gfs-pve2
   #   mode: pv_direct

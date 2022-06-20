@@ -4,4 +4,4 @@
   k8s:
     kubeconfig: "{{ kubeconfig_path }}"
     definition: "{{ lookup('template', 'coredns.yml.j2') }}"
-    state: absent
+    state: present

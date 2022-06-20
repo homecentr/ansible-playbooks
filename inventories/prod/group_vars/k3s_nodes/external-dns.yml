@@ -9,22 +9,26 @@ external_dns_rewrites:
     # which works but it's ugly so adding a rewrite (sort of cname) to make it more user friendly
   - from: smtp.homecentr.io
     to: smtp-relay.homecentr.homecentr.io
-  - from: dummy.homecentr.io
-    to: another.homecentr.homecentr.io
+
+external_dns_round_robin_records:
+  - name: pve
+    hosts:
+      - pve1
+      - pve2
 
 external_dns_additional_hosts:
   - name: pve1
-    var_names:
+    hostname_variable_names:
       - fqdn
   - name: pve2
-    var_names:
+    hostname_variable_names:
       - fqdn
   - name: minion
-    var_names:
+    hostname_variable_names:
       - fqdn
   - name: kube1
-    var_names:
+    hostname_variable_names:
       - fqdn
   - name: kube2
-    var_names:
+    hostname_variable_names:
       - fqdn

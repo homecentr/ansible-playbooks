@@ -15,18 +15,16 @@
     - import_role: name=../roles/k3s/external-dns
       tags:
         - dns
+        - external-dns
 
     - import_role: name=../roles/k3s/cert-manager
       tags:
         - cert-manager
 
-    # Deployed in original version
-    # TODO: Placement constraints and QoS, SMTP relay should be able to run anywhere and should always run
-    # TODO: Reconfigure CoreDNS to use gateway (?)
-    # TODO: Configure CoreDNS rewrite to rewrite *.homecentr.io to *.<namespace>.<cluster> or whatever resolves to the static ip
     - import_role: name=../roles/k3s/smtp-relay
       tags:
         - smtp-relay
+        - smtp
 
     - import_role: name=../roles/k3s/unifi-controller
       tags:

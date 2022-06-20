@@ -1,4 +1,10 @@
-authentik_database_storage_class: kadalu.gluster-service-data
-authentik_chart_version: 2022.4.2
-authentik_hostname: authentik.lab.homecentr.io
-authentik_tls_certificate_name: wildcard-lab-homecentr-io
+authentik_database_storage_class: kadalu.gluster-k3s-services
+authentik_chart_version: 2022.6.1
+authentik_hostname: auth.homecentr.io
+authentik_tls_certificate_name: wildcard-homecentr-io
+
+authentik_email_from: auth@homecentr.io
+authentik_email_smtp_host: smtp.sendgrid.net
+authentik_email_smtp_port: 587
+authentik_email_smtp_username: apikey
+authentik_email_smtp_protocol: tls

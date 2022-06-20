@@ -12,25 +12,42 @@ data:
           lameduck 5s
         }
         ready
-        hosts {
-    {% filter indent(width=4) %}
-    {% for host in external_dns_additional_hosts %}
-    {{ hostvars[host.name]['ansible_host'] }}{% for var_name in host.var_names %} {{ hostvars[host.name][var_name] }}{% endfor %}
 
-    {% endfor %}
-    {% endfilter %}
+        {% for record in external_dns_round_robin_records %}
+        template IN A {{ external_dns_cluster_domain }} {
+          match ^{{ (record.name + '.' + external_dns_cluster_domain + '.') | replace('.', '[.]') }}$
+          {% for host in record.hosts %}
+          answer "{% raw %}{{ .Name }}{% endraw %} {{ record.ttl | default("60") }} IN A {{ hostvars[host].ansible_host }}"
+          {% endfor %}
+
+          fallthrough
+        }
+        {% endfor %}
+        
+        {% filter indent(width=1) %}
+        {% for rewrite in external_dns_rewrites %}
+        rewrite continue name exact {{ rewrite.from }} {{ rewrite.to }}
+
+        {% endfor %}
+        {% endfilter %}
+
+        hosts {
+        {% filter indent(width=4) %}
+        {% for host in external_dns_additional_hosts %}
+        {% if "hostname_variable_names" in host %}
+        {{ hostvars[host.name]['ansible_host'] }}{% for var_name in host.hostname_variable_names %} {{ hostvars[host.name][var_name] }}{% endfor %}
+        {% else %}
+        {{ host.value }}{% for var_name in host.hostname_variable_names %} {{ hostvars[host.name][var_name] }}{% endfor %}
+        {% endif %}
+
+        {% endfor %}
+        {% endfilter %}
 
           fallthrough
         }
 
-    {% filter indent(width=1) %}
-    {% for rewrite in external_dns_rewrites %}
-    rewrite continue name exact {{ rewrite.from }} {{ rewrite.to }}
-
-    {% endfor %}
-    {% endfilter %}
-
         k8s_gateway {{ external_dns_cluster_domain }} {}
+      
         forward . {{ external_dns_forwarders | join(" ") }} {
           max_concurrent 1000
         }

@@ -15,6 +15,7 @@ spec:
       labels:
         app: smtp-relay
     spec:
+      priorityClassName: critical-priority # Required for iDRAC alerts
       containers:
       - name: opensmtpd
         image: ghcr.io/homecentr/opensmtpd:{{ smtp_relay_opensmtpd_image_tag }}

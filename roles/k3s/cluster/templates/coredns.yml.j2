@@ -11,23 +11,23 @@ metadata:
     kubernetes.io/bootstrapping: rbac-defaults
   name: system:coredns
 rules:
-  - apiGroups:
-    - ""
-    resources:
+- verbs:
+    - list
+    - watch
+  apiGroups:
+    - ''
+  resources:
     - endpoints
     - services
     - pods
     - namespaces
-    verbs:
+- verbs:
     - list
     - watch
-  - apiGroups:
+  apiGroups:
     - discovery.k8s.io
-    resources:
+  resources:
     - endpointslices
-    verbs:
-    - list
-    - watch
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -67,18 +67,19 @@ data:
         ready
         hosts {
         {% filter indent(width=4) %}
-        {% for host in k3s_cluster_dns_additional_hosts %}
-        {{ hostvars[host.name]['ansible_host'] }}{% for var_name in host.var_names %} {{ hostvars[host.name][var_name] }}{% endfor %}
-
+        {% for host in groups['all'] %}
+        {{ hostvars[host]['ansible_host'] }} {{ host }} {{ hostvars[host].fqdn }}
         {% endfor %}
+
+        {% for host in groups['gluster_nodes'] %}
+        {{ hostvars[host].ansible_host }} {{ hostvars[host].gluster_hostname }} {{ hostvars[host].gluster_fqdn }}
+        {% endfor %}
+
         {% endfilter %}
 
           fallthrough
         }
-        k8s_external {{ k3s_services_external_domain }}
-        forward . {{ k3s_cluster_dns_forwarders | join(" ") }} {
-          max_concurrent 1000
-        }
+        forward . /etc/resolv.conf
         prometheus :9153
         cache 30
         loop
@@ -208,37 +209,3 @@ spec:
   - name: metrics
     port: 9153
     protocol: TCP
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: external-dns-udp
-  namespace: kube-system
-  annotations:
-    metallb.universe.tf/allow-shared-ip: "DNS"
-    metallb.universe.tf/loadBalancerIPs: {{ k3s_cluster_dns_external_ip | mandatory }}
-spec:
-  type: LoadBalancer
-  ports:
-  - port: 53
-    targetPort: 53
-    protocol: UDP
-  selector:
-    k8s-app: kube-dns
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: external-dns-tcp
-  namespace: kube-system
-  annotations:
-    metallb.universe.tf/allow-shared-ip: "DNS"
-    metallb.universe.tf/loadBalancerIPs: {{ k3s_cluster_dns_external_ip | mandatory }}
-spec:
-  type: LoadBalancer
-  ports:
-  - port: 53
-    targetPort: 53
-    protocol: TCP
-  selector:
-    k8s-app: kube-dns

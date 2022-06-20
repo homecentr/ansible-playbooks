@@ -6,9 +6,18 @@
     repo_url: https://charts.goauthentik.io
     state: present
 
+# TODO: CoreDNS
+#   Multi value answer for pve.homecentr.io -> pve1.homecentr.io + pve2.homecentr.io -> can this be set up as a CNAME?
+#   Add second instance with a static ip
+#   Enable DNSSEC for homecentr.io zone
+
+
+# TODO: Enable SMTP
+# TODO: Deploy outpost(s) manually via chart or custom Kubernetes definition
+# TODO: Disable service account for security purposes
+
 
 # Note: the helm chart has a built-in prometheus configuration which can be used an inspiration for the other services
-
 - name: Deploy Authentik
   run_once: true
   kubernetes.core.helm:
@@ -28,7 +37,16 @@
         secret_key: "{{ authentik_cookie_signing_key }}"
         postgresql:
           password: "{{ authentik_database_password }}"
-        # TODO: Configure SMTP
+        email:
+          from: "{{ authentik_email_from }}"
+          host: "{{ authentik_email_smtp_host }}"
+          port: "{{ authentik_email_smtp_port }}"
+          use_ssl: "{{ 'yes' if authentik_email_smtp_protocol == 'ssl' else 'no' }}"
+          use_tls: "{{ 'yes' if authentik_email_smtp_protocol == 'tls' else 'no' }}"
+          username: "{{ authentik_email_smtp_username }}"
+          password: "{{ authentik_email_smtp_password }}"
+      error_reporting:
+        enabled: false
       postgresql:
         enabled: true
         postgresqlPassword: "{{ authentik_database_password }}"
@@ -52,6 +70,6 @@
       fail_on_error: yes
       strict: yes
   with_items:
-    - "traefik-redirect-to-https-middleware.yml.j2"
+    - "traefik-middleware.yml.j2"
     - "ingress-http.yml.j2"
     - "ingress-https.yml.j2"

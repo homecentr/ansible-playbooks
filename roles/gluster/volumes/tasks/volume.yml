@@ -38,9 +38,8 @@
 
 - name: Set allowed clients
   run_once: true
-  command: "{{ lookup('template', 'set-volume-clients-command.j2') }}"
-  # command: "gluster volume set {{ gluster_volume_config.name }} auth.allow '{{ (gluster_volume_config.allowed_clients | map('extract', hostvars) | map(attribute='gluster_ip') + ['127.0.0.1']) | join(',') }}'"
-  # command: "gluster volume set {{ gluster_volume_config.name }} auth.allow '*'"
+  # command: "{{ lookup('template', 'set-volume-clients-command.j2') }}"
+  command: "gluster volume set {{ gluster_volume_config.name }} auth.allow '*'"
 
 - name: Check volume status
   shell: "sudo gluster volume info {{ gluster_volume_config.name }} | grep 'Status:' | cut -d' ' -f2"

@@ -12,15 +12,12 @@
     import_role: name=../roles/gluster/volumes
     tags:
       - volumes
-
-
-
-  # TODO: User data volumes
-  # - they end up on the same hdd(s) but contain different data, this will then give an option to move the data to different disks if/when needed.
-  # - personal data can also have higher replicas (e.g. three with a brick on each physical disk)
-  # videos
-  # photos
-  # personal
-  # cctv
-  # images
-  # gitpod
+      
+- name: "Configure client servers"
+  hosts: all, !gluster_nodes
+  become: true
+  become_method: sudo
+  tasks:
+  - import_role: name=../roles/gluster/client
+    tags:
+      - client
