@@ -7,9 +7,7 @@ metadata:
     # k8s-app: external-dns
     kubernetes.io/name: "external-dns"
 spec:
-  # replicas: not specified here:
-  # 1. Default is 1.
-  # 2. Will be tuned in real time if DNS horizontal auto-scaling is turned on.
+  replicas: 2
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -27,6 +25,13 @@ spec:
       tolerations:
         - key: "CriticalAddonsOnly"
           operator: "Exists"
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              k8s-app: external-dns 
       nodeSelector:
         kubernetes.io/os: linux
       affinity:
