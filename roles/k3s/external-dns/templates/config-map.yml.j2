@@ -48,9 +48,11 @@ data:
           fallthrough
         }
 
-        k8s_gateway {{ external_dns_cluster_domain }} {}
+        k8s_gateway {{ external_dns_cluster_domain }} {
+        }
       
-        forward . {{ external_dns_forwarders | join(" ") }} {
+        forward . {{ ["tls://"] | product(external_dns_forwarders) | map('join') | list | join(" ") }} {
+          tls_servername {{ external_dns_forwarders_tls_name }}
           max_concurrent 1000
         }
         prometheus :9153

@@ -1,5 +1,7 @@
 external_dns_ipv4_address: 10.1.2.128 # TBA Secondary address (?)
 external_dns_cluster_domain: homecentr.io
+
+external_dns_forwarders_tls_name: dns.google
 external_dns_forwarders:
   - 8.8.8.8
   - 8.8.4.4
@@ -23,6 +25,10 @@ external_dns_records:
     type: A
     targets:
       - host: pve1
+  - name: vpn
+    type: A
+    targets:
+      - value: 89.239.25.20
 
 external_dns_known_hosts:
   - name: pve1
