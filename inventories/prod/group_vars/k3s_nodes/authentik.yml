@@ -1,10 +1,12 @@
-authentik_database_storage_class: kadalu.gluster-k3s-services
+authentik_storage_class: kadalu.gluster-k3s-services
+authentik_image_tag: 2022.6.3
 authentik_chart_version: 2022.6.1
 authentik_hostname: auth.homecentr.io
 authentik_tls_certificate_name: wildcard-homecentr-io
 
-authentik_email_from: auth@homecentr.io
-authentik_email_smtp_host: smtp.sendgrid.net
-authentik_email_smtp_port: 587
-authentik_email_smtp_username: apikey
-authentik_email_smtp_protocol: tls
+authentik_email_from: "\"Homecentr\" <auth@homecentr.io>"
+authentik_email_smtp_host: smtp-relay.homecentr.svc.cluster.local
+authentik_email_smtp_port: 25
+authentik_email_smtp_username: ""
+authentik_email_smtp_password: ""
+authentik_email_smtp_protocol: 'insecure' # To disable both ssl and tls

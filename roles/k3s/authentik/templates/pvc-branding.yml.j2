@@ -1,0 +1,12 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: data-authentik-branding
+  namespace: "{{ k3s_namespace }}"
+spec:
+  storageClassName: {{ authentik_storage_class }}
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi

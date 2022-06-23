@@ -11,6 +11,11 @@ spec:
     - Ingress
   ingress:
     - from:
+{% for service_labels in smtp_relay_allowed_clients_services %}
+        - podSelector:
+            matchLabels:
+              {{ service_labels }}
+{% endfor -%}
 {% for cidr_block in smtp_relay_allowed_clients_cidr_blocks %}
         - ipBlock:
             cidr: "{{ cidr_block }}"

@@ -12,8 +12,8 @@ kadalu_gluster_volumes:
       - gfs-pve2
     mode: pv_direct
 
-  # - name: downloads
-  #   hosts:
-  #     - gfs-pve1
-  #     - gfs-pve2
-  #   mode: pv_direct
+  - name: downloads
+    hosts:
+      - gfs-pve1
+      - gfs-pve2
+    mode: pv_direct

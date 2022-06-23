@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: authentik-branding
+  namespace: "{{ k3s_namespace | mandatory }}"
+data:
+  customStyles: |
+    :root {
+      --ak-accent: #0097a7 !important;
+      --pf-global--primary-color--100: #0097a7 !important;
+      --pf-global--primary-color--200: #006978 !important;
+
+      --pf-c-nav__link--m-current--after--BorderColor:  #0097a7 !important;
+    }
+    .pf-c-background-image.ak-flow-executor {
+      --pf-c-background-image--Filter: initial !important
+    }
+    .pf-c-brand.ak-brand {
+        max-width: 70%;
+        margin-left: auto  !important;
+        margin-right: auto  !important;
+    }
+    .pf-c-login__footer.ak-flow-executor {
+      visibility: hidden;
+    }
+
+
+binaryData:
+  loginBackground: "{{ lookup('url', authentik_login_background_url, split_lines=False) | b64encode }}"
+  logo: "{{ lookup('file', role_path + "/../../../assets/logo.png") | b64encode }}"
+  favicon: "{{ lookup('file', role_path + "/../../../assets/favicon.ico") | b64encode }}"

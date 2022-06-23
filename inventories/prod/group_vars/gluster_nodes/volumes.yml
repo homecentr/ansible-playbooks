@@ -32,3 +32,20 @@ gluster_volumes:
       - kube2
       - pve1
       - pve2
+
+  - name: downloads
+    storage_bricks:
+      - host: pve1
+        path: /mnt/zfs/user-data/gfs/downloads/brick0
+      - host: pve2
+        path: /mnt/zfs/user-data/gfs/downloads/brick0
+    arbiter_bricks:
+      - host: minion
+        path: /data/gfs/downloads/brick0
+    replicas: 2
+    arbiters: 1
+    allowed_clients:
+      - kube1
+      - kube2
+      - pve1
+      - pve2
