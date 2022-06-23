@@ -4,12 +4,10 @@ metadata:
   name: unifi-controller-infra-tcp
   namespace: "{{ k3s_namespace | mandatory }}"
   annotations:
-    metallb.universe.tf/allow-shared-ip: "UnifiController"
-    metallb.universe.tf/loadBalancerIPs: "{{ unifi_controller_infra_ipv4_address }}"
+    metallb.universe.tf/allow-shared-ip: UnifiController
+    metallb.universe.tf/loadBalancerIPs: {{ unifi_controller_infra_ipv4_address }}
 spec:
   ports:
-  - name: "https-web-ui" # TODO: Remove after proxy is working
-    port: 8443
   - name: "devices-communication"
     port: 8080
   - name: "guest-portal-https"

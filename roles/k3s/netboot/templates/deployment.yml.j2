@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: netboot
+  namespace: "{{ k3s_namespace | mandatory }}"
+  labels:
+    app: netboot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: netboot
+  template:
+    metadata:
+      labels:
+        app: netboot
+    spec:
+      containers:
+      - name: unifi-controller
+        image: lscr.io/linuxserver/netbootxyz:{{ netboot_image_tag }}
+        env:
+          - name: PUID
+            value: "1000"
+          - name: PGID
+            value: "1000"
+        ports:
+          - containerPort: 80
+          - containerPort: 3000
+          - containerPort: 69
+            protocol: UDP
+        volumeMounts:
+          - mountPath: /config
+            name: config
+          - mountPath: /assets
+            name: boot-images
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: netboot-config
+        - name: boot-images
+          persistentVolumeClaim:
+            claimName: boot-images

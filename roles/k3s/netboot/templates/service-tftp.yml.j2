@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: netboot-tftp
+  namespace: "{{ k3s_namespace | mandatory }}"
+  annotations:
+    metallb.universe.tf/allow-shared-ip: netboot
+    metallb.universe.tf/loadBalancerIPs: {{ netboot_boot_ipv4_address }}
+spec:
+  ports:
+  - name: tftp
+    port: 69
+    protocol: UDP
+  selector:
+    app: netboot

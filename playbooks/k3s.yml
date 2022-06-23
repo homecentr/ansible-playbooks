@@ -29,6 +29,7 @@
     - import_role: name=../roles/k3s/unifi-controller
       tags:
         - unifi-controller
+        - unifi
 
     - import_role: name=../roles/k3s/authentik
       tags:
@@ -37,6 +38,11 @@
     - import_role: name=../roles/k3s/qbittorrent
       tags:
         - qbittorrent
+
+    - import_role: name=../roles/k3s/netboot
+      tags:
+        - netboot
+        - pxe
 
 
     # TODO: Netboot.xyz

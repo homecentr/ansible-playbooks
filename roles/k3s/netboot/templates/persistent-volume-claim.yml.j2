@@ -1,0 +1,12 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: netboot-config
+  namespace: "{{ k3s_namespace | mandatory }}"
+spec:
+  storageClassName: {{ netboot_config_storage_class | mandatory }}
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi

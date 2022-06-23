@@ -4,8 +4,8 @@ metadata:
   name: unifi-controller-infra-udp
   namespace: "{{ k3s_namespace | mandatory }}"
   annotations:
-    metallb.universe.tf/allow-shared-ip: "UnifiController"
-    metallb.universe.tf/loadBalancerIPs: "{{ unifi_controller_infra_ipv4_address }}"
+    metallb.universe.tf/allow-shared-ip: UnifiController
+    metallb.universe.tf/loadBalancerIPs: {{ unifi_controller_infra_ipv4_address }}
 spec:
   ports:
   - name: "stun"

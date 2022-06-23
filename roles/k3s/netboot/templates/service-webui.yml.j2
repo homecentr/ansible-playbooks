@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: netboot-webui
+  namespace: "{{ k3s_namespace | mandatory }}"
+spec:
+  ports:
+  - name: "web-ui" # name must start with https in order for traefik to use https to communicate with the pod
+    port: 3000
+  selector:
+    app: netboot

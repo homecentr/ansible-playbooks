@@ -1,0 +1,35 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: unifi-controller
+  namespace: "{{ k3s_namespace | mandatory }}"
+spec:
+  podSelector:
+    matchLabels:
+      app: unifi-controller
+  policyTypes:
+    - Ingress
+  ingress:
+    - ports:
+      - protocol: tcp
+        port: 8443
+      from:
+      - podSelector:
+          matchLabels:
+            app.kubernetes.io/name: traefik
+    - ports:
+      # Note: Guest portal not used, ports disabled until needed
+      - protocol: tcp
+        port: 8080
+      - protocol: tcp
+        port: 6789
+      - protocol: udp
+        port: 3478
+      - protocol: udp
+        port: 10001
+      - protocol: udp
+        port: 1900
+      from:
+      - ipBlock:
+          cidr: "{{ unifi_controller_infra_subnet_cidr }}"
+        
