@@ -12,8 +12,8 @@
       strict: yes
   with_items:
     - "pvc-config.yml.j2"
-    - "pvc-downloads.yml.j2"
     - "deployment.yml.j2"
     - "service.yml.j2"
     - "ingress-http.yml.j2"
     - "ingress-https.yml.j2"
+    - "ingress-fwdauth.yml.j2"
