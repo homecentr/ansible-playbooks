@@ -44,24 +44,22 @@
         - netboot
         - pxe
 
+    - import_role: name=../roles/k3s/heimdall
+      tags:
+        - heimdall
+        - homepage
 
-    # TODO: Netboot.xyz
-    # TODO: Images samba share (both in one role)
+    - import_role: name=../roles/k3s/snipe-it
+      tags:
+        - snipe-it
+        - snipe
 
-    # TODO: DHCP configured for netboot.xyz
-
-    # TODO: SMB Share - media
-    # TODO: SMB Share - private per user data
-
+    - import_role: name=../roles/k3s/dhcp
+      tags:
+        - dhcp
+    
     # TODO: NextCloud
-
-    # TODO: Torrent client
-    # TODO: SMB Share - downloads
     # TODO: Plex
-
-    # TODO: Snipe IT (with database)
-
-    # TODO: Organizr
 
     # TODO: Radius for VPN (?)
 

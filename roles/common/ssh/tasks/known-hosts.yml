@@ -3,6 +3,11 @@
   register: ssh_key
 
 - name: "Add ssh key to known_hosts"
+  debug:
+    msg: "{{ hostvars[item].ssh_key if 'ssh_key' in hostvars[item] else 'empty' }}"
+  with_items: "{{ groups['all'] }}"
+
+- name: "Add ssh key to known_hosts"
   known_hosts:
     path: /etc/ssh/ssh_known_hosts
     name: "{{ hostvars[item].inventory_hostname }}"

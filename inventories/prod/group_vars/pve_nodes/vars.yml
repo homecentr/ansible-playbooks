@@ -1,0 +1,11 @@
+---
+ssh_permit_root_login: "without-password" # It is required for VNC proxy between the nodes
+
+pve_smtp_host: 10.1.2.130
+pve_smtp_port: 25
+pve_smtp_tls: false
+
+additional_hosts:
+  # To allow Open ID authentication
+  - ip: 10.1.2.141
+    host: auth.homecentr.io

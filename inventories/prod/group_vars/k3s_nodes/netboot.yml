@@ -1,4 +1,5 @@
 netboot_config_storage_class: kadalu.gluster-k3s-services
 netboot_boot_ipv4_address: 10.1.2.132
-netboot_hostname: boot.homecentr.io
+netboot_webui_hostname: boot.homecentr.io
+netboot_boot_hostname: pxe.homecentr.io
 netboot_tls_certificate_name: wildcard-homecentr-io

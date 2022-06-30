@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dhcp
+  namespace: "{{ k3s_namespace | mandatory }}"
+  labels:
+    app: dhcp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dhcp
+  template:
+    metadata:
+      labels:
+        app: dhcp
+    spec:
+      priorityClassName: system-cluster-critical
+      containers:
+      - name: dhcp
+        image: homecentr/dhcp:{{ dhcp_image_tag }}
+        env:
+          - name: PUID
+            value: "1000"
+          - name: PGID
+            value: "1000"
+          - name: DHCP_ARGS
+            value: "eth0" # To force listening on interface even though there's no subnet definition for the internal network
+        ports:
+          - containerPort: 67
+            protocol: UDP
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            add:
+            - NET_BIND_SERVICE
+        volumeMounts:
+          - name: dhcp-config
+            mountPath: "/config/dhcpd.conf"
+            subPath: dhcpd.conf
+            readOnly: true
+          - name: dhcp-config
+            mountPath: "/etc/default/isc-dhcp-server"
+            subPath: isc-dhcp-server
+            readOnly: true
+          - mountPath: /leases
+            name: leases
+      volumes:
+        - name: dhcp-config
+          configMap:
+            name: dhcp
+            items:
+            - key: dhcpd.conf
+              path: dhcpd.conf
+            - key: interfaces
+              path: interfaces
+        - name: leases
+          persistentVolumeClaim:
+            claimName: dhcp-leases

@@ -1,0 +1,12 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: snipe-it-mysql
+  namespace: "{{ k3s_namespace }}"
+spec:
+  storageClassName: {{ snipe_it_database_storage_class }}
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ snipe_it_database_storage_size }}

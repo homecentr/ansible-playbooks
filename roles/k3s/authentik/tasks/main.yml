@@ -21,6 +21,10 @@
     - "ingress-http.yml.j2"
     - "ingress-https.yml.j2"
     - "pvc-branding.yml.j2"
+    - "network-policy-postgresql.yml.j2"
+    - "network-policy-redis.yml.j2"
+    - "network-policy-server.yml.j2"
+    - "network-policy-worker.yml.j2"
 
 - name: Create branding config map
   run_once: true

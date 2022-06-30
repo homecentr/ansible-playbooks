@@ -2,7 +2,7 @@ ansible_host: 10.1.2.22
 fqdn: pve2.homecentr.io
 
 ssh_allow_root_login_trusted_clients:
-- monion
+- minion
 - pve1
 
 gluster_hostname: gfs-pve2

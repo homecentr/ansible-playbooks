@@ -1,0 +1,12 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: snipe-it-config
+  namespace: "{{ k3s_namespace }}"
+spec:
+  storageClassName: {{ snipe_it_config_storage_class }}
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi

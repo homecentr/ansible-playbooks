@@ -1,12 +1,12 @@
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: qbittorrent
+  name: heimdall
   namespace: "{{ k3s_namespace | mandatory }}"
 spec:
   podSelector:
     matchLabels:
-      app: qbittorrent
+      app: heimdall
   policyTypes:
     - Ingress
   ingress:

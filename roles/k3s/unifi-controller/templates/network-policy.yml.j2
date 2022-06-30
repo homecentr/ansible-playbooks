@@ -11,23 +11,26 @@ spec:
     - Ingress
   ingress:
     - ports:
-      - protocol: tcp
+      - protocol: TCP
         port: 8443
       from:
-      - podSelector:
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: kube-system
+        podSelector:
           matchLabels:
             app.kubernetes.io/name: traefik
     - ports:
       # Note: Guest portal not used, ports disabled until needed
-      - protocol: tcp
+      - protocol: TCP
         port: 8080
-      - protocol: tcp
+      - protocol: TCP
         port: 6789
-      - protocol: udp
+      - protocol: UDP
         port: 3478
-      - protocol: udp
+      - protocol: UDP
         port: 10001
-      - protocol: udp
+      - protocol: UDP
         port: 1900
       from:
       - ipBlock:

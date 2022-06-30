@@ -1,19 +1,25 @@
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: qbittorrent
+  name: netboot
   namespace: "{{ k3s_namespace | mandatory }}"
 spec:
   podSelector:
     matchLabels:
-      app: qbittorrent
+      app: netboot
   policyTypes:
     - Ingress
   ingress:
-    - from:
+    # Web UI
+    - ports:
+        - protocol: TCP
+          port: 3000
+      from:
       - namespaceSelector:
           matchLabels:
             kubernetes.io/metadata.name: kube-system
         podSelector:
           matchLabels:
             app.kubernetes.io/name: traefik
+    # TODO: Add assets
+    # TODO: Add TFTP

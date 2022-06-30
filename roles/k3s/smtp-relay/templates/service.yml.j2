@@ -5,6 +5,7 @@ metadata:
   namespace: "{{ k3s_namespace | mandatory }}"
   annotations:
     metallb.universe.tf/loadBalancerIPs: {{ smtp_relay_ipv4_address }}
+    coredns.io/hostname: {{ smtp_relay_hostname }}
 spec:
   ports:
   - port: 25
@@ -12,8 +13,6 @@ spec:
   selector:
     app: smtp-relay
   type: LoadBalancer
-  # externalIps:
-  # - {{ smtp_relay_ipv4_address }}
 status:
   loadBalancer:
     ingress:

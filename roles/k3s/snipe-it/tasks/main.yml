@@ -1,0 +1,24 @@
+- include_tasks: ../../load-kubeconfig.yml
+
+- name: Create resources
+  run_once: true
+  k8s:
+    kubeconfig: "{{ kubeconfig_path }}"
+    definition: "{{ lookup('template', item) }}"
+    state: present
+    apply: yes
+    validate:
+      fail_on_error: yes
+      strict: yes
+  with_items:
+    - "secret.yml.j2"
+    - "mysql/persistent-volume-claim.yml.j2"
+    - "mysql/deployment.yml.j2"
+    - "mysql/service.yml.j2"
+    # TODO: Network policy for mysql
+    - "snipe/persistent-volume-claim.yml.j2"
+    - "snipe/deployment.yml.j2"
+    - "snipe/service.yml.j2"
+    - "snipe/ingress-http.yml.j2"
+    - "snipe/ingress-https.yml.j2"
+    # TODO: Network policy for snipe it

@@ -9,7 +9,7 @@ metadata:
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
 spec:
   rules:
-  - host: {{ netboot_hostname }}
+  - host: {{ netboot_webui_hostname }}
     http:
       paths:
       - path: /outpost.goauthentik.io/

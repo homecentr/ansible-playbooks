@@ -1,0 +1,4 @@
+heimdall_image_tag: 2.4.12
+heimdall_hostname: homepage.homecentr.io
+heimdall_tls_certificate_name: wildcard-homecentr-io
+heimdall_config_storage_class: kadalu.gluster-k3s-services

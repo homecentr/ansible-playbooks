@@ -1,19 +1,18 @@
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: qbittorrent
+  name: authentik-worker
   namespace: "{{ k3s_namespace | mandatory }}"
 spec:
   podSelector:
     matchLabels:
-      app: qbittorrent
+      app.kubernetes.io/name: authentik
+      app.kubernetes.io/component: worker
   policyTypes:
     - Ingress
   ingress:
     - from:
-      - namespaceSelector:
+      - podSelector:
           matchLabels:
-            kubernetes.io/metadata.name: kube-system
-        podSelector:
-          matchLabels:
-            app.kubernetes.io/name: traefik
+            app.kubernetes.io/name: authentik
+            app.kubernetes.io/component: server

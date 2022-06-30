@@ -1,0 +1,87 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: snipe-it
+  namespace: "{{ k3s_namespace | mandatory }}"
+  labels:
+    app: snipe-it
+    component: server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: snipe-it
+      component: server
+  template:
+    metadata:
+      labels:
+        app: snipe-it
+        component: server
+    spec:
+      containers:
+      - name: snipe-it
+        image: lscr.io/linuxserver/snipe-it:{{ snipe_it_image_tag }}
+        env:
+          - name: PUID
+            value: "1000"
+          - name: PGID
+            value: "1000"
+          - name: APP_LOCALE
+            value: "en-GB"
+          - name: MAIL_PORT
+            value: "{{ snipe_it_smtp_port }}"
+          - name: MAIL_HOST
+            value: "{{ snipe_it_smtp_host }}"
+          - name: MAIL_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: snipe-it
+                key: smtp-username
+                optional: true
+          - name: MAIL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: snipe-it
+                key: smtp-password
+                optional: true
+          - name: MAIL_FROM_NAME
+            value: "{{ snipe_it_mail_from_name }}"
+          - name: MAIL_FROM_ADDR
+            value: "{{ snipe_it_mail_from_address }}"
+          - name: MAIL_REPLYTO_NAME
+            value: "{{ snipe_it_mail_replyto_name }}"
+          - name: MAIL_REPLYTO_ADDR
+            value: "{{ snipe_it_mail_replyto_address }}"
+          - name: APP_KEY
+            valueFrom:
+              secretKeyRef:
+                name: snipe-it
+                key: app-key
+                optional: false
+          - name: APP_URL
+            value: "https://{{ snipe_it_hostname }}"
+          - name: MYSQL_PORT_3306_TCP_ADDR
+            value: "snipe-it-mysql.{{ k3s_namespace }}.svc.cluster.local"
+          - name: MYSQL_PORT_3306_TCP_PORT
+            value: "3306"
+          - name: MYSQL_USER
+            value: "root"
+          - name: MYSQL_DATABASE
+            value: "snipeit"
+          - name: MYSQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: snipe-it
+                key: db-password
+                optional: false
+          - name: APP_TRUSTED_PROXIES
+            value: "172.16.0.0/16"
+        ports:
+          - containerPort: 80
+        volumeMounts:
+          - mountPath: /config
+            name: config
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: snipe-it-config

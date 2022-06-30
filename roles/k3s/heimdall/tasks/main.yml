@@ -13,10 +13,8 @@
   with_items:
     - "persistent-volume-claim.yml.j2"
     - "deployment.yml.j2"
-    - "service-webui.yml.j2"
-    - "service-tcp.yml.j2"
-    - "service-udp.yml.j2"
+    - "service.yml.j2"
     - "ingress-http.yml.j2"
     - "ingress-https.yml.j2"
     - "ingress-fwdauth.yml.j2"
-    # - "network-policy.yml.j2"
+    - "network-policy.yml.j2"

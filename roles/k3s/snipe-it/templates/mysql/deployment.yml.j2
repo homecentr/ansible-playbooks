@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: snipe-it-mysql
+  namespace: "{{ k3s_namespace | mandatory }}"
+  labels:
+    app: snipe-it
+    component: mysql
+spec:
+  selector:
+    matchLabels:
+      app: snipe-it
+      component: mysql
+  template:
+    metadata:
+      labels:
+        app: snipe-it
+        component: mysql
+    spec:
+      containers:
+      - name: mysql
+        image: mysql:{{ snipeit_mysql_image_tag }}
+        env:
+          - name: MYSQL_DATABASE
+            value: snipeit
+          - name: MYSQL_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: snipe-it
+                key: db-password
+                optional: false
+        ports:
+        - containerPort: 3306
+          name: mysql
+        volumeMounts:
+          - mountPath: /var/lib/mysql
+            name: database
+      volumes:
+        - name: database
+          persistentVolumeClaim:
+            claimName: snipe-it-mysql

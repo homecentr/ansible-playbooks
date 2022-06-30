@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: netboot-https
+  name: heimdall-https
   namespace: "{{ k3s_namespace | mandatory }}"
   annotations:
     kubernetes.io/ingress.class: "traefik"
@@ -9,15 +9,15 @@ metadata:
     traefik.ingress.kubernetes.io/router.middlewares: "{{ k3s_namespace | mandatory }}-authentik@kubernetescrd"
 spec:
   rules:
-  - host: {{ netboot_webui_hostname }}
+  - host: {{ heimdall_hostname }}
     http:
       paths:
       - path: /
         pathType: Prefix
         backend:
           service:
-            name: netboot-webui
+            name: heimdall
             port:
-              number: 3000
+              number: 80
   tls:
-    - secretName: {{ netboot_tls_certificate_name }}
+    - secretName: {{ heimdall_tls_certificate_name }}
