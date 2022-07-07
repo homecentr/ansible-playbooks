@@ -11,6 +11,7 @@
       fail_on_error: yes
       strict: yes
   with_items:
+    - "config-map-customization.yml.j2"
     - "pvc-config.yml.j2"
     - "deployment.yml.j2"
     - "service.yml.j2"

@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: qbittorrent-customization
+  namespace: "{{ k3s_namespace | mandatory }}"
+data:
+  defaults-qbittorrent-conf: |
+    {% raw %}
+    [AutoRun]
+    enabled=false
+    program=
+
+    [LegalNotice]
+    Accepted=true
+
+    [Preferences]
+    Connection\UPnP=false
+    Connection\PortRangeMin=6881
+    Downloads\SavePath=/downloads/
+    Downloads\ScanDirsV2=@Variant(\0\0\0\x1c\0\0\0\0)
+    Downloads\TempPath=/downloads/incomplete/
+    WebUI\Address=*
+    WebUI\ServerDomains=*
+    WebUI\AuthSubnetWhitelist=172.0.0.0/8
+    WebUI\AuthSubnetWhitelistEnabled=true
+    {% endraw %}

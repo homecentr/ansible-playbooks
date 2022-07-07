@@ -15,4 +15,5 @@
     - "persistent-volume-claim.yml.j2"
     - "deployment.yml.j2"
     - "service-udp.yml.j2"
-    - "network-policy.yml.j2"
+    
+  # Note: there is no traffic policy by design. This is due to the limitation of how UDP broadcast forwarding works (there's no source IP because the client does not have an ip address yet)

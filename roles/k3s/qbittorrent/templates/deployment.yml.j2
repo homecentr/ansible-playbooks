@@ -32,6 +32,10 @@ spec:
             name: config
           - mountPath: /downloads
             name: downloads
+          - name: customization
+            mountPath: /defaults/qBittorrent.conf
+            subPath: defaults-qbittorrent-conf
+            readOnly: true
       volumes:
         - name: config
           persistentVolumeClaim:
@@ -39,3 +43,6 @@ spec:
         - name: downloads
           persistentVolumeClaim:
             claimName: downloads # Shared PVC - Managed by kadalu role
+        - name: customization
+          configMap:
+            name: qbittorrent-customization

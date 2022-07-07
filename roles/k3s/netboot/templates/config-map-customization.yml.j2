@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: netboot-customization
+  namespace: "{{ k3s_namespace | mandatory }}"
+data:
+  cont-init-install: |
+    #!/bin/bash
+
+    echo "Removing tftp-hpa..."
+    apk del --no-cache tftp-hpa
+
+    echo "Installing dnsmasq..."
+    apk add --no-cache dnsmasq
+
+    # echo "Removing built-in tftp service..."
+    # rm -rf /etc/services.d/tftp
+    
+  tftp-run: |
+    #!/usr/bin/with-contenv bash
+
+    exec dnsmasq -p0 --enable-tftp --tftp-root=/config/menus --user=abc --tftp-single-port --keep-in-foreground
