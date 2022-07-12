@@ -33,6 +33,11 @@ spec:
           mountPath: "/config/smtp-credentials"
           subPath: relay_credentials
           readOnly: true
+        livenessProbe:
+          tcpSocket:
+            port: 25
+          initialDelaySeconds: 15
+          periodSeconds: 20
       volumes:
         - name: smtpd-config
           configMap:
