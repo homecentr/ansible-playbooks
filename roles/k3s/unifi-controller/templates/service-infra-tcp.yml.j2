@@ -6,6 +6,9 @@ metadata:
   annotations:
     metallb.universe.tf/allow-shared-ip: UnifiController
     metallb.universe.tf/loadBalancerIPs: {{ unifi_controller_infra_ipv4_address }}
+  labels:
+    app.kubernetes.io/name: unifi-controller
+    app.kubernetes.io/managed-by: ansible
 spec:
   ports:
   - name: "devices-communication"
@@ -17,5 +20,6 @@ spec:
   - name: "mobile-throughput-test"
     port: 6789
   type: LoadBalancer
+  externalTrafficPolicy: Local
   selector:
-    app: unifi-controller
+    app.kubernetes.io/name: unifi-controller

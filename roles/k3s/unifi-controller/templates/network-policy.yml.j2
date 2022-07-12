@@ -3,10 +3,13 @@ kind: NetworkPolicy
 metadata:
   name: unifi-controller
   namespace: "{{ k3s_namespace | mandatory }}"
+  labels:
+    app.kubernetes.io/name: unifi-controller
+    app.kubernetes.io/managed-by: ansible
 spec:
   podSelector:
     matchLabels:
-      app: unifi-controller
+      app.kubernetes.io/name: unifi-controller
   policyTypes:
     - Ingress
   ingress:

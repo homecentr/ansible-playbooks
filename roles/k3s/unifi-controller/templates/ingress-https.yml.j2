@@ -6,6 +6,9 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: "traefik"
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
+  labels:
+    app.kubernetes.io/name: unifi-controller
+    app.kubernetes.io/managed-by: ansible
 spec:
   rules:
   - host: {{ unifi_controller_hostname }}

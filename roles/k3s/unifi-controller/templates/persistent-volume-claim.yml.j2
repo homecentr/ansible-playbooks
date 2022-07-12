@@ -3,6 +3,9 @@ apiVersion: v1
 metadata:
   name: unifi-controller
   namespace: "{{ k3s_namespace | mandatory }}"
+  labels:
+    app.kubernetes.io/name: unifi-controller
+    app.kubernetes.io/managed-by: ansible
 spec:
   storageClassName: {{ unifi_controller_storage_class | mandatory }}
   accessModes:

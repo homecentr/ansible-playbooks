@@ -6,9 +6,12 @@ metadata:
   annotations:
     traefik.ingress.kubernetes.io/service.serversscheme: https
     traefik.ingress.kubernetes.io/service.serverstransport: {{ k3s_namespace | mandatory }}-unifi-controller@kubernetescrd
+  labels:
+    app.kubernetes.io/name: unifi-controller
+    app.kubernetes.io/managed-by: ansible
 spec:
   ports:
   - name: "https-web-ui" # name must start with https in order for traefik to use https to communicate with the pod
     port: 8443
   selector:
-    app: unifi-controller
+    app.kubernetes.io/name: unifi-controller

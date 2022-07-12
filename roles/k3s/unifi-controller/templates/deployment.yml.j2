@@ -4,16 +4,18 @@ metadata:
   name: unifi-controller
   namespace: "{{ k3s_namespace | mandatory }}"
   labels:
-    app: unifi-controller
+    app.kubernetes.io/name: unifi-controller
+    app.kubernetes.io/managed-by: ansible
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: unifi-controller
+      app.kubernetes.io/name: unifi-controller
   template:
     metadata:
       labels:
-        app: unifi-controller
+        app.kubernetes.io/name: unifi-controller
+        app.kubernetes.io/managed-by: ansible
     spec:
       containers:
       - name: unifi-controller
@@ -41,6 +43,13 @@ spec:
         volumeMounts:
           - mountPath: /config
             name: config
+        livenessProbe:
+          httpGet:
+            scheme: HTTPS
+            path: /
+            port: 8443
+          initialDelaySeconds: 45
+          periodSeconds: 10
       volumes:
         - name: config
           persistentVolumeClaim:
