@@ -3,6 +3,9 @@ kind: NetworkPolicy
 metadata:
   name: smtp-relay
   namespace: "{{ k3s_namespace | mandatory }}"
+  labels:
+    app.kubernetes.io/name: smtp-relay
+    app.kubernetes.io/managed-by: ansible
 spec:
   podSelector:
     matchLabels:

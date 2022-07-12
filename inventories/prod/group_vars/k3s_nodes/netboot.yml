@@ -3,3 +3,6 @@ netboot_boot_ipv4_address: 10.1.2.132
 netboot_webui_hostname: boot.homecentr.io
 netboot_boot_hostname: pxe.homecentr.io
 netboot_tls_certificate_name: wildcard-homecentr-io
+netboot_allowed_clients_cidr_blocks:
+- 10.1.2.0/24
+- 10.1.3.0/24

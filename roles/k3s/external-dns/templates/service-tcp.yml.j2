@@ -6,6 +6,10 @@ metadata:
   annotations:
     metallb.universe.tf/allow-shared-ip: "external-dns"
     metallb.universe.tf/loadBalancerIPs: {{ external_dns_ipv4_address | mandatory }}
+  labels:
+    app.kubernetes.io/name: external-dns
+    app.kubernetes.io/component: tcp-service
+    app.kubernetes.io/managed-by: ansible
 spec:
   type: LoadBalancer
   ports:
@@ -13,4 +17,5 @@ spec:
     targetPort: 53
     protocol: TCP
   selector:
-    k8s-app: external-dns
+    app.kubernetes.io/name: external-dns
+  externalTrafficPolicy: Local

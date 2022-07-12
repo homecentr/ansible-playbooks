@@ -21,5 +21,16 @@ spec:
         podSelector:
           matchLabels:
             app.kubernetes.io/name: traefik
-    # TODO: Add assets
-    # TODO: Add TFTP
+{% if netboot_allowed_clients_cidr_blocks is defined and netboot_allowed_clients_cidr_blocks | length %}
+    # Boot related port with direct access via dedicated IP
+    - ports:
+      - protocol: TCP
+        port: 80
+      - protocol: UDP
+        port: 69
+      from:
+{% for cidr_block in netboot_allowed_clients_cidr_blocks %}
+        - ipBlock:
+            cidr: "{{ cidr_block }}"
+{% endfor -%}
+{% endif %}

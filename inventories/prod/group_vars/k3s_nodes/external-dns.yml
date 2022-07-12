@@ -20,6 +20,14 @@ external_dns_records:
     type: A
     targets:
       - value: 89.239.25.20
+  - name: idrac-r510
+    type: A
+    targets:
+      - value: 10.1.2.16
+  - name: idrac-r530
+    type: A
+    targets:
+      - value: 10.1.2.21
 
 external_dns_known_hosts:
   - name: pve1
@@ -32,3 +40,8 @@ external_dns_known_hosts:
     hostname_variable: fqdn
   - name: kube2
     hostname_variable: fqdn
+
+external_dns_allowed_clients_cidr_blocks:
+  - 10.1.2.0/24
+  - 10.1.3.0/24
+  - 10.1.4.0/24

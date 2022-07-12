@@ -4,16 +4,19 @@ metadata:
   name: smtp-relay
   namespace: "{{ k3s_namespace | mandatory }}"
   labels:
-    app: smtp-relay
+    app.kubernetes.io/name: smtp-relay
+    app.kubernetes.io/managed-by: ansible
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: smtp-relay
+      app.kubernetes.io/name: smtp-relay
+      app.kubernetes.io/managed-by: ansible
   template:
     metadata:
       labels:
-        app: smtp-relay
+        app.kubernetes.io/name: smtp-relay
+        app.kubernetes.io/managed-by: ansible
     spec:
       priorityClassName: critical-priority # Required for iDRAC alerts
       containers:

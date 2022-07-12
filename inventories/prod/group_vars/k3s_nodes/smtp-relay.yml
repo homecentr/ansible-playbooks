@@ -6,9 +6,11 @@ smtp_relay_username: apikey
 smtp_relay_sender_domain: homecentr.io
 smtp_relay_allowed_clients_cidr_blocks:
   - "127.0.0.0/8"
-  - "10.1.2.0/24"
+  - "10.1.2.0/24" 
   - "10.1.3.5/32" # HP printer
-  - "172.16.0.0/16" # Kubernetes services
+  # iDRAC
+  # Proxmox nodes
+  # 
 smtp_relay_allowed_clients_services:
-  - app.kubernetes.io/component: worker
-    app.kubernetes.io/name: authentik
+  - app.kubernetes.io/name: authentik
+    app.kubernetes.io/component: worker

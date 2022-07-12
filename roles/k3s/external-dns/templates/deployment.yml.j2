@@ -4,8 +4,8 @@ metadata:
   name: external-dns
   namespace: "{{ k3s_namespace | mandatory }}"
   labels:
-    # k8s-app: external-dns
-    kubernetes.io/name: "external-dns"
+    app.kubernetes.io/name: external-dns
+    app.kubernetes.io/managed-by: ansible
 spec:
   replicas: 2
   strategy:
@@ -14,11 +14,12 @@ spec:
       maxUnavailable: 1
   selector:
     matchLabels:
-      k8s-app: external-dns
+      app.kubernetes.io/name: external-dns
   template:
     metadata:
       labels:
-        k8s-app: external-dns
+        app.kubernetes.io/name: external-dns
+        app.kubernetes.io/managed-by: ansible
     spec:
       priorityClassName: system-cluster-critical
       serviceAccountName: external-dns
@@ -39,7 +40,7 @@ spec:
            requiredDuringSchedulingIgnoredDuringExecution:
            - labelSelector:
                matchExpressions:
-               - key: k8s-app
+               - key: app.kubernetes.io/name
                  operator: In
                  values: ["external-dns"]
              topologyKey: kubernetes.io/hostname

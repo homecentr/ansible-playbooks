@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: unifi-controller-webui
+  namespace: "{{ k3s_namespace | mandatory }}"
+  annotations:
+    traefik.ingress.kubernetes.io/service.serversscheme: https
+    traefik.ingress.kubernetes.io/service.serverstransport: {{ k3s_namespace | mandatory }}-nextcloud@kubernetescrd
+spec:
+  ports:
+  - name: "https-web-ui" # name must start with https in order for traefik to use https to communicate with the pod
+    port: 443
+  selector:
+    app: nextcloud

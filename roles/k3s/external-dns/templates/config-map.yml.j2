@@ -3,6 +3,9 @@ kind: ConfigMap
 metadata:
   name: external-dns
   namespace: "{{ k3s_namespace | mandatory }}"
+  labels:
+    app.kubernetes.io/name: external-dns
+    app.kubernetes.io/managed-by: ansible
 data:
   Corefile: |
     .:53 {

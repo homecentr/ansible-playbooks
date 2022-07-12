@@ -3,6 +3,8 @@ kind: ClusterRole
 metadata:
   labels:
     kubernetes.io/bootstrapping: rbac-defaults
+    app.kubernetes.io/name: external-dns
+    app.kubernetes.io/managed-by: ansible
   name: system:external-dns
 rules:
   - apiGroups:

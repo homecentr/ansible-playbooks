@@ -1,0 +1,12 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: nextcloud-data
+  namespace: "{{ k3s_namespace }}"
+spec:
+  storageClassName: {{ nextcloud_data_storage_class }}
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ nextcloud_data_storage_size }}

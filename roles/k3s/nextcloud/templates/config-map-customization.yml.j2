@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nextcloud-customization
+  namespace: "{{ k3s_namespace | mandatory }}"
+data:
+  test: value

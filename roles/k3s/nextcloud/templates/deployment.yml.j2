@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nextcloud
+  namespace: "{{ k3s_namespace | mandatory }}"
+  labels:
+    app: nextcloud
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nextcloud
+  template:
+    metadata:
+      labels:
+        app: nextcloud
+    spec:
+      containers:
+      - name: nextcloud
+        image: lscr.io/linuxserver/nextcloud:{{ nextcloud_image_tag }}
+        env:
+          - name: PUID
+            value: "1000"
+          - name: PGID
+            value: "1000"
+        ports:
+          - containerPort: 443
+        volumeMounts:
+          - mountPath: /config
+            name: config
+          - mountPath: /downloads
+            name: downloads
+          - mountPath: /data
+            name: data
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: nextcloud-config
+        - name: data
+          persistentVolumeClaim:
+            claimName: nextcloud-data
+        - name: downloads
+          persistentVolumeClaim:
+            claimName: downloads # Shared PVC - Managed by kadalu role
+            
+        # - name: customization
+        #   configMap:
+        #     name: qbittorrent-customization

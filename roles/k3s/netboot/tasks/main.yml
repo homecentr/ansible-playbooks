@@ -20,4 +20,4 @@
     - "ingress-http.yml.j2"
     - "ingress-https.yml.j2"
     - "ingress-fwdauth.yml.j2"
-    # - "network-policy.yml.j2"
+    - "network-policy.yml.j2"

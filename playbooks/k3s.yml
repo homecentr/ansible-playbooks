@@ -57,11 +57,14 @@
     - import_role: name=../roles/k3s/dhcp
       tags:
         - dhcp
+
+    - import_role: name=../roles/k3s/nextcloud
+      tags:
+        - nextcloud
     
-    # TODO: NextCloud
     # TODO: Plex
 
-    # TODO: Radius for VPN (?)
+    # TODO: Radius for VPN access (based on authentik - connect to ldap outpost ?)
 
 
   # - import_role: name=../roles/k3s/dashboard

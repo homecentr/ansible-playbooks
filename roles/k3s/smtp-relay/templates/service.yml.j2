@@ -6,14 +6,14 @@ metadata:
   annotations:
     metallb.universe.tf/loadBalancerIPs: {{ smtp_relay_ipv4_address }}
     coredns.io/hostname: {{ smtp_relay_hostname }}
+  labels:
+    app.kubernetes.io/name: smtp-relay
+    app.kubernetes.io/managed-by: ansible
 spec:
   ports:
   - port: 25
     targetPort: 25
   selector:
-    app: smtp-relay
+    app.kubernetes.io/name: smtp-relay
   type: LoadBalancer
-status:
-  loadBalancer:
-    ingress:
-    - ip: {{ smtp_relay_ipv4_address }}
+  externalTrafficPolicy: Local
