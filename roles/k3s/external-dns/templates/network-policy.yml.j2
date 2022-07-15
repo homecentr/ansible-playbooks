@@ -15,9 +15,9 @@ spec:
   ingress:
     - ports:
       - protocol: TCP
-        port: 53
+        port: 1053
       - protocol: UDP
-        port: 53
+        port: 1053
       from:
 {% for cidr_block in external_dns_allowed_clients_cidr_blocks %}
         - ipBlock:

@@ -7,7 +7,21 @@ After=network-online.target
 Type=notify
 ExecStartPre=-/sbin/modprobe br_netfilter
 ExecStartPre=-/sbin/modprobe overlay
-ExecStart=/usr/local/bin/k3s server --data-dir {{ k3s_server_location }} {{ k3s_extra_server_args | default("") }}
+ExecStart=/usr/local/bin/k3s server --data-dir {{ k3s_server_location }} {{ k3s_extra_server_args | default("") }} \
+    --protect-kernel-defaults=true \
+    --secrets-encryption=true \
+    --kube-apiserver-arg='audit-log-path=/var/lib/rancher/k3s/server/logs/audit.log' \
+    --kube-apiserver-arg='audit-policy-file=/var/lib/rancher/k3s/server/audit.yaml' \
+    --kube-apiserver-arg='audit-log-maxage=30' \
+    --kube-apiserver-arg='audit-log-maxbackup=10' \
+    --kube-apiserver-arg='audit-log-maxsize=100' \
+    --kube-apiserver-arg='request-timeout=300s' \
+    --kube-apiserver-arg='service-account-lookup=true' \
+    --kube-apiserver-arg='enable-admission-plugins=NodeRestriction,PodSecurityPolicy,NamespaceLifecycle,ServiceAccount' \
+    --kube-controller-manager-arg='terminated-pod-gc-threshold=10' \
+    --kube-controller-manager-arg='use-service-account-credentials=true' \
+    --kubelet-arg='streaming-connection-idle-timeout=5m' \
+    --kubelet-arg='make-iptables-util-chains=true'
 KillMode=process
 Delegate=yes
 # Having non-zero Limit*s causes performance problems due to accounting overhead

@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: cert-manager-allow-inbound-metric-collection
+  namespace: cert-manager
+spec:
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: NAMESPACENAME
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/instance: SELECTORLABELS
+    ports:
+    - port: 9402
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: cert-manager
+      app.kubernetes.io/component: controller
+      app.kubernetes.io/name: cert-manager
+  policyTypes:
+  - Ingress

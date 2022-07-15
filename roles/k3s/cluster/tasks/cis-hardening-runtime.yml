@@ -1,0 +1,30 @@
+- name: Create kubelet.conf
+  register: kubelet_conf
+  copy:
+    dest: /etc/sysctl.d/90-kubelet.conf
+    owner: root
+    group: root
+    mode: 0640
+    content: "{{ lookup('template', 'kubelet.conf.j2') }}"
+    force: yes
+
+- name: Apply kubelet.conf file
+  when: kubelet_conf.changed
+  command: sysctl -p /etc/sysctl.d/90-kubelet.conf.
+
+- name: Create audit log directory
+  file:
+    path: /var/lib/rancher/k3s/server/logs
+    owner: root
+    group: root
+    mode: 0700
+    state: directory
+
+- name: Create audit policy
+  copy:
+    dest: /var/lib/rancher/k3s/server/audit.yaml
+    owner: root
+    group: root
+    mode: 0644
+    content: "{{ lookup('template', 'audit.yml.j2') }}"
+    force: yes

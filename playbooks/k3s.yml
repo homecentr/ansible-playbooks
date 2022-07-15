@@ -12,14 +12,14 @@
       tags:
         - kadalu
 
+    - import_role: name=../roles/k3s/cert-manager
+      tags:
+        - cert-manager
+
     - import_role: name=../roles/k3s/external-dns
       tags:
         - dns
         - external-dns
-
-    - import_role: name=../roles/k3s/cert-manager
-      tags:
-        - cert-manager
 
     - import_role: name=../roles/k3s/smtp-relay
       tags:
@@ -74,3 +74,14 @@
   # TODO: Authentication
   # TODO: Switch for standard K8S dashboard
   # TODO: Pass token as header so it doesn't have be entered through UI
+
+    - import_role: name=../roles/k3s/kube-audit
+      tags:
+        - kube-audit
+        - audit
+
+    # Optional:
+    # - import_role: name=../roles/k3s/kube-bench
+    #   tags:
+    #     - kube-bench
+    #     - audit

@@ -18,20 +18,79 @@
     kubeconfig_path: "{{ kubeconfig_path }}"
     values:
       installCRDs: true
+      webhook:
+        podAnnotations:
+          container.apparmor.security.beta.kubernetes.io/cert-manager: runtime/default
+          seccomp.security.alpha.kubernetes.io/pod: runtime/default
+        resources:
+          limits:
+            cpu: 500m
+            memory: 256Mi
+          requests:
+            memory: 128Mi
+        containerSecurityContext:
+          allowPrivilegeEscalation: false
+          privileged: false
+          runAsNonRoot: true
+          runAsUser: 1000
+          runAsGroup: 2000
+          readOnlyRootFilesystem: true
+          capabilities:
+              drop:
+              - all
+      cainjector:
+        podAnnotations:
+          container.apparmor.security.beta.kubernetes.io/cert-manager: runtime/default
+          seccomp.security.alpha.kubernetes.io/pod: runtime/default
+        resources:
+          limits:
+            cpu: 500m
+            memory: 256Mi
+          requests:
+            memory: 128Mi
+        containerSecurityContext:
+          allowPrivilegeEscalation: false
+          privileged: false
+          runAsNonRoot: true
+          runAsUser: 1000
+          runAsGroup: 2000
+          readOnlyRootFilesystem: true
+          capabilities:
+              drop:
+              - all
+      podAnnotations:
+        container.apparmor.security.beta.kubernetes.io/cert-manager: runtime/default
+        seccomp.security.alpha.kubernetes.io/pod: runtime/default
+      resources:
+        limits:
+          cpu: 500m
+          memory: 256Mi
+        requests:
+          memory: 128Mi
+      containerSecurityContext:
+        allowPrivilegeEscalation: false
+        privileged: false
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 2000
+        readOnlyRootFilesystem: true
+        capabilities:
+            drop:
+            - all
 
-- name: Create Cloudflare API token secret
+- name: Create resources
   run_once: true
   k8s:
     kubeconfig: "{{ kubeconfig_path }}"
-    definition: "{{ lookup('template', 'cloudflare-secret.yml.j2') }}"
+    definition: "{{ lookup('template', item) }}"
     state: present
-
-- name: Create Cloudflare dns based issuer
-  run_once: true
-  k8s:
-    kubeconfig: "{{ kubeconfig_path }}"
-    definition: "{{ lookup('template', 'cloudflare-issuer.yml.j2') }}"
-    state: present
+  with_items:
+    - "cloudflare-secret.yml.j2"
+    - "network-policy-deny-all.yml.j2"
+    - "network-policy-allow-dns.yml.j2"
+    - "network-policy-allow-http.yml.j2"
+    # - "network-policy-allow-metrics.yml.j2" TBA - when prometheus is set up
+    - "network-policy-allow-webhook.yml.j2"
 
 - name: Create certificates
   run_once: true
