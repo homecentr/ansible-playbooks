@@ -14,11 +14,24 @@ spec:
     metadata:
       labels:
         app: dhcp
+        audit.kubernetes.io/pod.allow-capability-chown: "true"
+        container.audit.kubernetes.io/dhcp.allow-capability-chown: "true"
+      annotations:
+            container.apparmor.security.beta.kubernetes.io/dhcp: runtime/default
+            seccomp.security.alpha.kubernetes.io/pod: runtime/default
     spec:
       priorityClassName: system-cluster-critical
       containers:
       - name: dhcp
         image: homecentr/dhcp:{{ dhcp_image_tag }}
+        # metadata:
+        #   labels:
+        #     container.audit.kubernetes.io/dhcp.allow-capability-chown: "true"
+            # container.audit.kubernetes.io/dhcp.allow-capability-dac-override: "Required for S6 user switch"
+            # container.audit.kubernetes.io/dhcp.allow-capability-net-bind-service: "Required to start DHCP on port 67"
+            # container.audit.kubernetes.io/dhcp.allow-capability-net-raw: "Required for DHCP traffic"
+            # container.audit.kubernetes.io/dhcp.allow-capability-setgid: "Required for S6 user switch"
+            # container.audit.kubernetes.io/dhcp.allow-capability-setuid: "Required for S6 user switch"
         env:
           - name: PUID
             value: "1000"
@@ -29,11 +42,36 @@ spec:
         ports:
           - containerPort: 67
             protocol: UDP
+            resources:
+        limits:
+          cpu: 500m
+          memory: 256Mi
+        requests:
+          memory: 128Mi
         securityContext:
           allowPrivilegeEscalation: false
+          # privileged: false
+          readOnlyRootFilesystem: false
           capabilities:
+            drop:
+            # - AUDIT_CONTROL
+            # - AUDIT_WRITE
+            # - FOWNER
+            # - FSETID
+            # - LEASE
+            # - MKNOD
+            # - NET_BROADCAST
+            # - SETFCAP
+            # - SETPCAP
+            # - SYS_CHROOT
+            - ALL
             add:
+            - CHOWN
+            - DAC_OVERRIDE
             - NET_BIND_SERVICE
+            - NET_RAW
+            - SETGID
+            - SETUID
         volumeMounts:
           - name: dhcp-config
             mountPath: "/config/dhcpd.conf"

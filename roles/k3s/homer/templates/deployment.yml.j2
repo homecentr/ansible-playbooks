@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: homer
+  namespace: "{{ k3s_namespace | mandatory }}"
+  labels:
+    app.kubernetes.io/name: homer
+    app.kubernetes.io/managed-by: ansible
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: homer
+  template:
+    metadata:
+      annotations:
+        container.apparmor.security.beta.kubernetes.io/homer: runtime/default
+        seccomp.security.alpha.kubernetes.io/pod: runtime/default
+      labels:
+        app.kubernetes.io/name: homer
+        app.kubernetes.io/managed-by: ansible
+    spec:
+      automountServiceAccountToken: false
+      containers:
+      - name: homer
+        image: b4bz/homer:{{ homer_image_tag }}
+        env:
+          - name: INIT_ASSETS
+            value: "0"
+        ports:
+          - containerPort: 8080
+        securityContext:
+          allowPrivilegeEscalation: false
+          privileged: false
+          runAsNonRoot: true
+          runAsUser: 1000
+          runAsGroup: 1000
+          readOnlyRootFilesystem: true
+          capabilities:
+              drop:
+              - all
+        resources:
+          limits:
+            cpu: 500m
+            memory: 256Mi
+          requests:
+            memory: 128Mi

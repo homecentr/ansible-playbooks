@@ -44,9 +44,13 @@
         - netboot
         - pxe
 
-    - import_role: name=../roles/k3s/heimdall
+    # - import_role: name=../roles/k3s/heimdall
+    #   tags:
+    #     - heimdall
+    #     - homepage
+    - import_role: name=../roles/k3s/homer
       tags:
-        - heimdall
+        - homer
         - homepage
 
     - import_role: name=../roles/k3s/snipe-it
