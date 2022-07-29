@@ -3,7 +3,8 @@ smtp_relay_ipv4_address: 10.1.2.130
 smtp_relay_host: smtp.sendgrid.net
 smtp_relay_port: 587
 smtp_relay_username: apikey
-smtp_relay_sender_domain: homecentr.io
+smtp_relay_starttls: true
+smtp_relay_max_size: 20480000
 smtp_relay_allowed_clients_cidr_blocks:
   - "127.0.0.0/8"
   - "10.1.2.0/24" 

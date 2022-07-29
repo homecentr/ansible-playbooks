@@ -11,41 +11,50 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: smtp-relay
-      app.kubernetes.io/managed-by: ansible
   template:
     metadata:
       labels:
         app.kubernetes.io/name: smtp-relay
         app.kubernetes.io/managed-by: ansible
+      annotations:
+        container.apparmor.security.beta.kubernetes.io/mailrelay: runtime/default
+        seccomp.security.alpha.kubernetes.io/pod: runtime/default
     spec:
       priorityClassName: critical-priority # Required for iDRAC alerts
+      automountServiceAccountToken: false
       containers:
-      - name: opensmtpd
-        image: ghcr.io/homecentr/opensmtpd:{{ smtp_relay_opensmtpd_image_tag }}
+      - name: mailrelay
+        image: ghcr.io/homecentr/mailrelay:{{ smtp_relay_mailrelay_image_tag }}
         ports:
-        - containerPort: 25
+        - containerPort: 2525
         volumeMounts:
-        - name: smtpd-config
-          mountPath: "/config/smtpd.conf"
-          subPath: smtpd.conf
-          readOnly: true
-        - name: smtp-credentials
-          mountPath: "/config/smtp-credentials"
-          subPath: relay_credentials
+        - name: smtp-config
+          mountPath: "/config/mailrelay.json"
+          subPath: config
           readOnly: true
         livenessProbe:
           tcpSocket:
-            port: 25
+            port: 2525
           initialDelaySeconds: 15
           periodSeconds: 20
+        securityContext:
+          allowPrivilegeEscalation: false
+          privileged: false
+          runAsNonRoot: true
+          runAsUser: 1000
+          runAsGroup: 1000
+          readOnlyRootFilesystem: true
+          capabilities:
+              drop:
+              - all
+        resources:
+          limits:
+            cpu: 500m
+            memory: 512Mi
+          requests:
+            memory: 128Mi
       volumes:
-        - name: smtpd-config
-          configMap:
-            name: smtp-relay
-            items:
-            - key: "smtpd"
-              path: smtpd.conf
-        - name: smtp-credentials
+        - name: smtp-config
           secret:
-            secretName: smtp-relay-credentials
+            secretName: smtp-relay
             optional: false

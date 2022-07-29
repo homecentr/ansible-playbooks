@@ -11,8 +11,7 @@
       fail_on_error: yes
       strict: yes
   with_items:
-    - "secret.yml.j2"
-    - "config-map.yml.j2"
+    - "secret-config.yml.j2"
     - "deployment.yml.j2"
     - "service.yml.j2"
     - "network-policy.yml.j2"

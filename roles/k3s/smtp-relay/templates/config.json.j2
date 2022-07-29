@@ -1,0 +1,13 @@
+{
+    "smtp_server":   "{{ smtp_relay_host }}",
+    "smtp_port":     {{ smtp_relay_port }},
+    "smtp_starttls": {{ smtp_relay_starttls }},
+    "smtp_username": "{{ smtp_relay_username }}",
+    "smtp_password": "{{ smtp_relay_password }}",
+    "smtp_max_email_size": {{ smtp_relay_max_size }},
+    "smtp_login_auth_type": false,
+    "local_listen_ip": "0.0.0.0",
+    "local_listen_port": 2525,
+    "allowed_hosts": ["*"],
+    "timeout_secs": 30
+}

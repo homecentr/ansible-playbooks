@@ -4,6 +4,5 @@
 # smtp_relay_port
 # smtp_relay_username
 # smtp_relay_password
-# smtp_relay_domain
 # smtp_relay_allowed_clients_cidr_blocks
-smtp_relay_opensmtpd_image_tag: "latest"
+smtp_relay_mailrelay_image_tag: "latest"
