@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 printHelp() {
   echo "Usage: apply (lab|prod) <playbook>"

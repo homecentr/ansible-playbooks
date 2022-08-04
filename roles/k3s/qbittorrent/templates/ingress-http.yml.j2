@@ -7,6 +7,9 @@ metadata:
     kubernetes.io/ingress.class: "traefik"
     traefik.ingress.kubernetes.io/router.middlewares: "{{ k3s_namespace | mandatory }}-redirect-to-https@kubernetescrd"
     traefik.ingress.kubernetes.io/router.entrypoints: web
+  labels:
+    app.kubernetes.io/name: qbittorrent
+    app.kubernetes.io/managed-by: ansible
 spec:
   rules:
   - host: {{ qbittorrent_hostname | mandatory }}

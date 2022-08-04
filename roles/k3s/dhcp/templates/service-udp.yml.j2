@@ -5,6 +5,9 @@ metadata:
   namespace: "{{ k3s_namespace | mandatory }}"
   annotations:
     metallb.universe.tf/loadBalancerIPs: {{ dhcp_ipv4_address }}
+  labels:
+    app.kubernetes.io/name: dhcp
+    app.kubernetes.io/managed-by: ansible
 spec:
   type: LoadBalancer
   ports:

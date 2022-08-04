@@ -3,6 +3,9 @@ kind: NetworkPolicy
 metadata:
   name: qbittorrent
   namespace: "{{ k3s_namespace | mandatory }}"
+  labels:
+    app.kubernetes.io/name: qbittorrent
+    app.kubernetes.io/managed-by: ansible
 spec:
   podSelector:
     matchLabels:

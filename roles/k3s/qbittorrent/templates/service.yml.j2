@@ -3,9 +3,12 @@ kind: Service
 metadata:
   name: qbittorrent
   namespace: "{{ k3s_namespace | mandatory }}"
+  labels:
+    app.kubernetes.io/name: qbittorrent
+    app.kubernetes.io/managed-by: ansible
 spec:
   ports:
   - name: "web-ui"
     port: 8080
   selector:
-    app: qbittorrent
+    app.kubernetes.io/name: qbittorrent

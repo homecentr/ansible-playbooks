@@ -4,27 +4,26 @@ metadata:
   name: qbittorrent
   namespace: "{{ k3s_namespace | mandatory }}"
   labels:
-    app: qbittorrent
+    app.kubernetes.io/name: qbittorrent
+    app.kubernetes.io/managed-by: ansible
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: qbittorrent
+      app.kubernetes.io/name: qbittorrent
   template:
     metadata:
+      annotations:
+        container.apparmor.security.beta.kubernetes.io/qbittorrent: runtime/default
+        seccomp.security.alpha.kubernetes.io/pod: runtime/default
       labels:
-        app: qbittorrent
+        app.kubernetes.io/name: qbittorrent
+        app.kubernetes.io/managed-by: ansible
     spec:
+      automountServiceAccountToken: false
       containers:
       - name: qbittorrent
-        image: lscr.io/linuxserver/qbittorrent:{{ qbittorrent_image_tag }}
-        env:
-          - name: PUID
-            value: "1000"
-          - name: PGID
-            value: "1000"
-          - name: WEBUI_PORT
-            value: "8080"
+        image: homecentr/qbittorrent:{{ qbittorrent_image_tag }}
         ports:
           - containerPort: 8080
         volumeMounts:
@@ -32,10 +31,28 @@ spec:
             name: config
           - mountPath: /downloads
             name: downloads
-          - name: customization
-            mountPath: /defaults/qBittorrent.conf
-            subPath: defaults-qbittorrent-conf
-            readOnly: true
+        livenessProbe:
+          httpGet:
+            scheme: HTTP
+            path: /
+            port: 8080
+          initialDelaySeconds: 45
+          timeoutSeconds: 15
+          periodSeconds: 30
+        securityContext:
+          allowPrivilegeEscalation: false
+          privileged: false
+          runAsNonRoot: true
+          readOnlyRootFilesystem: true
+          capabilities:
+              drop:
+              - all
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 1Gi
+          requests:
+            memory: 256Mi
       volumes:
         - name: config
           persistentVolumeClaim:
@@ -43,6 +60,3 @@ spec:
         - name: downloads
           persistentVolumeClaim:
             claimName: downloads # Shared PVC - Managed by kadalu role
-        - name: customization
-          configMap:
-            name: qbittorrent-customization

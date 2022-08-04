@@ -1,4 +1,4 @@
-dhcp_image_tag: 1.1.1
+dhcp_image_tag: 1.2.1
 dhcp_leases_storage_class: kadalu.gluster-k3s-services
 dhcp_cluster_internal_subnet: 172.16.0.0/16
 dhcp_ipv4_address: 10.1.2.133

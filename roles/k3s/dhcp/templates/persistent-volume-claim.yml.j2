@@ -3,6 +3,9 @@ apiVersion: v1
 metadata:
   name: dhcp-leases
   namespace: "{{ k3s_namespace | mandatory }}"
+  labels:
+    app.kubernetes.io/name: dhcp
+    app.kubernetes.io/managed-by: ansible
 spec:
   storageClassName: {{ dhcp_leases_storage_class | mandatory }}
   accessModes:

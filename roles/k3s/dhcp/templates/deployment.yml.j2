@@ -4,41 +4,31 @@ metadata:
   name: dhcp
   namespace: "{{ k3s_namespace | mandatory }}"
   labels:
-    app: dhcp
+    app.kubernetes.io/name: dhcp
+    app.kubernetes.io/managed-by: ansible
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: dhcp
+      app.kubernetes.io/name: dhcp
   template:
     metadata:
       labels:
-        app: dhcp
-        audit.kubernetes.io/pod.allow-capability-chown: "true"
-        container.audit.kubernetes.io/dhcp.allow-capability-chown: "true"
+        app.kubernetes.io/name: dhcp
+        app.kubernetes.io/managed-by: ansible
+        container.audit.kubernetes.io/dhcp.allow-capability-net-bind-service: "Required-port-67"
+        container.audit.kubernetes.io/dhcp.allow-capability-net-raw: "Required-LPF-socket"
+        container.audit.kubernetes.io/dhcp.allow-privilege-escalation: "Required-bug-in-kubernetes"
       annotations:
-            container.apparmor.security.beta.kubernetes.io/dhcp: runtime/default
-            seccomp.security.alpha.kubernetes.io/pod: runtime/default
+        container.apparmor.security.beta.kubernetes.io/dhcp: runtime/default
+        seccomp.security.alpha.kubernetes.io/pod: runtime/default
     spec:
       priorityClassName: system-cluster-critical
+      automountServiceAccountToken: false
       containers:
       - name: dhcp
         image: homecentr/dhcp:{{ dhcp_image_tag }}
-        # metadata:
-        #   labels:
-        #     container.audit.kubernetes.io/dhcp.allow-capability-chown: "true"
-            # container.audit.kubernetes.io/dhcp.allow-capability-dac-override: "Required for S6 user switch"
-            # container.audit.kubernetes.io/dhcp.allow-capability-net-bind-service: "Required to start DHCP on port 67"
-            # container.audit.kubernetes.io/dhcp.allow-capability-net-raw: "Required for DHCP traffic"
-            # container.audit.kubernetes.io/dhcp.allow-capability-setgid: "Required for S6 user switch"
-            # container.audit.kubernetes.io/dhcp.allow-capability-setuid: "Required for S6 user switch"
-        env:
-          - name: PUID
-            value: "1000"
-          - name: PGID
-            value: "1000"
-          - name: DHCP_ARGS
-            value: "eth0" # To force listening on interface even though there's no subnet definition for the internal network
+        args: ["eth0"] # To force listening on interface even though there's no subnet definition for the internal network
         ports:
           - containerPort: 67
             protocol: UDP
@@ -49,29 +39,16 @@ spec:
         requests:
           memory: 128Mi
         securityContext:
-          allowPrivilegeEscalation: false
-          # privileged: false
-          readOnlyRootFilesystem: false
+          allowPrivilegeEscalation: true # Cannot be set to false due to https://github.com/kubernetes/kubernetes/issues/56374
+          privileged: false
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
           capabilities:
             drop:
-            # - AUDIT_CONTROL
-            # - AUDIT_WRITE
-            # - FOWNER
-            # - FSETID
-            # - LEASE
-            # - MKNOD
-            # - NET_BROADCAST
-            # - SETFCAP
-            # - SETPCAP
-            # - SYS_CHROOT
-            - ALL
+            - all
             add:
-            - CHOWN
-            - DAC_OVERRIDE
             - NET_BIND_SERVICE
             - NET_RAW
-            - SETGID
-            - SETUID
         volumeMounts:
           - name: dhcp-config
             mountPath: "/config/dhcpd.conf"
@@ -79,10 +56,16 @@ spec:
             readOnly: true
           - name: dhcp-config
             mountPath: "/etc/default/isc-dhcp-server"
-            subPath: isc-dhcp-server
+            subPath: interfaces
             readOnly: true
           - mountPath: /leases
             name: leases
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 1Gi
+          requests:
+            memory: 256Mi
       volumes:
         - name: dhcp-config
           configMap:

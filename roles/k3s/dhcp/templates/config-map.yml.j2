@@ -3,6 +3,9 @@ kind: ConfigMap
 metadata:
   name: dhcp
   namespace: "{{ k3s_namespace | mandatory }}"
+  labels:
+    app.kubernetes.io/name: dhcp
+    app.kubernetes.io/managed-by: ansible
 data:
   interfaces:
     INTERFACES="eth0"

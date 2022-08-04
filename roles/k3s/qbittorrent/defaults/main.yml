@@ -5,4 +5,4 @@
 qbittorrent_config_storage_size: 1Gi
 # qbittorrent_downloads_storage_class
 # qbittorrent_downloads_storage_size
-qbittorrent_image_tag: latest
+# qbittorrent_image_tag
