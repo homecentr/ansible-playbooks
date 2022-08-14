@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: mosquitto
+  namespace: "{{ k3s_namespace | mandatory }}"
+spec:
+  podSelector:
+    matchLabels:
+      app: mosquitto
+  policyTypes:
+    - Ingress
+{% if not mosquitto_allowed_clients_services is defined or (mosquitto_allowed_clients_services | length) == 0 %}
+  ingress: []
+{% else %}
+  ingress:
+    - ports:
+      - protocol: TCP
+        port: 1883
+      - protocol: TCP
+        port: 9001
+      from:
+{% for service_labels in mosquitto_allowed_clients_services %}
+        - podSelector:
+            matchLabels:
+              {{ service_labels }}
+{% endfor -%}
+{% endif -%}

@@ -65,6 +65,11 @@
     - import_role: name=../roles/k3s/nextcloud
       tags:
         - nextcloud
+
+    - import_role: name=../roles/k3s/mosquitto
+      tags:
+        - mosquitto
+        - mqtt
     
     # TODO: Plex
 

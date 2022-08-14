@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mosquitto
+  namespace: "{{ k3s_namespace | mandatory }}"
+  labels:
+    app.kubernetes.io/name: mosquitto
+    app.kubernetes.io/managed-by: ansible
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: mosquitto
+  template:
+    metadata:
+      annotations:
+        container.apparmor.security.beta.kubernetes.io/mosquitto: runtime/default
+        seccomp.security.alpha.kubernetes.io/pod: runtime/default
+      labels:
+        app.kubernetes.io/name: mosquitto
+        app.kubernetes.io/managed-by: ansible
+    spec:
+      automountServiceAccountToken: false
+      containers:
+      - name: mosquitto
+        image: eclipse-mosquitto:{{ mosquitto_image_tag }}
+        ports:
+          - containerPort: 1883
+          - containerPort: 9001
+        volumeMounts:
+          - name: state-pvc
+            mountPath: "/mosquitto"
+          - name: config-map
+            mountPath: "/mosquitto/config/mosquitto.conf"
+            subPath: mosquitto.conf
+            readOnly: true
+        securityContext:
+          allowPrivilegeEscalation: false
+          privileged: false
+          runAsNonRoot: true
+          runAsUser: 1000
+          runAsGroup: 1000
+          readOnlyRootFilesystem: true
+          capabilities:
+              drop:
+              - all
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 1024Mi
+          requests:
+            memory: 128Mi
+      volumes:
+        - name: state-pvc
+          persistentVolumeClaim:
+            claimName: mosquitto
+        - name: config-map
+          configMap:
+            name: mosquitto
+            items:
+            - key: mosquitto.conf
+              path: mosquitto.conf

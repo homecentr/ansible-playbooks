@@ -1,0 +1,15 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: mosquitto
+  namespace: "{{ k3s_namespace | mandatory }}"
+  labels:
+    app.kubernetes.io/name: mosquitto
+    app.kubernetes.io/managed-by: ansible
+spec:
+  storageClassName: {{ mosquitto_storage_class | mandatory }}
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ mosquitto_storage_size }}
