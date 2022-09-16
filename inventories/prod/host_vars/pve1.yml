@@ -8,6 +8,7 @@ ssh_allow_root_login_trusted_clients:
 gluster_hostname: gfs-pve1
 gluster_fqdn: gfs-pve1.homecentr.one
 gluster_ip: 10.1.7.17
+gluster_mount_host: pve1
 
 ups_name: eaton1
 ups_shutdown_delay_seconds: 180 # Wait 3 minutes before shutting down to give the VMs time to shutdown themselves

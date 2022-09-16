@@ -36,10 +36,18 @@
   command: "{{ lookup('template', 'create-volume-command.j2') }}"
   when: volume_exists.rc != 0
 
+- name: Enable server tls
+  run_once: true
+  command: "gluster volume set {{ gluster_volume_config.name }} server.ssl on"
+
+- name: Enable client tls
+  run_once: true
+  command: "gluster volume set {{ gluster_volume_config.name }} client.ssl on"
+
 - name: "Set allowed clients !!! TODO: USE TLS"
   run_once: true
-  # command: "{{ lookup('template', 'set-volume-clients-command.j2') }}"
-  command: "gluster volume set {{ gluster_volume_config.name }} auth.allow '*'"
+  command: "{{ lookup('template', 'set-volume-clients-command.j2') }}"
+  # command: "gluster volume set {{ gluster_volume_config.name }} auth.allow '*'"
 
 - name: Check volume status
   shell: "sudo gluster volume info {{ gluster_volume_config.name }} | grep 'Status:' | cut -d' ' -f2"

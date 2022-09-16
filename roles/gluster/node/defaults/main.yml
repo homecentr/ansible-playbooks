@@ -1,1 +1,2 @@
 gluster_node_tls_key_size: 4096
+gluster_tls_certificate_validity_days: 7300

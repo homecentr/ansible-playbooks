@@ -1,0 +1,3 @@
+gluster_volume_mounts:
+  - name: k3s-services
+    path: /mnt/gfs/k3s-services

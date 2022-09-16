@@ -5,6 +5,8 @@ fqdn: kube3.homecentr.one
 docker_macvlan_interface: ens18
 ups_shutdown_delay_seconds: 60 # Wait 1 minute so the system doesn't shutdown on power hick ups but shuts down before T+3 when the PVE nodes start shutting down
 
+gluster_mount_host: pve2
+
 k3s_extra_server_args: "--bind-address 10.1.2.50 --node-ip 10.1.2.50"
 k3s_cluster_join: https://kube1:6443
 k3s_labels:
