@@ -1,0 +1,6 @@
+- name: restart server
+  service:
+    name: glusterd
+    state: restarted
+    enabled: yes
+  when: "'gluster_servers' in group_names"

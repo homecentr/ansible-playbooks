@@ -1,23 +1,7 @@
 ---
-- name: "Install and configure glusterfs"
+- name: "Install and configure tls identity"
   hosts: gluster_nodes
   become: true
   become_method: sudo
   tasks:
-  - import_role: name=../roles/gluster/cluster
-    tags:
-      - cluster
-
-  - name: "Service data volume"
-    import_role: name=../roles/gluster/volumes
-    tags:
-      - volumes
-      
-- name: "Configure client servers"
-  hosts: all, !gluster_nodes
-  become: true
-  become_method: sudo
-  tasks:
-  - import_role: name=../roles/gluster/client
-    tags:
-      - client
+  - import_role: name=../roles/gluster/node

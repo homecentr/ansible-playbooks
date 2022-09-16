@@ -6,15 +6,17 @@ gluster_volumes:
       - host: pve2
         path: /mnt/zfs/service-data/gfs/k3s-services/brick0
     arbiter_bricks:
-      - host: minion
+      - host: pve3
         path: /data/gfs/k3s-services/brick0
     replicas: 2
     arbiters: 1
     allowed_clients:
       - kube1
       - kube2
+      - kube3
       - pve1
       - pve2
+      - pve3
 
   - name: boot-images
     storage_bricks:
@@ -23,7 +25,7 @@ gluster_volumes:
       - host: pve2
         path: /mnt/zfs/service-data/gfs/boot-images/brick0
     arbiter_bricks:
-      - host: minion
+      - host: pve3
         path: /data/gfs/boot-images/brick0
     replicas: 2
     arbiters: 1
@@ -32,6 +34,7 @@ gluster_volumes:
       - kube2
       - pve1
       - pve2
+      - pve3
 
   - name: downloads
     storage_bricks:
@@ -40,7 +43,7 @@ gluster_volumes:
       - host: pve2
         path: /mnt/zfs/user-data/gfs/downloads/brick0
     arbiter_bricks:
-      - host: minion
+      - host: pve3
         path: /data/gfs/downloads/brick0
     replicas: 2
     arbiters: 1
@@ -49,3 +52,23 @@ gluster_volumes:
       - kube2
       - pve1
       - pve2
+      - pve3
+
+  - name: nvr
+    replicas: 2
+    arbiters: 1
+    storage_bricks:
+      - host: pve1
+        path: /mnt/zfs/cctv/gfs/nvr/brick0
+      - host: pve2
+        path: /mnt/zfs/cctv/gfs/nvr/brick0
+    arbiter_bricks:
+    - host: pve3
+      path: /data/gfs/nvr/brick0
+    allowed_clients:
+      - kube1
+      - kube2
+      - pve1
+      - pve2
+      - pve3
+    

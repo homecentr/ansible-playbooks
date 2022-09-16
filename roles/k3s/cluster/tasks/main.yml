@@ -11,3 +11,4 @@
 - include_tasks: setup-priorities.yml
 - include_tasks: setup-namespace.yml
 - include_tasks: setup-middlewares.yml
+- include_tasks: setup-network-policies.yml

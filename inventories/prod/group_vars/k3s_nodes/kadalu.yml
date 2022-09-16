@@ -17,3 +17,9 @@ kadalu_gluster_volumes:
       - gfs-pve1
       - gfs-pve2
     mode: pv_direct
+
+  - name: nvr
+    hosts:
+      - gfs-pve1
+      - gfs-pve2
+    mode: pv_direct

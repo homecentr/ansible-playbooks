@@ -8,4 +8,3 @@
   vars:
     gluster_volume_config: "{{ item }}"
   with_items: "{{ gluster_volumes }}"
-  # Only where current node hosts data !!!

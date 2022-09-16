@@ -1,5 +1,4 @@
 - include_tasks: apt.yml
 - include_tasks: port-forwarding.yml
-- include_tasks: qdevice.yml
 - include_tasks: smtp.yml
 - include_tasks: ssh.yml

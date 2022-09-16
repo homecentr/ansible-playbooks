@@ -1,0 +1,14 @@
+- include_tasks: apt.yml
+- include_tasks: hosts.yml
+- include_tasks: tls.yml
+- include_tasks: client.yml
+
+- include_tasks: server.yml
+  when: "'gluster_servers' in group_names"
+
+# - include_task: volume-create.yml
+#   when: "'gluster_servers' in group_names"
+#   with_items: "{{ gluster_volumes }}"
+
+# - include_task: volume-mount.yml
+#   with_items: "{{ gluster_volume_mounts }}"

@@ -1,0 +1,12 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: frigate
+  namespace: "{{ k3s_namespace | mandatory }}"
+spec:
+  podSelector:
+    matchLabels:
+      app: frigate
+  policyTypes:
+    - Ingress
+# TODO: Traefik for http only, rtmp exposure?

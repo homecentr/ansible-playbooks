@@ -1,9 +1,18 @@
 ---
-- name: "Create admin user ({{ users_admin_username }})"
+# Enabling passwordless sudo must be first as the next step removes admin user's password and when the playbook is run for the first time with password, it fails
+- name: "Enable passwordless sudo for admin user"
+  lineinfile:
+    path: /etc/sudoers
+    state: present
+    regexp: "^{{ users_admin_username }}"
+    line: "{{ users_admin_username }} ALL=(ALL) NOPASSWD: ALL"
+    validate: 'visudo -cf %s'
+
+- name: "Create admin user"
   ansible.builtin.user:
     name: "{{ users_admin_username }}"
     shell: /bin/bash
-    password: "{{ users_admin_password | mandatory | password_hash('sha512', users_admin_password_salt) }}"
+    password: '*' # Disables user's password
     groups:
     - sudo
     state: present
@@ -12,15 +21,8 @@
   authorized_key:
     user: "{{ users_admin_username }}"
     state: present
-    key: "{{ users_admin_public_key }}"
-
-- name: "Enable passwordless sudo for {{ users_admin_username }} user"
-  lineinfile:
-    path: /etc/sudoers
-    state: present
-    regexp: "^{{ users_admin_username }}"
-    line: "{{ users_admin_username }} ALL=(ALL) NOPASSWD: ALL"
-    validate: 'visudo -cf %s'
+    key: "{{ item }}"
+  with_items: "{{ users_admin_public_keys }}"
 
 - name: "Tighten admin user's home directory permissions"
   file:

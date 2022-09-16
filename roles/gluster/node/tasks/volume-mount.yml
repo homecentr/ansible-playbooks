@@ -1,0 +1,18 @@
+- name: Create mount directory
+  file:
+    path: "{{ gluster_volume_config.mount_path }}"
+    state: directory
+
+- name: Mount volume to localhost
+  ansible.posix.mount:
+    path: "{{ gluster_volume_config.mount_path }}"
+    src: "{{ gluster_hostname }}:/{{ gluster_volume_config.name }}" # MOUNT SERVERS ARE RELATIVE TO HOST !!!
+    fstype: glusterfs
+    opts: defaults,_netdev
+    state: mounted
+  # Only mount the volume if the node hosts data
+  when: gluster_volume_config.storage_bricks | selectattr('host','equalto', inventory_hostname) | count > 0
+
+
+# Servers: Mount from localhost, ALWAYS
+# Clients (e.g. kubes) -> mount either from all or just from the node which they are tied to...

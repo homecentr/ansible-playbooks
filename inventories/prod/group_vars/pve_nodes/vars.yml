@@ -8,4 +8,4 @@ pve_smtp_tls: false
 additional_hosts:
   # To allow Open ID authentication
   - ip: 10.1.2.141
-    host: auth.homecentr.io
+    host: auth.homecentr.one

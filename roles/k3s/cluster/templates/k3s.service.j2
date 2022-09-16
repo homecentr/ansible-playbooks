@@ -3,6 +3,8 @@ Description=Lightweight Kubernetes
 Documentation=https://k3s.io
 After=network-online.target
 
+# PodSecurityPolicy is not enabled in the admission plugins on purpose, cluster is switched to Pod Security Standards
+
 [Service]
 Type=notify
 ExecStartPre=-/sbin/modprobe br_netfilter
@@ -17,7 +19,8 @@ ExecStart=/usr/local/bin/k3s server --data-dir {{ k3s_server_location }} {{ k3s_
     --kube-apiserver-arg='audit-log-maxsize=100' \
     --kube-apiserver-arg='request-timeout=300s' \
     --kube-apiserver-arg='service-account-lookup=true' \
-    --kube-apiserver-arg='enable-admission-plugins=NodeRestriction,PodSecurityPolicy,NamespaceLifecycle,ServiceAccount' \
+    --kube-apiserver-arg='enable-admission-plugins=NodeRestriction,NamespaceLifecycle,ServiceAccount' \
+    --kube-apiserver-arg='feature-gates=PodSecurity '
     --kube-controller-manager-arg='terminated-pod-gc-threshold=10' \
     --kube-controller-manager-arg='use-service-account-credentials=true' \
     --kubelet-arg='streaming-connection-idle-timeout=5m' \

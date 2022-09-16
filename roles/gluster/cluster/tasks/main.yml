@@ -1,4 +1,0 @@
----
-- include_tasks: hosts.yml
-- include_tasks: install.yml
-- include_tasks: probe.yml

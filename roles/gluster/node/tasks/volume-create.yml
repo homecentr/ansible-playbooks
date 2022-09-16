@@ -1,0 +1,51 @@
+# Note: this role is not using the existing gluster.gluster modules because the module for managing volumes is buggy and poorly designed.
+# Another reason is that this way ansible creates the volume(s) if they don't exist but doesn't touch them if they already do.
+# This isn't ideal but it's safer because it can never corrupt a volume containing data.
+
+- name: Check if volume exists
+  command: "gluster volume info {{ gluster_volume_config.name }}"
+  failed_when: false
+  register: volume_exists
+
+- name: Create storage bricks directories if they do not exist
+  file:
+    path: "{{ brick.path }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0770
+  with_items: "{{ gluster_volume_config.storage_bricks | selectattr('host', 'equalto', inventory_hostname) }}"
+  loop_control:
+    loop_var: brick
+  when: volume_exists.rc != 0
+
+- name: Create arbiter bricks directories if they do not exist
+  file:
+    path: "{{ brick.path }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0770
+  with_items: "{{ gluster_volume_config.arbiter_bricks | selectattr('host', 'equalto', inventory_hostname) }}"
+  loop_control:
+    loop_var: brick
+  when: volume_exists.rc != 0
+
+- name: Create volume if does not exist
+  run_once: true
+  command: "{{ lookup('template', 'create-volume-command.j2') }}"
+  when: volume_exists.rc != 0
+
+- name: "Set allowed clients !!! TODO: USE TLS"
+  run_once: true
+  # command: "{{ lookup('template', 'set-volume-clients-command.j2') }}"
+  command: "gluster volume set {{ gluster_volume_config.name }} auth.allow '*'"
+
+- name: Check volume status
+  shell: "sudo gluster volume info {{ gluster_volume_config.name }} | grep 'Status:' | cut -d' ' -f2"
+  register: volume_status
+
+- name: Start the volume
+  run_once: true
+  command: "gluster volume start {{ gluster_volume_config.name }}"
+  when: volume_status.stdout != "Started"

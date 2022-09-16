@@ -1,0 +1,70 @@
+- name: Install required pip modules
+  include_role:
+    name: geerlingguy.pip
+  vars:
+    pip_package: python3-pip
+    pip_install_packages:
+    - name: cryptography
+
+- name: Generate private key
+  notify: restart server
+  community.crypto.openssl_privatekey:
+    path: /etc/ssl/glusterfs.key
+    size: "{{ gluster_node_tls_key_size }}"
+
+- name: Create certificate signing request (server)
+  community.crypto.openssl_csr:
+    path: /etc/ssl/glusterfs.csr
+    privatekey_path: /etc/ssl/glusterfs.key
+    common_name: "{{ gluster_hostname }}"
+    subject_alt_name: "DNS:{{ gluster_fqdn }}"
+  when: "'gluster_servers' in group_names"
+
+- name: Create certificate signing request (client)
+  community.crypto.openssl_csr:
+    path: /etc/ssl/glusterfs.csr
+    privatekey_path: /etc/ssl/glusterfs.key
+    common_name: "{{ ansible_hostname }}"
+    subject_alt_name: "DNS:{{ fqdn }}"
+  when: "'gluster_servers' not in group_names"
+
+- name: Generate a node certificate
+  notify: restart server
+  community.crypto.x509_certificate:
+    path: /etc/ssl/glusterfs.pem
+    privatekey_path: /etc/ssl/glusterfs.key
+    csr_path: /etc/ssl/glusterfs.csr
+    provider: selfsigned
+    return_content: yes
+  register: gluster_cert
+
+- name: Store node certificate in facts
+  set_fact:
+    gluster_certificate: "{{ gluster_cert.certificate }}"
+
+- name: Generate ca file by concatenating all node certificates
+  notify: restart server
+  copy:
+    dest: /etc/ssl/glusterfs.ca
+    content: "{{ groups['gluster_nodes'] | map('extract', hostvars) | map(attribute='gluster_certificate') | join('') }}"
+    owner: root
+    group: root
+    mode: 0600
+    force: yes
+
+- name: Enable Gluster TLS (Create dir)
+  file:
+    path: /var/lib/glusterd
+    state: directory
+    owner: root
+    group: root
+    mode: 0744
+
+- name: Enable Gluster TLS
+  notify: restart server
+  file:
+    path: /var/lib/glusterd/secure-access
+    state: touch 
+    owner: root
+    group: root
+    mode: 0644

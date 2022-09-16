@@ -1,0 +1,10 @@
+- name: Install Gluster client
+  apt:
+    name: glusterfs-client # Implicitly depends on fuse
+    state: present
+    update_cache: yes
+
+- name: "Load fuse kernel module if not present"
+  community.general.modprobe:
+    name: fuse
+    state: present

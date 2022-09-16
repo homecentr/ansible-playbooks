@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: frigate-https
+  namespace: "{{ k3s_namespace | mandatory }}"
+  annotations:
+    kubernetes.io/ingress.class: "traefik"
+    traefik.ingress.kubernetes.io/router.middlewares: "{{ k3s_namespace | mandatory }}-authentik@kubernetescrd"
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+  labels:
+    app.kubernetes.io/name: frigate
+    app.kubernetes.io/managed-by: ansible
+spec:
+  rules:
+  - host: {{ frigate_hostname }}
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: frigate
+            port:
+              number: 5000
+  tls:
+    - secretName: {{ frigate_tls_certificate_name }}

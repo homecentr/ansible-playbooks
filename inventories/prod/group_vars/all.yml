@@ -6,7 +6,7 @@ users_admin_username: lholota
 ssh_allowed_users:
 - lholota
 
-clamav_alert_smtp_sender: clamav@homecentr.io
+clamav_alert_smtp_sender: clamav@homecentr.one
 clamav_alert_smtp_recipient: antivirus@homecentr.eu.pagerduty.com
 clamav_alert_smtp_host: smtp.sendgrid.net
 clamav_alert_smtp_port: 587
@@ -17,4 +17,6 @@ ups_devices:
   driver: usbhid-ups
   description: Eaton 5E 1100i USB
   port: auto
-  monitored_by: minion
+  monitored_by: pve3
+  # vendor: 0463
+  # product: ffff

@@ -4,13 +4,17 @@
   become: true
   become_method: sudo
   tasks:
+    # TODO: Install kubectl locally
+    # TODO: Install kubescape locally
+    # TODO: Set up kubeconfig
+
     - import_role: name=../roles/k3s/cluster
       tags:
         - cluster
 
-    - import_role: name=../roles/k3s/kadalu
-      tags:
-        - kadalu
+    # - import_role: name=../roles/k3s/kadalu
+    #   tags:
+    #     - kadalu
 
     - import_role: name=../roles/k3s/cert-manager
       tags:
@@ -70,6 +74,11 @@
       tags:
         - mosquitto
         - mqtt
+
+    - import_role: name=../roles/k3s/frigate
+      tags:
+        - frigate
+        - nvr
     
     # TODO: Plex
 

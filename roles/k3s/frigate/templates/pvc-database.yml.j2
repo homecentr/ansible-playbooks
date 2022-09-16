@@ -1,0 +1,15 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: frigate-database
+  namespace: "{{ k3s_namespace | mandatory }}"
+  labels:
+    app.kubernetes.io/name: frigate
+    app.kubernetes.io/managed-by: ansible
+spec:
+  storageClassName: {{ frigate_database_storage_class }}
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ frigate_database_storage_size }}

@@ -1,0 +1,89 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frigate
+  namespace: "{{ k3s_namespace | mandatory }}"
+  labels:
+    app.kubernetes.io/name: frigate
+    app.kubernetes.io/managed-by: ansible
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: frigate
+  template:
+    metadata:
+      annotations:
+        container.apparmor.security.beta.kubernetes.io/frigate: runtime/default
+        seccomp.security.alpha.kubernetes.io/pod: runtime/default
+      labels:
+        app.kubernetes.io/name: frigate
+        app.kubernetes.io/managed-by: ansible
+    spec:
+      automountServiceAccountToken: false
+      containers:
+      - name: frigate
+        image: homecentr/frigate:{{ frigate_image_tag }}
+        env:
+          - name: FRIGATE_RTSP_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: frigate
+                key: rtsp_password
+                optional: false
+        ports:
+          - name: http
+            containerPort: 5000
+          - name: rtmp
+            containerPort: 1935
+        volumeMounts:
+          - name: database-pvc
+            mountPath: "/db"
+          - name: media-pvc
+            mountPath: "/media/frigate"
+          - name: dshm
+            mountPath: /dev/shm
+          - name: tmp
+            mountPath: /tmp
+          - name: config-map
+            mountPath: "/config/config.yml"
+            subPath: frigate.yml
+            readOnly: true
+        securityContext:
+          allowPrivilegeEscalation: false
+          privileged: false
+          runAsNonRoot: true
+          runAsUser: 1000
+          runAsGroup: 1000
+          readOnlyRootFilesystem: true
+          capabilities:
+              drop:
+              - all
+        resources:
+          limits:
+            cpu: 6000m
+            memory: 8096Mi
+          requests:
+            memory: 1024Mi
+      volumes:
+        - name: dshm
+          emptyDir:
+            medium: Memory
+            sizeLimit: {{ frigate_shm_size }}
+        - name: tmp
+          emptyDir:
+            medium: Memory
+            sizeLimit: {{ fridate_cache_size }}
+        - name: database-pvc
+          persistentVolumeClaim:
+            claimName: frigate-database
+        - name: media-pvc
+          persistentVolumeClaim:
+            claimName: {{ frigate_media_pvc_name }}
+        - name: config-map
+          configMap:
+            name: frigate
+            defaultMode: 0444
+            items:
+            - key: frigate.yml
+              path: frigate.yml

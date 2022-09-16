@@ -1,6 +1,0 @@
-- name: "Set up local users"
-  hosts: all
-  become: true
-  tasks:
-  - import_role: name=../roles/common/users
-    tags: [ users ]

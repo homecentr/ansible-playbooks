@@ -1,12 +1,13 @@
 ansible_host: 10.1.2.49
 ups_name: eaton1
 
-fqdn: kube2.homecentr.io
+fqdn: kube2.homecentr.one
 docker_macvlan_interface: ens18
 ups_shutdown_delay_seconds: 60 # Wait 1 minute so the system doesn't shutdown on power hick ups but shuts down before T+3 when the PVE nodes start shutting down
 
 k3s_extra_server_args: "--bind-address 10.1.2.49 --node-ip 10.1.2.49"
 k3s_cluster_join: https://kube1:6443
 k3s_labels:
-  homecentr.io/allowed-workload: any
-  homecentr.io/hardware-gpu: false
+  homecentr.one/workload-critical: true
+  homecentr.one/workload-standard: true
+  homecentr.one/hardware-gpu: true
