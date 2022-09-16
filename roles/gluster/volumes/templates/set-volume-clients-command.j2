@@ -1,8 +1,0 @@
-gluster volume set {{ gluster_volume_config.name }} auth.allow '
-{%- for client in gluster_volume_config.allowed_clients -%}
-{{ hostvars[client].ansible_host }},
-    {%- if "gluster_ip" in hostvars[client] -%}
-        {{ hostvars[client].gluster_ip }},
-    {%- endif -%}
-{%- endfor -%}
-127.0.0.1'
