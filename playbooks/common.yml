@@ -22,9 +22,9 @@
 
   - import_role: name=../roles/common/ssh
     tags: [ ssh ]
-
-  - import_role: name=../roles/common/ups
-    tags: [ ups ]
   
   - import_role: name=../roles/common/motd
     tags: [ motd ]
+
+  - import_role: name=cloudalchemy.node_exporter
+    tags: [ node_exporter ]

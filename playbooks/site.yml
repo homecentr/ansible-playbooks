@@ -2,5 +2,6 @@
 # - import_playbook: ssh-client.yml
 - import_playbook: pve-nodes.yml
 - import_playbook: common.yml
+- import_playbook: ups.yml
 - import_playbook: gluster.yml
 - import_playbook: k3s.yml

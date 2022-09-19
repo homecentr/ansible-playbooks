@@ -5,3 +5,25 @@
   become_method: sudo
   tasks:
   - import_role: name=../roles/gluster/node
+
+
+# Shared
+#  - client package
+#  - tls identity - create and then compile into ca chain right in the next step - or replace with CA (?)
+
+
+#  - mounts - this has to be done at the END of the role (volumes must exist)
+
+# Client
+#  - external based hostnames
+
+# Server
+# - server package
+# - exporter
+# - internal based hostnames
+
+
+# apt
+# hosts
+# install (client/server)
+# create volumes

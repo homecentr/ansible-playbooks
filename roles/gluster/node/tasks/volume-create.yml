@@ -50,10 +50,14 @@
   # command: "gluster volume set {{ gluster_volume_config.name }} auth.allow '*'"
 
 - name: Check volume status
-  shell: "sudo gluster volume info {{ gluster_volume_config.name }} | grep 'Status:' | cut -d' ' -f2"
+  shell: "gluster volume info {{ gluster_volume_config.name }} | grep 'Status:' | cut -d' ' -f2"
   register: volume_status
 
 - name: Start the volume
   run_once: true
   command: "gluster volume start {{ gluster_volume_config.name }}"
   when: volume_status.stdout != "Started"
+
+- name: Enable quota
+  shell: "gluster volume quota {{ gluster_volume_config.name }} enable"
+  when: gluster_volume_config.quotas

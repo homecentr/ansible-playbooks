@@ -76,9 +76,7 @@
     group: root
     mode: 0644
 
-- name: restart server
-  service:
-    name: glusterd
-    state: restarted
-    enabled: yes
+- name: Restart server daemon
+  include_tasks: restart.yml
   when: "'gluster_servers' in group_names and (gluster_secure_access.changed or gluster_ca.changed or gluster_cert.changed or gluster_private_key.changed)"
+  throttle: 1 # to make sure the daemons are restarted one by one

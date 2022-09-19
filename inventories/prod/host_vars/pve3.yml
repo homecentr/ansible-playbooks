@@ -11,4 +11,4 @@ gluster_ip: 10.1.7.30
 gluster_mount_host: pve3
 
 ups_name: eaton1
-ups_shutdown_delay_seconds: 300 # Wait 5 minutes before shutting down to give other machines time to recognize they need to shut down
+ups_shutdown_delay_seconds: 240 # Wait before shutting down to give other machines time to recognize they need to shut down

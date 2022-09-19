@@ -15,4 +15,4 @@
   gluster.gluster.gluster_peer:
     state: present
     # Current node has to be removed from the list because probing self throws an error
-    nodes: "{{ groups['gluster_servers'] | map('extract', hostvars) | map(attribute='gluster_hostname') | difference([ gluster_hostname ]) }}" 
+    nodes: "{{ groups['gluster_servers'] | map('extract', hostvars) | map(attribute='gluster_hostname') | difference([ gluster_hostname ]) }}"

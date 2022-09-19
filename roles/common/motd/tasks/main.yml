@@ -10,6 +10,9 @@
 
 - include_tasks: setup-common-scripts.yml
 
+- include_tasks: setup-ups-scripts.yml
+  when: "'ups_masters' in group_names or 'ups_masters' in group_names"
+
 # ZFS
 - include_tasks: setup-zfs-scripts.yml
   when: motd_enable_zfs_status

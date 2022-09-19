@@ -1,0 +1,6 @@
+- name: "Common set up on all servers"
+  hosts: ups_masters:ups_slaves
+  become: true
+  tasks:
+  - import_role: name=../roles/common/ups
+    tags: [ ups ]

@@ -1,9 +1,7 @@
 ansible_host: 10.1.2.49
-ups_name: eaton1
 
 fqdn: kube2.homecentr.one
 docker_macvlan_interface: ens18
-ups_shutdown_delay_seconds: 60 # Wait 1 minute so the system doesn't shutdown on power hick ups but shuts down before T+3 when the PVE nodes start shutting down
 
 gluster_mount_host: pve2
 

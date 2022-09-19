@@ -6,6 +6,9 @@
 - include_tasks: server.yml
   when: "'gluster_servers' in group_names"
 
+- include_tasks: exporter.yml
+  when: "'gluster_servers' in group_names"
+
 - include_tasks: tls.yml
 
 - include_tasks: volume-create.yml

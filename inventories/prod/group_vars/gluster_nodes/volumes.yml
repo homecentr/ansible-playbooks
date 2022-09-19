@@ -10,6 +10,7 @@ gluster_volumes:
         path: /data/gfs/k3s-services/brick0
     replicas: 2
     arbiters: 1
+    quota: yes
     allowed_clients:
       - kube1
       - kube2

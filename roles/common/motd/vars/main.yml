@@ -1,6 +1,5 @@
 motd_common_scripts:
 - 20-sysinfo
-- 25-ups
 - 35-disk-space
 - 90-updates
 
