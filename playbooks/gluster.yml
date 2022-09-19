@@ -1,29 +1,14 @@
 ---
-- name: "Install and configure tls identity"
-  hosts: gluster_nodes
+- name: "Set up gluster cluster"
+  hosts: gluster_servers
   become: true
   become_method: sudo
   tasks:
-  - import_role: name=../roles/gluster/node
+  - import_role: name=../roles/gluster/server
 
-
-# Shared
-#  - client package
-#  - tls identity - create and then compile into ca chain right in the next step - or replace with CA (?)
-
-
-#  - mounts - this has to be done at the END of the role (volumes must exist)
-
-# Client
-#  - external based hostnames
-
-# Server
-# - server package
-# - exporter
-# - internal based hostnames
-
-
-# apt
-# hosts
-# install (client/server)
-# create volumes
+- name: "Set up gluster clients"
+  hosts: gluster_clients
+  become: true
+  become_method: sudo
+  tasks:
+  - import_role: name=../roles/gluster/client

@@ -5,21 +5,9 @@
 - include_tasks: ../../shared/tls.yml
   register: gluster_tls
   vars:
-    gluster_node_hostname: "{{ gluster_hostname }}" # Servers must use their gluster specific identity
+    gluster_node_hostname: "{{ ansible_hostname }}" # Servers must use their gluster specific identity
     gluster_node_additional_names: 
-    - "{{ gluster_fqdn }}"
-    - "{{ ansible_hostname }}"
     - "{{ fqdn }}"
-
-- include_tasks: restart.yml
-  when: gluster_tls.changed
-
-- include_tasks: exporter.yml
-
-- include_tasks: create-volume.yml
-  vars:
-    gluster_volume_config: "{{ item }}"
-  with_items: "{{ gluster_volumes }}"
 
 - include_tasks: ../../shared/mount-volume.yml
   vars:

@@ -1,6 +1,9 @@
 ansible_user: lholota
 ansible_python_interpreter: "/usr/bin/python3"
 
+gluster_major_version: 10
+gluster_minor_version: 2
+
 users_admin_username: lholota
 
 ssh_allowed_users:

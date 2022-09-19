@@ -10,6 +10,16 @@
   shell: 
     cmd: "openssl version -d | cut -d'\"' -f2"
   register: gluster_openssl_dir
+  changed_when: false
+
+- name: Copy CA certificate
+  copy:
+    dest: "{{ gluster_openssl_dir.stdout }}/glusterfs.ca"
+    content: "{{ gluster_ca_public_key }}"
+    owner: root
+    group: root
+    mode: 0600
+    force: yes
 
 - name: Generate private key
   register: gluster_private_key
@@ -17,21 +27,12 @@
     path: "{{ gluster_openssl_dir.stdout }}/glusterfs.key"
     size: "{{ gluster_node_tls_key_size }}"
 
-- name: Create certificate signing request (server)
+- name: Create certificate signing request
   community.crypto.openssl_csr:
     path: "{{ gluster_openssl_dir.stdout }}/glusterfs.csr"
     privatekey_path: "{{ gluster_openssl_dir.stdout }}/glusterfs.key"
-    common_name: "{{ gluster_hostname }}"
-    subject_alt_name: "DNS:{{ gluster_fqdn }}"
-  when: "'gluster_servers' in group_names"
-
-- name: Create certificate signing request (client)
-  community.crypto.openssl_csr:
-    path: "{{ gluster_openssl_dir.stdout }}/glusterfs.csr"
-    privatekey_path: "{{ gluster_openssl_dir.stdout }}/glusterfs.key"
-    common_name: "{{ ansible_hostname }}"
-    subject_alt_name: "DNS:{{ fqdn }}"
-  when: "'gluster_servers' not in group_names"
+    common_name: "{{ gluster_node_hostname }}"
+    subject_alt_name: "{{ gluster_node_additional_names | map('regex_replace', '(.*)', 'DNS:\\1') | join(',') }}"
 
 - name: Generate a node certificate
   register: gluster_cert
@@ -39,23 +40,10 @@
     path: "{{ gluster_openssl_dir.stdout }}/glusterfs.pem"
     privatekey_path: "{{ gluster_openssl_dir.stdout }}/glusterfs.key"
     csr_path: "{{ gluster_openssl_dir.stdout }}/glusterfs.csr"
-    selfsigned_not_after: "+{{ gluster_tls_certificate_validity_days }}d"
-    provider: selfsigned
-    return_content: yes
-
-- name: Store node certificate in facts
-  set_fact:
-    gluster_certificate: "{{ gluster_cert.certificate }}"
-
-- name: Generate ca file by concatenating all node certificates
-  register: gluster_ca
-  copy:
-    dest: "{{ gluster_openssl_dir.stdout }}/glusterfs.ca"
-    content: "{{ groups['gluster_nodes'] | map('extract', hostvars) | map(attribute='gluster_certificate') | join('') }}"
-    owner: root
-    group: root
-    mode: 0600
-    force: yes
+    ownca_not_after: "+{{ gluster_tls_certificate_validity_days }}d"
+    ownca_content: "{{ gluster_ca_public_key }}"
+    ownca_privatekey_content: "{{ gluster_ca_private_key }}"
+    provider: ownca
 
 - name: Enable Gluster TLS (Create dir)
   file:
@@ -75,8 +63,3 @@
     owner: root
     group: root
     mode: 0644
-
-- name: Restart server daemon
-  include_tasks: restart.yml
-  when: "'gluster_servers' in group_names and (gluster_secure_access.changed or gluster_ca.changed or gluster_cert.changed or gluster_private_key.changed)"
-  throttle: 1 # to make sure the daemons are restarted one by one

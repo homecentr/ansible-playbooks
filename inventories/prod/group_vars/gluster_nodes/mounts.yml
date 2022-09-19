@@ -1,3 +1,6 @@
+gluster_node_tls_key_size: 4096
+gluster_tls_certificate_validity_days: 7300
+
 gluster_volume_mounts:
   - name: k3s-services
     path: /mnt/gfs/k3s-services

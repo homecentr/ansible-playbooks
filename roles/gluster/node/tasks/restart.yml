@@ -1,8 +1,0 @@
-- name: Restart server daemon
-  service:
-    name: glusterd
-    state: restarted
-    enabled: yes
-  
-- name: Wait for daemon to come back online
-  

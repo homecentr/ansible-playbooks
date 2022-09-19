@@ -5,6 +5,7 @@
 - name: Check if volume exists
   command: "gluster volume info {{ gluster_volume_config.name }}"
   failed_when: false
+  changed_when: false
   register: volume_exists
 
 - name: Create storage bricks directories if they do not exist
@@ -44,10 +45,19 @@
   run_once: true
   command: "gluster volume set {{ gluster_volume_config.name }} client.ssl on"
 
-- name: "Set allowed clients !!! TODO: USE TLS"
+- name: Debug 1
+  debug:
+    var: hostvars[item].ansible_host
+  with_items: "{{ gluster_volume_config.allowed_clients }}"
+
+- name: Debug 2
+  debug:
+    var: hostvars[item].ansible_hostname
+  with_items: "{{ gluster_volume_config.allowed_clients }}"
+
+- name: "Set allowed clients"
   run_once: true
   command: "{{ lookup('template', 'set-volume-clients-command.j2') }}"
-  # command: "gluster volume set {{ gluster_volume_config.name }} auth.allow '*'"
 
 - name: Check volume status
   shell: "gluster volume info {{ gluster_volume_config.name }} | grep 'Status:' | cut -d' ' -f2"
@@ -58,6 +68,12 @@
   command: "gluster volume start {{ gluster_volume_config.name }}"
   when: volume_status.stdout != "Started"
 
+- name: Check if quota is enabled
+  run_once: true
+  shell: gluster volume info k3s-services | grep 'features.quota:' | cut -d' ' -f2
+  register: volume_quota
+  changed_when: false
+
 - name: Enable quota
   shell: "gluster volume quota {{ gluster_volume_config.name }} enable"
-  when: gluster_volume_config.quotas
+  when: "gluster_volume_config.quotas and volume_quota.stdout != 'on'"
