@@ -1,6 +1,7 @@
 ---
 - name: Get machine ssh keys
   hosts: all
+  any_errors_fatal: true
   tasks:
     - name: "Get host ssh key"
       command: "ssh-keyscan -t rsa {{ inventory_hostname }} | cut -d' ' -f 3"

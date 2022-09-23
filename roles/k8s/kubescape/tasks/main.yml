@@ -1,0 +1,36 @@
+- include_tasks: ../../load-kubeconfig.yml
+
+- name: Add kubescape helm repo
+  kubernetes.core.helm_repository:
+    name: kubescape
+    repo_url: "https://kubescape.github.io/helm-charts/"
+    state: present
+
+- name: Install kubescape
+  run_once: true
+  kubernetes.core.helm:
+    state: present
+    release_name: kubescape
+    release_namespace: kubescape
+    create_namespace: yes
+    chart_version: "{{ kubescape_chart_version }}"
+    chart_ref: kubescape/kubescape-cloud-operator
+    kubeconfig_path: "{{ kubeconfig_path }}"
+    values:
+      clusterName: k8s.homecentr.one
+      kubescape:
+        serviceMonitor:
+          enabled: false # TODO: Enable when prometheus stack is installed
+        submit: false
+        enableHostScan: true
+        downloadArtifacts: false
+
+- name: Create kubescape network policy
+  run_once: true
+  k8s:
+    kubeconfig: "{{ kubeconfig_path }}"
+    definition: "{{ lookup('template', 'network-policy-kubescape.yml.j2') }}"
+    state: present
+    apply: yes
+
+# TODO: Create monitoring network policy

@@ -1,6 +1,7 @@
 - name: "Common set up on all servers"
   hosts: all
   become: true
+  any_errors_fatal: true
   tasks:
   - import_role: name=../roles/common/users
     tags: [ users ]

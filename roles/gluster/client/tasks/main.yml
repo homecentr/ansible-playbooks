@@ -9,7 +9,7 @@
     gluster_node_additional_names: 
     - "{{ fqdn }}"
 
-- include_tasks: ../../shared/mount-volume.yml
+- include_tasks: ../../shared/volume-mount.yml
   vars:
     gluster_mount_config: "{{ item }}"
   when: gluster_volume_mounts is defined

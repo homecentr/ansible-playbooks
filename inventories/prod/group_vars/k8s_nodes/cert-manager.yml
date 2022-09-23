@@ -1,0 +1,17 @@
+certmanager_acme_use_staging: false
+certmanager_certificates:
+  - name: "wildcard-homecentr-one"
+    namespaces:
+      - services
+      - monitoring
+    duration: 2160h # 90d
+    renewBefore: 360h # 15d
+    domains:
+      - "*.homecentr.one"
+  - name: test2-homecentr.one
+    namespaces:
+      - services
+    duration: 2160h # 90d
+    renewBefore: 360h # 15d
+    domains:
+      - test2.homecentr.one

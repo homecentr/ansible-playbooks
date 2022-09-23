@@ -1,0 +1,10 @@
+frigate_hostname: nvr.homecentr.one
+frigate_tls_certificate_name: wildcard-homecentr-one
+
+frigate_image_tag: 1.0.0
+frigate_mqtt_host: mosquitto.homecentr.svc.cluster.local
+frigate_shm_size: 2Gi
+fridate_cache_size: 1Gi
+frigate_database_storage_class: kadalu.gluster-k3s-services
+frigate_database_storage_size: 2Gi
+frigate_media_pvc_name: nvr

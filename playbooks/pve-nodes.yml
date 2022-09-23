@@ -3,5 +3,6 @@
   hosts: pve_nodes
   become: true
   become_method: sudo
+  any_errors_fatal: true
   tasks:
     - include_role: name=../roles/proxmox/pve-node

@@ -1,0 +1,47 @@
+external_dns_ipv4_address: 10.1.2.128 # TBA Secondary address (?)
+external_dns_cluster_domain: homecentr.one
+
+external_dns_forwarders_tls_name: dns.google
+external_dns_forwarders:
+  - 8.8.8.8
+  - 8.8.4.4
+
+external_dns_records:
+  - name: pve
+    type: A
+    targets:
+      - host: pve1
+      - host: pve2
+  - name: print
+    type: A
+    targets:
+      - value: 10.1.3.5
+  - name: vpn
+    type: A
+    targets:
+      - value: 89.239.25.20
+  - name: idrac-r510
+    type: A
+    targets:
+      - value: 10.1.2.16
+  - name: idrac-r530
+    type: A
+    targets:
+      - value: 10.1.2.21
+
+external_dns_known_hosts:
+  - name: pve1
+    hostname_variable: fqdn
+  - name: pve2
+    hostname_variable: fqdn
+  - name: minion
+    hostname_variable: fqdn
+  - name: kube1
+    hostname_variable: fqdn
+  - name: kube2
+    hostname_variable: fqdn
+
+external_dns_allowed_clients_cidr_blocks:
+  - 10.1.2.0/24
+  - 10.1.3.0/24
+  - 10.1.4.0/24

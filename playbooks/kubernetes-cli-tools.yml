@@ -1,0 +1,8 @@
+---
+- name: "Install CLI tools"
+  hosts: localhost
+  become: true
+  become_method: sudo
+  any_errors_fatal: true
+  tasks:
+    - import_role: name=../roles/kubernetes/cli-tools

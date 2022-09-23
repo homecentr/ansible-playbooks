@@ -1,0 +1,7 @@
+- name: Create default network policies
+  run_once: true
+  k8s:
+    kubeconfig: "{{ kubeconfig_path }}"
+    definition: "{{ lookup('template', 'deny-all-network-policy.yml.j2', template_vars=dict(target_namespace=item)) }}"
+    state: present
+  with_items: "{{ ['default', 'kube-public'] + k3s_cluster_namespaces }}"

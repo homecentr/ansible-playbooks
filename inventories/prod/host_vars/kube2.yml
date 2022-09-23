@@ -5,9 +5,9 @@ docker_macvlan_interface: ens18
 
 gluster_mount_host: pve2
 
-k3s_extra_server_args: "--bind-address 10.1.2.49 --node-ip 10.1.2.49"
+k3s_cluster_extra_server_args: "--bind-address 10.1.2.49 --node-ip 10.1.2.49"
 k3s_cluster_join: https://kube1:6443
-k3s_labels:
+k3s_cluster_node_labels:
   homecentr.one/workload-critical: true
   homecentr.one/workload-standard: true
   homecentr.one/hardware-gpu: true

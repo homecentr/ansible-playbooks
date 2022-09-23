@@ -1,4 +1,0 @@
-k3s_cluster_init: no
-k3s_server_location: "/var/lib/rancher/k3s"
-k3s_pod_eviction_timeout: 1m0s
-systemd_dir: "/etc/systemd/system"

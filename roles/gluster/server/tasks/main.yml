@@ -21,7 +21,7 @@
     gluster_volume_config: "{{ item }}"
   with_items: "{{ gluster_volumes }}"
 
-- include_tasks: ../../shared/mount-volume.yml
+- include_tasks: ../../shared/volume-mount.yml
   vars:
     gluster_mount_config: "{{ item }}"
   when: gluster_volume_mounts is defined

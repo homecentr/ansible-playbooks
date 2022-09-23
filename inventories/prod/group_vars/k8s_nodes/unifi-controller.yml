@@ -1,0 +1,5 @@
+unifi_controller_storage_class: kadalu.gluster-k3s-services
+unifi_controller_hostname: unifi.homecentr.one
+unifi_controller_tls_certificate_name: wildcard-homecentr-one
+unifi_controller_infra_ipv4_address: 10.1.2.131
+unifi_controller_infra_subnet_cidr: 10.1.1.0/24

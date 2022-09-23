@@ -1,0 +1,19 @@
+- include_tasks: ../load-kubeconfig.yml
+
+- name: Add emberstack helm repo
+  kubernetes.core.helm_repository:
+    name: emberstack
+    repo_url: https://emberstack.github.io/helm-charts
+    state: present
+
+- name: Deploy reflector
+  run_once: true
+  kubernetes.core.helm:
+    state: present
+    release_name: reflector
+    release_namespace: kube-system
+    create_namespace: no
+    chart_version: "{{ reflector_chart_version }}"
+    chart_ref: emberstack/reflector
+    kubeconfig_path: "{{ kubeconfig_path }}"
+    values:

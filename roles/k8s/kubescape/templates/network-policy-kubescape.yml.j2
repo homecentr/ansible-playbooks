@@ -1,0 +1,41 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: kubescape
+  namespace: kubescape
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from: # Allow traffic from other pods in the namespace
+      - namespaceSelector:
+          matchLabels:
+            namespace: kubescape
+  egress:
+    - to: # Allow kube api
+{% for node in groups['k8s_nodes'] %}
+        - ipBlock:
+            cidr: {{ hostvars[node].ansible_host }}/32
+{% endfor %}
+      ports:
+        - protocol: TCP
+          port: 6443 # K3s specific port
+    - to:  # Allow internet traffic
+      - ipBlock:
+          cidr: 0.0.0.0/0
+          except:
+          - 10.0.0.0/8
+          - 192.168.0.0/16
+          - 172.16.0.0/20
+    - to: # Allow calling other pods in the namespace
+       - namespaceSelector:
+          matchLabels:
+            namespace: kubescape
+    - to: # Allow DNS
+      - ports:
+          - protocol: TCP
+            port: 53
+          - protocol: UDP
+            port: 53

@@ -1,0 +1,4 @@
+# k3s_namespace
+certmanager_acme_use_staging: false
+certmanager_chart_version: "1.9.0"
+certmanager_webhook_secure_port: 10222

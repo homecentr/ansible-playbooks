@@ -1,0 +1,36 @@
+- name: Validate input
+  assert:
+    that:
+      - "subdir_name is defined"
+      - "subdir_name | length > 0"
+    msg: "Variable 'subdir_name' is not defined or empty"
+
+- name: Create directory (executed on gluster server)
+  delegate_to: "{{ groups['gluster_servers'] | random }}"
+  file:
+    path: "{{ gluster_volume_mounts  | selectattr('name', 'equalto', subdir_volume_name) | map(attribute='path') | first }}/{{ subdir_name }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0770
+
+- name: Set quota
+  delegate_to: "{{ groups['gluster_servers'] | random }}"
+  when: subdir_quota is defined
+  shell:
+    command: "gluster volume quota {{ subdir_volume_name }} limit-usage {{ subdir_name }} {{ subdir_quota }}"
+
+- name: Remove quota
+  delegate_to: "{{ groups['gluster_servers'] | random }}"
+  when: subdir_quota is not defined
+  register: subdir_remove_quita
+  failed_when: "'Reason : No data available' not in subdir_remove_quita.stderr"
+  shell:
+    command: "gluster volume quota {{ subdir_volume_name }} remove {{ subdir_name }}"
+
+
+
+
+
+# Removed when nothing to remove
+    # Reason : No data available

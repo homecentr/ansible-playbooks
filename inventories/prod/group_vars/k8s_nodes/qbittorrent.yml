@@ -1,0 +1,6 @@
+qbittorrent_image_tag: 1.0.0
+qbittorrent_hostname: torrent.homecentr.one
+qbittorrent_tls_certificate_name: wildcard-homecentr-one
+qbittorrent_config_storage_class: kadalu.gluster-k3s-services
+qbittorrent_downloads_storage_class: kadalu.gluster-downloads
+qbittorrent_downloads_storage_size: 1000Mi # Ignored because the storage is pv_direct in Kadalu

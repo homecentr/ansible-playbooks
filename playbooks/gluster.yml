@@ -3,6 +3,7 @@
   hosts: gluster_servers
   become: true
   become_method: sudo
+  any_errors_fatal: true
   tasks:
   - import_role: name=../roles/gluster/server
 

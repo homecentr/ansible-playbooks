@@ -1,0 +1,15 @@
+- name: Make sure the manifests directory exists
+  file:
+    path: /var/lib/rancher/k3s/server/manifests
+    state: directory
+    owner: root
+    group: root
+    mode: 0750
+
+- name: Customize Traefik deployment
+  copy:
+    dest: /var/lib/rancher/k3s/server/manifests/traefik-custom.yaml
+    content: "{{ lookup('template', 'traefik-custom.yaml.j2') }}"
+    owner: root
+    group: root
+    mode: 0644

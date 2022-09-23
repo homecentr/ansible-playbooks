@@ -45,16 +45,6 @@
   run_once: true
   command: "gluster volume set {{ gluster_volume_config.name }} client.ssl on"
 
-- name: Debug 1
-  debug:
-    var: hostvars[item].ansible_host
-  with_items: "{{ gluster_volume_config.allowed_clients }}"
-
-- name: Debug 2
-  debug:
-    var: hostvars[item].ansible_hostname
-  with_items: "{{ gluster_volume_config.allowed_clients }}"
-
 - name: "Set allowed clients"
   run_once: true
   command: "{{ lookup('template', 'set-volume-clients-command.j2') }}"

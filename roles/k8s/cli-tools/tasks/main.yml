@@ -1,0 +1,11 @@
+- import_tasks: kubectl.yml
+  tags:
+    - kubectl
+
+- import_tasks: kubescape.yml
+  tags:
+    - kubescape
+
+- import_tasks: kubeaudit.yml
+  tags:
+    - kubeaudit

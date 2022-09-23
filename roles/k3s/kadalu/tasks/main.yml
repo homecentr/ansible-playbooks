@@ -1,4 +1,0 @@
-- include_tasks: ../load-kubeconfig.yml
-- include_tasks: install.yml
-- include_tasks: storage-classes.yml
-- include_tasks: persistent-volume-claims.yml

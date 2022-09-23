@@ -1,0 +1,14 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: cert-manager-allow-outbound-kubeapi
+  namespace: cert-manager
+spec:
+  egress:
+    # TODO: Limit to port 6443
+    - to:
+        - ipBlock:
+            cidr: 10.1.2.0/24
+  podSelector: {}
+  policyTypes:
+  - Egress
