@@ -8,7 +8,7 @@ k3s_services_external_ip_range: 10.1.2.141-10.1.2.191
 k3s_services_external_reserved_ip_range: 10.1.2.128-10.1.2.140
 k3s_cluster_namespaces:
 - monitoring
-- security
+- auth
 - services
 
 k3s_cluster_traefik_ip_address: 10.1.2.141

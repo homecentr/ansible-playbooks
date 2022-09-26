@@ -3,3 +3,16 @@
     helm_version: "{{ k3s_cluster_helm_version }}"
     helm_platform: linux
     helm_arch: amd64
+
+- name: Install git (required to install Helm plugin)
+  apt:
+    name: git
+    state: present
+    update_cache: yes
+    force_apt_get: yes
+    default_release: bullseye
+
+- name: Install Helm diff plugin
+  kubernetes.core.helm_plugin:
+    plugin_path: https://github.com/databus23/helm-diff
+    state: present

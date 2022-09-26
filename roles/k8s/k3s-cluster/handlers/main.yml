@@ -1,5 +1,10 @@
 - name: restart k3s
-  systemd:
+  register: k3s_restart
+  service:
     name: k3s
     state: restarted
     enabled: yes
+  until: k3s_restart.status.ActiveState == "active"
+  delay: 20
+  retries: 15
+  throttle: 1

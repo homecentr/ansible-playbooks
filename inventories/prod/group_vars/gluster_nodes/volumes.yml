@@ -1,5 +1,6 @@
 gluster_volumes:
   - name: k3s-services
+    mount_path: /mnt/gfs/k3s-services
     storage_bricks:
       - host: pve1
         path: /mnt/zfs/service-data/gfs/k3s-services/brick0
@@ -18,9 +19,6 @@ gluster_volumes:
       - pve1
       - pve2
       - pve3
-    subdirs:
-      - path: /prometheus
-        quota: 20Gi
 
 # TODO: k3s-user-data
 # TODO: k3s-nvr

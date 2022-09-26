@@ -5,32 +5,38 @@
       - "subdir_name | length > 0"
     msg: "Variable 'subdir_name' is not defined or empty"
 
+- name: Select gluster host
+  set_fact:
+    gluster_executor: "{{ groups['gluster_servers'] | random }}"
+
+- name: Load gluster server host
+  ansible.builtin.add_host:
+    name: '{{ gluster_executor }}'
+    groups: gluster_servers
+
 - name: Create directory (executed on gluster server)
-  delegate_to: "{{ groups['gluster_servers'] | random }}"
+  delegate_to: "{{ gluster_executor }}"
   file:
-    path: "{{ gluster_volume_mounts  | selectattr('name', 'equalto', subdir_volume_name) | map(attribute='path') | first }}/{{ subdir_name }}"
+    path: "{{ gluster_volumes | selectattr('name', 'equalto', subdir_volume_name) | map(attribute='mount_path') | first }}/{{ subdir_name }}"
     state: directory
     owner: root
     group: root
     mode: 0770
 
 - name: Set quota
-  delegate_to: "{{ groups['gluster_servers'] | random }}"
-  when: subdir_quota is defined
+  delegate_to: "{{ gluster_executor }}"
+  when: subdir_quota_gigabytes is defined
   shell:
-    command: "gluster volume quota {{ subdir_volume_name }} limit-usage {{ subdir_name }} {{ subdir_quota }}"
+    cmd: "gluster volume quota {{ subdir_volume_name }} limit-usage /{{ subdir_name }} {{ subdir_quota_gigabytes }}GB"
 
 - name: Remove quota
-  delegate_to: "{{ groups['gluster_servers'] | random }}"
-  when: subdir_quota is not defined
+  delegate_to: "{{ gluster_executor }}"
+  when: subdir_quota_gigabytes is not defined
   register: subdir_remove_quita
   failed_when: "'Reason : No data available' not in subdir_remove_quita.stderr"
   shell:
-    command: "gluster volume quota {{ subdir_volume_name }} remove {{ subdir_name }}"
+    cmd: "gluster volume quota {{ subdir_volume_name }} remove /{{ subdir_name }}"
 
-
-
-
-
-# Removed when nothing to remove
-    # Reason : No data available
+- name: Set fact
+  set_fact:
+    gluster_volume_subdirs: "{{ gluster_volume_subdirs | default({}) | combine({ subdir_name: (gluster_volumes | selectattr('name', 'equalto', subdir_volume_name) | map(attribute='mount_path') | first) + '/' + subdir_name }) }}"

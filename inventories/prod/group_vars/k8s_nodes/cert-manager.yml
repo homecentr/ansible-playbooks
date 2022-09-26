@@ -8,10 +8,4 @@ certmanager_certificates:
     renewBefore: 360h # 15d
     domains:
       - "*.homecentr.one"
-  - name: test2-homecentr.one
-    namespaces:
-      - services
-    duration: 2160h # 90d
-    renewBefore: 360h # 15d
-    domains:
-      - test2.homecentr.one
+ 

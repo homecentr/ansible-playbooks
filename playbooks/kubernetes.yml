@@ -22,7 +22,9 @@
       tags:
         - cert-manager
 
-  # TODO: Prometheus
+    - import_role: name=../roles/k8s/prometheus-operator
+      tags:
+        - prometheus
 
     # - import_role: name=../roles/k8s/kubescape
     #   tags:

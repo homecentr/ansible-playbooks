@@ -1,0 +1,2 @@
+prometheus_operator_namespace: monitoring
+prometheus_operator_chart_version: 40.1.0

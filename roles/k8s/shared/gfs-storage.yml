@@ -1,0 +1,73 @@
+- name: Create gluster volume subdir
+  run_once: true
+  include_tasks: ../../gluster/shared/volume-subdir.yml
+  vars:
+    subdir_volume_name: "{{ gfs_storage_gluster_volume }}"
+    subdir_name: "{{ gfs_storage_service_name }}/{{ gfs_storage_directory_name }}"
+    subdir_quota_gigabytes: 10
+
+- name: Create storage class
+  run_once: true
+  k8s:
+    kubeconfig: "{{ kubeconfig_path }}"
+    definition: |
+      apiVersion: storage.k8s.io/v1
+      kind: StorageClass
+      metadata:
+        name: gfs.{{ gfs_storage_service_name }}-{{ gfs_storage_directory_name }}
+        labels:
+          app.kubernetes.io/instance: "{{ gfs_storage_service_instance_name }}"
+          app.kubernetes.io/managed-by: "ansible"
+          app.kubernetes.io/name: "{{ gfs_storage_service_name }}"
+      provisioner: kubernetes.io/no-provisioner
+      volumeBindingMode: WaitForFirstConsumer
+    state: present
+
+- name: Create persistent volume
+  run_once: true
+  k8s:
+    kubeconfig: "{{ kubeconfig_path }}"
+    definition: |
+      apiVersion: v1
+      kind: PersistentVolume
+      metadata:
+        name: {{ gfs_storage_service_name }}-{{ gfs_storage_directory_name }}
+        labels:
+          app.kubernetes.io/instance: "{{ gfs_storage_service_instance_name }}"
+          app.kubernetes.io/managed-by: "ansible"
+          app.kubernetes.io/name: "{{ gfs_storage_service_name }}"
+      spec:
+        storageClassName: gfs.{{ gfs_storage_service_name }}-{{ gfs_storage_directory_name }}
+        persistentVolumeReclaimPolicy: Recycle
+        capacity:
+          storage: {{ gfs_storage_size_gigabytes }}Gi
+        accessModes:
+          - ReadWriteOnce
+        hostPath: 
+          path: "{{ gluster_volume_subdirs[gfs_storage_service_name + '/' + gfs_storage_directory_name] }}"
+    state: present
+
+- name: Create persistent volume claim
+  run_once: true
+  k8s:
+    kubeconfig: "{{ kubeconfig_path }}"
+    definition: |
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      metadata:
+        name: {{ gfs_storage_service_name }}-{{ gfs_storage_directory_name }}
+        namespace: {{ gfs_storage_namespace }}
+        labels:
+          app.kubernetes.io/instance: "{{ gfs_storage_service_instance_name }}"
+          app.kubernetes.io/managed-by: "ansible"
+          app.kubernetes.io/name: "{{ gfs_storage_service_name }}"
+      spec:
+        storageClassName: gfs.{{ gfs_storage_service_name }}-{{ gfs_storage_directory_name }}
+        volumeName: {{ gfs_storage_service_name }}-{{ gfs_storage_directory_name }}
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: {{ gfs_storage_size_gigabytes }}Gi
+    state: present
+  when: gfs_storage_create_pvc is defined and gfs_storage_create_pvc

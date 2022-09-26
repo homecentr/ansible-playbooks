@@ -1,6 +1,6 @@
 - name: Restart server daemon
   register: gluster_restart
-  until: myserviceDetails.status.ActiveState == "active"
+  until: gluster_restart.status.ActiveState == "active"
   delay: 20
   retries: 15
   throttle: 1
