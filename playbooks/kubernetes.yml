@@ -26,6 +26,11 @@
       tags:
         - prometheus
 
+    - import_role: name=../roles/k8s/prometheus-operator-node-monitoring
+      tags:
+        - prometheus-node-exporter
+        - prometheus-node-monitoring
+
     # - import_role: name=../roles/k8s/kubescape
     #   tags:
     #     - kubescape

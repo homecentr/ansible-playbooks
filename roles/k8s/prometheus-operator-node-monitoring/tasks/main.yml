@@ -1,0 +1,45 @@
+- include_tasks: ../load-kubeconfig.yml
+
+- name: Create network policies
+  run_once: true
+  k8s:
+    kubeconfig: "{{ kubeconfig_path }}"
+    definition: "{{ lookup('template', item) }}"
+    apply: yes
+    state: present
+  with_items:
+    - "network-policy-prometheus-allow-node-exporter.yml.j2"
+
+- name: Create node monitoring resources
+  run_once: true
+  k8s:
+    kubeconfig: "{{ kubeconfig_path }}"
+    definition: "{{ lookup('template', item.1, template_vars=hostvars[item.0]) }}"
+    apply: yes
+    state: present
+  loop: "{{ groups.all | product([ 'service.yml.j2', 'endpoint.yml.j2']) | list }}"
+
+- name: Create service monitor
+  run_once: true
+  k8s:
+    kubeconfig: "{{ kubeconfig_path }}"
+    definition: "{{ lookup('template', 'service-monitor.yml.j2') }}"
+    apply: yes
+    state: present
+
+- run_once: true
+  delegate_to: localhost
+  become: false
+  copy:
+    dest: /tmp/dashboard.yml
+    content: "{{ lookup('template', 'dashboard-config-map.yml.j2') }}"
+
+# Dashboard is from https://github.com/rfmoz/grafana-dashboards/blob/master/prometheus/node-exporter-full.json
+- name: Create grafana dashboard
+  run_once: true
+  k8s:
+    kubeconfig: "{{ kubeconfig_path }}"
+    definition: "{{ lookup('template', 'dashboard-config-map.yml.j2') }}"
+    apply: no # Must be set to no otherwise the k8s ansible module adds the whole config map content to annotations which breaches the limit
+    force: yes # To replace the config map since apply cannot be enabled
+    state: present

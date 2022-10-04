@@ -1,0 +1,19 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: node-exporter
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/name: node-exporter
+    app.kubernetes.io/managed-by: ansible
+spec:
+  #namespaceSelector:
+  #  matchNames:
+  #  - monitoring
+  jobLabel: app.kubernetes.io/instance
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: node-exporter
+  endpoints:
+  - port: metrics
+    interval: 10s

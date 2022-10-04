@@ -21,7 +21,7 @@
     state: directory
     owner: root
     group: root
-    mode: 0770
+    mode: 0777
 
 - name: Set quota
   delegate_to: "{{ gluster_executor }}"
